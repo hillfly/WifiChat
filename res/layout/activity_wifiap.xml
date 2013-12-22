@@ -1,45 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:gif="http://schemas.android.com/apk/res/com.immomo.momo.android.activity"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/bg" >
+    android:background="@color/background_normal"
+    android:orientation="vertical" >
 
     <com.immomo.momo.android.view.WifiapSearchAnimationFrameLayout
         android:id="@+id/search_animation_wt_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
+    <include
+        android:id="@+id/wifiap_header"
+        layout="@layout/include_header" /> 
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/lucency"
+        android:layout_below="@+id/wifiap_header"
         android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/top_navigation_layout_wt_main"
-            android:layout_width="fill_parent"
-            android:layout_height="48.0dip"
-            android:background="@drawable/bg_top_navigation_bar"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >            
-
-            <TextView
-                style="@style/textview_large"
-                android:layout_weight="1.0"
-                android:text="@string/wt" />
-
-            <Button
-                android:id="@+id/search_btn_wt_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="6.0dip"
-                android:background="@drawable/wifiap_search_wt" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -78,8 +62,8 @@
                     android:id="@+id/radar_gif_wt_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"                 
-                    android:src="@drawable/ap_3" />
+                    android:src="@drawable/ap_3"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/create_ap_llayout_wt_main"
@@ -112,37 +96,59 @@
                     android:layout_marginTop="5.0dip"
                     android:background="@drawable/wifiap_create" />
             </LinearLayout>
-            
-        </LinearLayout>        
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/introduction_layout_wt_main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#aa000000"
-        android:gravity="center"
-        android:visibility="gone" >
+            <LinearLayout
+                android:id="@+id/introduction_layout_wt_main"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#aa000000"
+                android:gravity="center"
+                android:visibility="gone" >
 
-        <ImageView
-            android:id="@+id/introduction_image_wt_main"
-            android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/introduction_image_wt_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/wt_load" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/wt_load" />
+            android:background="@drawable/bg_unlogin_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dip"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="4dip" >
+
+            <Button
+                android:id="@+id/wifiap_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginRight="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="返    回"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/wifiap_btn_login"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginLeft="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="下 一 步"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/dialog_layout_wt_main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#aa000000"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <include
-            android:layout_width="260.0dip"
-            android:layout_height="wrap_content"
-            layout="@layout/common_wifiap_dialog" />
-    </LinearLayout>
-
-</FrameLayout>
+</RelativeLayout>
