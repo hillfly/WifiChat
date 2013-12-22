@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="职业"
+            android:textColor="@color/font_attribute"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:gravity="center_vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingRight="4dip"
+                    android:singleLine="true"
+                    android:text="医疗/护理/制药"
+                    android:textColor="@color/font_value"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/industry_iv_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_userinfo_group" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.immomo.momo.android.view.EmoticonsTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="医疗"
+        android:textColor="@color/font_value"
+        android:textSize="16sp" />
+
+</LinearLayout>

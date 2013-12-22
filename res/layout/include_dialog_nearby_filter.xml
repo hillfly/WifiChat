@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_nearby_layout_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/dialog_backgroud_full"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:paddingTop="70dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_popwindow"
+        android:padding="20dip" >
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:gravity="center_vertical"
+                    android:text="您想看到的用户"
+                    android:textColor="@color/menu_text"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/dialog_nearby_rg_gender"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_gender_all"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_left"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="全部"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_gender_male"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_center"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="男"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_gender_female"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_right"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="女"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+                </RadioGroup>
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginTop="10dip"
+                    android:gravity="center_vertical"
+                    android:text="出现的时间"
+                    android:textColor="@color/menu_text"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/dialog_nearby_rg_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dip"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_time_fifteenminutes"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_left"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="15分钟"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_time_sixtyminutes"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_center"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="60分钟"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_time_oneday"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_center"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="1天"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/dialog_nearby_rb_time_twoday"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tab_right"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:minHeight="33dip"
+                        android:text="2天"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="14sp" />
+                </RadioGroup>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="@color/blue"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15.0dip"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/dialog_nearby_btn_submit"
+                        style="@style/Style_Dialog_Button"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_default_popsubmit"
+                        android:text="确认" />
+
+                    <Button
+                        android:id="@+id/dialog_nearby_btn_cancel"
+                        style="@style/Style_Dialog_Button"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_default"
+                        android:text="取消" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

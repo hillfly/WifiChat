@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="52dip" >
+
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/transparent" />
+
+        <ImageButton
+            android:id="@+id/chat_audioditor_ib_plus"
+            android:layout_width="36dip"
+            android:layout_height="46dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="2dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginTop="2dip"
+            android:background="@drawable/btn_chatbtn2"
+            android:src="@drawable/ic_chat_plus_normal" />
+
+        <ImageButton
+            android:id="@+id/chat_audioditor_ib_keyboard"
+            android:layout_width="36dip"
+            android:layout_height="46dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="2dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="2dip"
+            android:background="@drawable/btn_chatbtn2"
+            android:src="@drawable/ic_chat_keyboard_normal" />
+
+        <ImageView
+            android:id="@+id/chat_audioditor_iv_audiobtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:focusable="false"
+            android:paddingTop="1dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chatbar_audiobtn_normal" />
+    </RelativeLayout>
+
+</LinearLayout>

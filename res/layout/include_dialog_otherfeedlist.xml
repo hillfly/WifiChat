@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dip"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dropmenu_up"
+    android:orientation="vertical" >
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/dialog_otherfeedlist_htv_copy"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_listitem_selector"
+        android:padding="10dip"
+        android:text="复制文本"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/dialog_divider" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/dialog_otherfeedlist_htv_report"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_listitem_selector"
+        android:padding="10dip"
+        android:text="举报"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+</LinearLayout>

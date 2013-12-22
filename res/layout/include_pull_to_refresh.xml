@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical" >
+
+    <LinearLayout
+        android:id="@+id/refresh_header_layout_container"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@drawable/bg_loadbar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.immomo.momo.android.view.RotatingImageView
+            android:id="@+id/refresh_header_riv_loading"
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_common_droparrow" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dip"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/refresh_header_htv_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dropbar_text_color"
+                android:textSize="16sp" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/refresh_header_htv_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dropbar_text_color"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

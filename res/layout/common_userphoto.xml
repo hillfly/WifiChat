@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/userphoto_layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="10dip"
+    android:paddingTop="10dip" >
+
+    <com.immomo.momo.android.view.ScrollViewPager
+        android:id="@+id/userphoto_scrollviewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </com.immomo.momo.android.view.ScrollViewPager>
+
+</LinearLayout>

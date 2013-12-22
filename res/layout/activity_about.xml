@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_normal"
+    android:orientation="vertical" 
+    android:padding="10dip">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="130dip"
+            android:scaleType="fitStart"
+            android:src="@drawable/pic_about_logo" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="15dip"
+        android:paddingRight="15dip" >
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:id="@+id/about_htv_versionname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/about_btn_checknewversion"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/btn_default"
+            android:text="检查更新"
+            android:textColor="@color/text_color"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/about_btn_introduction"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/btn_default"
+            android:text="版本介绍"
+            android:textColor="@color/text_color"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/about_btn_go_official_website"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/btn_default"
+            android:text="给陌陌评分"
+            android:textColor="@color/text_color"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pic_about_immomo" />
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Copyright © 2013 MOMO TECH All Rights Reserved"
+            android:textColor="@color/text_color"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</LinearLayout>

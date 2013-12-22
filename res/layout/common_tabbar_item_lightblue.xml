@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/bg_maintab_item_lightblue"
+    android:layout_width="fill_parent"
+    android:paddingBottom="2dip"
+    android:layout_height="40dip"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <View
+        android:id="@+id/tabbar_item_ligthblue_driver_left"
+        android:layout_width="1px"
+        android:layout_height="18dip"
+        android:background="#ffa5a9ad"
+        android:visibility="gone" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/tabbar_item_htv_label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/tabbar_item_ligthblue_driver_right"
+        android:layout_width="1px"
+        android:layout_height="18dip"
+        android:background="#ffa5a9ad"
+        android:visibility="gone" />
+
+</LinearLayout>

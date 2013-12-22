@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="left" >
+
+    <ImageView
+        android:id="@+id/message_iv_mapimage"
+        android:layout_width="133dip"
+        android:layout_height="67dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginRight="1dip"
+        android:gravity="center_vertical"
+        android:src="@drawable/ic_common_def_map" />
+
+    <LinearLayout
+        android:id="@+id/message_layout_maploading"
+        android:layout_width="133dip"
+        android:layout_height="67dip"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:src="@drawable/ic_chat_def_map" />
+
+        <ImageView
+            android:id="@+id/message_iv_maploading"
+            android:layout_width="29dip"
+            android:layout_height="5dip" 
+            android:src="@drawable/ic_loading_msgplus_01"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/userphoto_avatar_item_layout_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="2dip"
+    android:layout_weight="1" >
+
+    <com.immomo.momo.android.view.RoundImageView
+        android:id="@+id/userphoto_avatar_item_riv_avatar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_userheader_vip_shadow"
+        android:focusable="false"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/userphoto_avatar_item_iv_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_vipavatar_cover"
+        android:clickable="true"
+        android:focusable="true"/>
+
+</RelativeLayout>

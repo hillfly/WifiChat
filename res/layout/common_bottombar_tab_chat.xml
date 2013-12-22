@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dip"
+    android:layout_height="40dip"
+    android:layout_weight="1"
+    android:background="@drawable/bg_tb_item_center"
+    android:paddingBottom="2dip" >
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/tab_chat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/ic_tab_chat"
+        android:gravity="center_horizontal"
+        android:shadowDx="0.0"
+        android:shadowDy="-1.0"
+        android:shadowRadius="1.0"
+        android:text="消息"
+        android:textColor="@color/maintab_text_color"
+        android:textSize="11sp" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/tab_chat_label"
+        android:layout_marginRight="-14dip"
+        android:layout_marginTop="1dip"
+        android:background="@drawable/bg_msgtip_normal"
+        android:gravity="center"
+        android:marqueeRepeatLimit="1"
+        android:minWidth="20dip"
+        android:singleLine="true"
+        android:text="6"
+        android:textColor="#ffffffff"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

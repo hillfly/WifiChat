@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/message_layout_timecontainer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="15dip"
+    android:layout_marginTop="15dip"
+    android:gravity="center"
+    android:visibility="visible" >
+
+    <LinearLayout
+        android:id="@+id/message_timestamp_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:gravity="center" >
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:id="@+id/message_timestamp_htv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09-06 10:19"
+            android:textColor="@color/font_value"
+            android:textSize="12.0sp" />
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:id="@+id/message_timestamp_htv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="2dip"
+            android:text="0.01km"
+            android:textColor="@color/font_value"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="55dip"
+        android:layout_toLeftOf="@+id/message_timestamp_layout"
+        android:background="@color/timestampline" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="55dip"
+        android:layout_toRightOf="@+id/message_timestamp_layout"
+        android:background="@color/timestampline" />
+
+</RelativeLayout>

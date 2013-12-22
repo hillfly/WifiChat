@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_undercard" >
+
+    <include
+        android:id="@+id/feedprofile_header"
+        layout="@layout/include_header" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/feedprofile_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="true" />
+
+    <ListView
+        android:id="@+id/feedprofile_lv_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/feedprofile_layout_bottom"
+        android:layout_below="@+id/feedprofile_header"
+        android:background="@drawable/transparent"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@null"
+        android:dividerHeight="0dip"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="true"
+        android:focusable="true"
+        android:listSelector="@drawable/list_selector_transition" />
+
+    <LinearLayout
+        android:id="@+id/feedprofile_layout_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/feedprofile_layout_emote"
+        android:background="@color/background_normal"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/devideline" />
+
+        <com.immomo.momo.android.view.EmoticonsTextView
+            android:id="@+id/feedprofile_etv_editertitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip" >
+
+            <Button
+                android:id="@+id/feedprofile_btn_send"
+                android:layout_width="50dip"
+                android:layout_height="46dip"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/feedprofile_etv_editertitle"
+                android:background="@drawable/btn_chatbtn3"
+                android:text="评论"
+                android:textColor="@color/white" />
+
+            <com.immomo.momo.android.view.EmoticonsEditText
+                android:id="@+id/feedprofile_eet_editer"
+                android:layout_width="fill_parent"
+                android:layout_height="45dip"
+                android:layout_below="@+id/feedprofile_etv_editertitle"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                android:layout_toLeftOf="@+id/feedprofile_btn_send"
+                android:layout_toRightOf="@+id/feedprofile_iv_emote"
+                android:background="@drawable/edittext_sendmsg"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:gravity="left|center"
+                android:maxLength="120"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/light_notes_color"
+                android:textCursorDrawable="@null"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/feedprofile_iv_emote"
+                android:layout_width="36dip"
+                android:layout_height="46dip"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/feedprofile_etv_editertitle"
+                android:background="@drawable/btn_chatbtn"
+                android:clickable="true"
+                android:src="@drawable/ic_publish_emote" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feedprofile_layout_emote"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/msg_editor_backgroud" >
+
+        <com.immomo.momo.android.view.EmoteInputView
+            android:id="@+id/feedprofile_eiv_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dip"
+    android:paddingRight="16dip" >
+
+    <RelativeLayout
+        android:id="@+id/otherprofile_layout_sex_sign"
+        android:layout_width="fill_parent"
+        android:layout_height="36dip" >
+
+        <LinearLayout
+            android:id="@+id/otherprofile_layout_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="6dip"
+            android:paddingRight="6dip" >
+
+            <ImageView
+                android:id="@+id/otherprofile_iv_gender"
+                android:layout_width="8dip"
+                android:layout_height="8dip"
+                android:layout_marginRight="2dip"
+                android:scaleType="fitXY" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/otherprofile_htv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:id="@+id/otherprofile_htv_constellation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dip"
+            android:layout_toRightOf="@+id/otherprofile_layout_gender"
+            android:textColor="@color/font_value"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_marginTop="1dip"
+                android:src="@drawable/ic_user_location" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/otherprofile_htv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_value"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="4dip"
+                    android:layout_marginTop="1dip"
+                    android:src="@drawable/ic_user_loctime" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/otherprofile_htv_time"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/font_value"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/otherprofile_layout_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dip"
+        android:background="@drawable/bg_groupparty_desc"
+        android:padding="10dip"
+        android:clickable="true" >
+
+        <LinearLayout
+            android:id="@+id/otherprofile_layout_feed_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dip"
+            android:gravity="center" >
+
+            <com.immomo.momo.android.view.RoundImageView
+                android:id="@+id/otherprofile_riv_feed_pic"
+                android:layout_width="40dip"
+                android:layout_height="40dip" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dip"
+                android:src="@drawable/ic_common_arrow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/otherprofile_layout_feed_pic"
+            android:orientation="vertical" >
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:text="个人动态"
+                android:textColor="@color/font_attribute"
+                android:textSize="16sp" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/otherprofile_htv_feed_sign"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:singleLine="true"
+                android:textColor="@color/font_value"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dip"
+                    android:src="@drawable/ic_user_location" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/otherprofile_htv_feed_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="3dip"
+                    android:singleLine="true"
+                    android:textColor="@color/font_value"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

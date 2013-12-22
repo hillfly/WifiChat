@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WifiChat</string>    
+    <string name="cancel">取消</string> 
+    <string name="sure">确认</string>
+    <string name="confirm">确定</string>   
+    <string name="notify">提示</string>  
+    <string name="wt">创建连接</string>
+    <string name="connect">点击连接</string>
+    <string name="disconnect">点击断开</string>
+    <string name="wt_list_empty">"未搜索到可用热点，可尝试重新搜索。"</string>
+    <string name="create_ap_fail">"热点创建失败，请尝试重新创建。"</string>
+    <string name="wt_searching">正在搜索附近的热点...</string>
+    <string name="not_create_ap">您的设备不支持热点创建</string>
+    <string name="creating_ap">正在创建热点</string>
+    <string name="close_wifi_prompt">创建热点会关闭当前的WiFi，确认继续？</string>
+    <string name="ap_used">系统热点被占用，点确定开启热点以传输文件。</string>
+    <string name="closed_wifi_prompt">WLAN未开启，点确定开启WLAN以搜索热点。</string>
+    <string name="opened_ap_prompt">是否关闭当前热点去搜索其他热点？</string>
+    <string name="close_ap_prompt">您确定需要关闭热点？</string>
+    <string name="wt_connect_ok">热点连接成功</string>
+    <string name="pre_wt_connect_ok">热点创建成功！</string>
+    <string name="middle_wt_connect_ok">\n热点名：</string>
+    <string name="suf_wt_connect_ok">\n连接密码：wifichat123</string>
+</resources>

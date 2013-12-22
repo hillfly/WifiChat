@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:gravity="center_vertical" >
+
+    <LinearLayout
+        android:id="@+id/userphoto_avatar_layout_page_line1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block1"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block2"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block3"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block4"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/userphoto_avatar_layout_page_line2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dip"
+        android:orientation="horizontal" >
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block5"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block6"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block7"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+
+        <include
+            android:id="@+id/userphoto_avatar_layout_photo_block8"
+            android:layout_weight="1"
+            layout="@layout/include_userphoto_avatar_item" />
+    </LinearLayout>
+
+</LinearLayout>

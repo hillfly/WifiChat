@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/pic_index_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:src="@drawable/pic_index_logo" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="center"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="center"
+        android:src="@drawable/pic_index_copyright" />
+
+    <LinearLayout
+        android:id="@+id/welcome_linear_ctrlbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_welcome_ctrlbar"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="vertical"
+        android:paddingBottom="15dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="13dip" >
+
+        <LinearLayout
+            android:id="@+id/welcome_linear_avatars"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block0"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block1"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block2"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block3"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block4"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+
+            <include
+                android:id="@+id/welcome_include_member_avatar_block5"
+                android:layout_weight="1"
+                layout="@layout/include_welcome_item" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_index_totaluser" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/welcome_htv_usercount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:text="0"
+                android:textColor="#FFFFFFFF"
+                android:textSize="18sp" />
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="位用户在你身边"
+                android:textColor="#FFFFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/welcome_btn_register"
+                android:layout_width="100dip"
+                android:layout_height="40dip"
+                android:layout_margin="5dip"
+                android:background="@drawable/btn_default_blue"
+                android:text="注册"
+                android:textColor="#FFFFFFFF" />
+
+            <Button
+                android:id="@+id/welcome_btn_login"
+                android:layout_width="100dip"
+                android:layout_height="40dip"
+                android:layout_margin="5dip"
+                android:background="@drawable/btn_default_white"
+                android:text="登录"
+                android:textColor="#ff465579" />
+
+            <ImageButton
+                android:id="@+id/welcome_ibtn_about"
+                android:layout_width="wrap_content"
+                android:layout_height="40dip"
+                android:layout_margin="5dip"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/btn_default_white"
+                android:src="@drawable/ic_welcome_about_normal" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/otherprofile_bindinfo_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dip"
+    android:paddingRight="16dip" >
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:paddingBottom="7dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="社交与绑定信息"
+        android:textColor="@color/blue"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="@color/blue"
+        android:orientation="vertical" >
+    </View>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dip"
+        android:layout_marginTop="12dip"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/otherprofile_bindinfo_layout_sina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:gravity="center_horizontal"
+            android:minWidth="55dip"
+            android:orientation="vertical" 
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/otherprofile_bindinfo_iv_sina"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_userpro_sina_large" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/otherprofile_bindinfo_iv_sina"
+                    android:layout_alignLeft="@+id/otherprofile_bindinfo_iv_sina"
+                    android:layout_alignRight="@+id/otherprofile_bindinfo_iv_sina"
+                    android:layout_alignTop="@+id/otherprofile_bindinfo_iv_sina"
+                    android:background="@drawable/bg_userpro_press"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </RelativeLayout>
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="新浪微博"
+                android:textColor="@color/notes_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/otherprofile_bindinfo_layout_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:gravity="center_horizontal"
+            android:minWidth="55dip"
+            android:orientation="vertical" 
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/otherprofile_bindinfo_iv_tx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_userpro_tweibo_large" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/otherprofile_bindinfo_iv_tx"
+                    android:layout_alignLeft="@+id/otherprofile_bindinfo_iv_tx"
+                    android:layout_alignRight="@+id/otherprofile_bindinfo_iv_tx"
+                    android:layout_alignTop="@+id/otherprofile_bindinfo_iv_tx"
+                    android:background="@drawable/bg_userpro_press"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </RelativeLayout>
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="腾讯微博"
+                android:textColor="@color/notes_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/otherprofile_bindinfo_layout_renren"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:gravity="center_horizontal"
+            android:minWidth="55dip"
+            android:orientation="vertical" 
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/otherprofile_bindinfo_iv_renren"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_userpro_renren_large" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/otherprofile_bindinfo_iv_renren"
+                    android:layout_alignLeft="@+id/otherprofile_bindinfo_iv_renren"
+                    android:layout_alignRight="@+id/otherprofile_bindinfo_iv_renren"
+                    android:layout_alignTop="@+id/otherprofile_bindinfo_iv_renren"
+                    android:background="@drawable/bg_userpro_press"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </RelativeLayout>
+
+            <com.immomo.momo.android.view.HandyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="人人网"
+                android:textColor="@color/notes_color" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

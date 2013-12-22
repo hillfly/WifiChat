@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="52dip"
+    android:gravity="bottom"
+    android:orientation="horizontal"
+    android:paddingBottom="2dip"
+    android:paddingLeft="4dip"
+    android:paddingRight="4dip"
+    android:paddingTop="2dip" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dip"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/chat_textditor_ib_plus"
+            android:layout_width="36dip"
+            android:layout_height="46dip"
+            android:layout_marginRight="4dip"
+            android:background="@drawable/btn_chatbtn2"
+            android:src="@drawable/ic_chat_plus_normal" />
+
+        <RelativeLayout
+            android:layout_width="36dip"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/chat_textditor_ib_keyboard"
+                android:layout_width="fill_parent"
+                android:layout_height="46dip"
+                android:background="@drawable/btn_chatbtn2"
+                android:src="@drawable/ic_chat_keyboard_normal" />
+
+            <ImageButton
+                android:id="@+id/chat_textditor_ib_emote"
+                android:layout_width="fill_parent"
+                android:layout_height="46dip"
+                android:background="@drawable/btn_chatbtn2"
+                android:src="@drawable/ic_chat_emote_normal" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.immomo.momo.android.view.EmoticonsEditText
+        android:id="@+id/chat_textditor_eet_editer"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/edittext_sendmsg"
+        android:gravity="center_vertical"
+        android:imeOptions="flagNoExtractUi"
+        android:maxHeight="120dip"
+        android:maxLength="4000"
+        android:minHeight="46dip"
+        android:paddingTop="3dip" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/chat_textditor_btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="46dip"
+            android:layout_marginLeft="4dip"
+            android:background="@drawable/btn_chatbtn3"
+            android:minWidth="50dip"
+            android:text="发送"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/chat_textditor_iv_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="46dip"
+            android:layout_marginLeft="4dip"
+            android:background="@drawable/btn_chatbtn2"
+            android:clickable="true"
+            android:minWidth="50dip"
+            android:src="@drawable/ic_chat_audio_normal" />
+    </LinearLayout>
+
+</LinearLayout>

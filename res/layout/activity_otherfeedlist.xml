@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_undercard" >
+
+    <include
+        android:id="@+id/otherfeedlist_header"
+        layout="@layout/include_header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/otherfeedlist_header"
+        android:orientation="vertical" >
+
+        <com.immomo.momo.android.view.MoMoRefreshListView
+            android:id="@+id/otherfeedlist_mmrlv_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@null"
+            android:fadingEdge="none"
+            android:listSelector="@drawable/list_selector_transition" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otherfeedlist_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="true" />
+
+</RelativeLayout>

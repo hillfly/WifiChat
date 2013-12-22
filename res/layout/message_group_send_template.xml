@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:minHeight="40dip"
+    android:orientation="vertical"
+    android:paddingBottom="4dip"
+    android:paddingTop="4dip" >
+
+    <include layout="@layout/message_timestamp" />
+
+    <LinearLayout
+        android:id="@+id/message_layout_contentcontainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/message_layout_leftcontainer"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right" >
+
+            <View
+                android:id="@+id/left_margin_view"
+                android:layout_width="52dip"
+                android:layout_height="1dip" />
+
+            <LinearLayout
+                android:id="@+id/message_layout_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/left_margin_view"
+                android:layout_marginRight="3dip"
+                android:layout_marginTop="8dip">
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/message_htv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:paddingBottom="4dip"
+                    android:paddingLeft="8dip"
+                    android:paddingRight="8dip"
+                    android:paddingTop="4dip"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_layout_messagecontainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/left_margin_view"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="10dip" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/message_layout_rightcontainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dip"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/message_iv_userphoto"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

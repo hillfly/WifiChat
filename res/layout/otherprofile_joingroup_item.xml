@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bglistitem_selector_user"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="2dip" >
+
+    <ImageView
+        android:id="@+id/joingroup_item_avatar"
+        android:layout_width="36dip"
+        android:layout_height="36dip"
+        android:focusable="false"
+        android:scaleType="fitXY" />
+
+    <com.immomo.momo.android.view.EmoticonsTextView
+        android:id="@+id/joingroup_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="7dip"
+        android:layout_marginRight="7dip"
+        android:layout_toLeftOf="@+id/joingroup_item_owner"
+        android:layout_toRightOf="@+id/joingroup_item_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/font_attribute"
+        android:textSize="16sp" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/joingroup_item_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="1dip"
+        android:layout_marginRight="1dip"
+        android:background="@drawable/bg_grouplist_ower"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        android:text="群主"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

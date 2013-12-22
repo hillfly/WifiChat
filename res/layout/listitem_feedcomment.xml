@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bglistitem_selector_feedcomments"
+        android:paddingBottom="5.0dip"
+        android:paddingLeft="12.0dip"
+        android:paddingRight="12.0dip"
+        android:paddingTop="5.0dip" >
+
+        <ImageView
+            android:id="@+id/feedcomment_item_iv_avatar"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/bg_message_photo"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_common_def_header" />
+
+        <com.immomo.momo.android.view.EmoticonsTextView
+            android:id="@+id/feedcomment_item_etv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/feedcomment_item_iv_avatar"
+            android:singleLine="true"
+            android:textColor="@color/font_attribute"
+            android:textSize="14sp" />
+
+        <com.immomo.momo.android.view.EmoticonsTextView
+            android:id="@+id/feedcomment_item_etv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/feedcomment_item_etv_name"
+            android:layout_below="@id/feedcomment_item_etv_name"
+            android:layout_marginBottom="5dip"
+            android:textColor="@color/font_value"
+            android:textSize="14sp" />
+
+        <com.immomo.momo.android.view.HandyTextView
+            android:id="@+id/feedcomment_item_htv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/feedcomment_item_etv_name"
+            android:drawablePadding="2dip"
+            android:textColor="@color/font_value"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/devideline_undercard" />
+
+</RelativeLayout>

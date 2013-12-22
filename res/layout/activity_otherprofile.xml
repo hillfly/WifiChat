@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_normal" >
+
+    <include
+        android:id="@+id/otherprofile_header"
+        android:layout_alignParentTop="true"
+        layout="@layout/include_header" />
+
+    <com.immomo.momo.android.view.PagerScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/otherprofile_bottom"
+        android:layout_below="@+id/otherprofile_header"
+        android:fadingEdge="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <include layout="@layout/include_otherprofile_photos" />
+
+            <include layout="@layout/include_otherprofile_feed" />
+
+            <include layout="@layout/include_otherprofile_accountinfo" />
+
+            <include layout="@layout/include_otherprofile_bindinfo" />
+
+            <include layout="@layout/include_otherprofile_selfintroduction" />
+
+            <include layout="@layout/include_otherprofile_joingroup" />
+        </LinearLayout>
+    </com.immomo.momo.android.view.PagerScrollView>
+
+    <include
+        android:id="@+id/otherprofile_bottom"
+        layout="@layout/include_otherprofile_bottom" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otherprofile_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="false" />
+
+</RelativeLayout>

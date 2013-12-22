@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="130dip"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dropmenu_up"
+    android:orientation="vertical" >
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/dialog_chat_htv_voicemode"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_listitem_selector"
+        android:padding="10dip"
+        android:text="语音收听方式"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/dialog_divider" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/dialog_chat_htv_create"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_listitem_selector"
+        android:padding="10dip"
+        android:text="创建多人对话"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/dialog_divider" />
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/dialog_chat_htv_synchronous"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_listitem_selector"
+        android:padding="10dip"
+        android:text="同步聊天消息"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+</LinearLayout>

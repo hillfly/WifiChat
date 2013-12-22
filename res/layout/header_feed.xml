@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_undercard"
+    android:orientation="vertical"
+    android:paddingTop="10dip" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card_normal"
+            android:duplicateParentState="false" >
+
+            <RelativeLayout
+                android:id="@+id/header_feed_layout_top"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dip" >
+
+                <RelativeLayout
+                    android:id="@+id/header_feed_layout_timeroot"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="6dip" >
+
+                    <ImageView
+                        android:id="@+id/header_feed_iv_avatar"
+                        android:layout_width="36dip"
+                        android:layout_height="36dip"
+                        android:layout_alignParentLeft="true"
+                        android:focusable="false"
+                        android:scaleType="fitXY"/>
+
+                    <LinearLayout
+                        android:id="@+id/header_feed_layout_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center" >
+
+                        <TextView
+                            android:id="@+id/header_feed_tv_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_value"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dip"
+                        android:layout_toLeftOf="@+id/header_feed_layout_time"
+                        android:layout_toRightOf="@+id/header_feed_iv_avatar"
+                        android:gravity="center_vertical"
+                        android:minHeight="36dip"
+                        android:orientation="vertical" >
+
+                        <com.immomo.momo.android.view.EmoticonsTextView
+                            android:id="@+id/header_feed_etv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textColor="@color/font_value"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dip"
+                            android:orientation="horizontal" >
+
+                            <LinearLayout
+                                android:id="@+id/header_feed_layout_gender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dip"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:paddingBottom="2dip"
+                                android:paddingLeft="5dip"
+                                android:paddingRight="5dip"
+                                android:paddingTop="2dip" >
+
+                                <ImageView
+                                    android:id="@+id/header_feed_iv_gender"
+                                    android:layout_width="8dip"
+                                    android:layout_height="8dip"
+                                    android:scaleType="fitXY"/>
+
+                                <com.immomo.momo.android.view.HandyTextView
+                                    android:id="@+id/header_feed_htv_age"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dip"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_vip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_vip"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_group_role"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_group" 
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_industry"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_weibo"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_weibo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_weibo" 
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_txweibo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_tweibo" 
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_renren"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_renren" 
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_device"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_apple"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_relation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_bothfollow" 
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/user_item_iv_icon_multipic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dip"
+                                android:layout_marginRight="1dip"
+                                android:src="@drawable/ic_userinfo_multipic"
+                                android:visibility="gone" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <com.immomo.momo.android.view.EmoticonsTextView
+                    android:id="@+id/header_feed_etv_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/header_feed_layout_timeroot"
+                    android:lineSpacingMultiplier="1.3"
+                    android:textColor="@color/font_attribute"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/header_feed_iv_content"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
+                    android:layout_below="@+id/header_feed_etv_content"
+                    android:layout_marginTop="3dip"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_below="@+id/header_feed_layout_top"
+                android:background="@drawable/bg_card_inner_bottom_normal" >
+
+                <LinearLayout
+                    android:id="@+id/header_feed_layout_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_card_inner_bottom_right"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:minWidth="50dip"
+                    android:padding="5dip" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dip"
+                        android:src="@drawable/ic_feed_comment_highlight" />
+
+                    <TextView
+                        android:id="@+id/header_feed_tv_commentcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dip"
+                        android:background="@null"
+                        android:textColor="@color/orange"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="fill_parent"
+                    android:layout_toLeftOf="@+id/header_feed_layout_comment"
+                    android:background="#ffdfdfdf"
+                    android:focusable="false" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="20dip"
+                    android:layout_toLeftOf="@+id/header_feed_layout_comment"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dip"
+                        android:paddingTop="2dip"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_user_location" />
+
+                    <TextView
+                        android:id="@+id/header_feed_tv_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:duplicateParentState="true"
+                        android:ellipsize="middle"
+                        android:gravity="right"
+                        android:singleLine="true"
+                        android:textColor="@color/font_value"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/header_feed_layout_loading"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="12dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="-5dip" 
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/header_feed_tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="评论加载中"
+            android:textColor="@color/font_value"
+            android:textColorHint="@color/white"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/header_feed_iv_loading"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_marginRight="5dip"
+            android:layout_toLeftOf="@+id/header_feed_tv_loading"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_loading" />
+    </RelativeLayout>
+
+</LinearLayout>

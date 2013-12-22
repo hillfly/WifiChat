@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fadingEdge="none"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="15dip" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal" >
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/reg_phone_htv_areacode"
+                    android:layout_width="100dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/edittext_default"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="+86"
+                    android:textColor="@color/font_value"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/reg_phone_et_phone"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/edittext_default"
+                    android:hint="输入手机号码"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="16"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" >
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/reg_phone_htv_notice"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8.0dip"
+                    android:background="#fffceec3"
+                    android:ellipsize="start"
+                    android:gravity="center"
+                    android:padding="3dip"
+                    android:singleLine="true"
+                    android:text="186 8134 1780"
+                    android:textColor="#fff4a900"
+                    android:textSize="35sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/reg_phone_layout_note"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@+id/reg_phone_htv_notice"
+                    android:orientation="vertical"
+                    android:paddingBottom="50dip" >
+
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:id="@+id/reg_phone_htv_note"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:layout_marginTop="8dip"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="注册即表示你同意 陌陌用户协议。违反协议的用户可能会被限制使用，请查看协议并约束行为"
+                        android:textColor="@color/notes_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

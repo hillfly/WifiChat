@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="left" >
+
+    <ImageView
+        android:id="@+id/message_iv_msgimage"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginRight="1dip"
+        android:gravity="center_vertical"
+        android:src="@drawable/ic_common_def_header"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/message_layout_loading"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="59dip"
+            android:layout_height="46dip"
+            android:layout_gravity="center"
+            android:layout_margin="15dip"
+            android:src="@drawable/ic_chat_def_pic" />
+
+        <ImageView
+            android:id="@+id/message_iv_loading"
+            android:layout_width="29dip"
+            android:layout_height="5dip"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10px"
+            android:src="@drawable/ic_loading_msgplus_02" />
+    </LinearLayout>
+
+    <com.immomo.momo.android.view.HandyTextView
+        android:id="@+id/message_htv_loading_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_download_process_bar"
+        android:paddingBottom="2dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="2dip"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="guide_content">
+        <item>@drawable/index_content_1</item>
+        <item>@drawable/index_content_2</item>
+        <item>@drawable/index_content_3</item>
+        <item>@drawable/index_content_4</item>
+        <item>@drawable/index_content_5</item>
+    </array>
+    <array name="guide_bottom">
+        <item>@drawable/index_bottom_1</item>
+        <item>@drawable/index_bottom_2</item>
+        <item>@drawable/index_bottom_3</item>
+        <item>@drawable/index_bottom_4</item>
+        <item>@drawable/index_bottom_5</item>
+    </array>
+    <array name="guide_backgroud">
+        <item>@drawable/index_intro_bg</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>@drawable/index_intro_bg</item>
+    </array>
+
+    <string-array name="chat_audio_type">
+        <item>智能切换</item>
+        <item>扬声器模式(免提)</item>
+        <item>听筒模式</item>
+    </string-array>
+    <string-array name="onlinestate_type">
+        <item>在线</item>
+        <item>忙碌</item>
+        <item>隐身</item>
+        <item>离线</item>     
+    </string-array>
+    <string-array name="reportfeed_items">
+        <item>骚扰信息</item>
+        <item>虚假身份</item>
+        <item>广告欺诈</item>
+        <item>不当发言</item>
+    </string-array>
+
+</resources>

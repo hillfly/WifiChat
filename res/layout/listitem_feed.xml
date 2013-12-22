@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip" >
+
+    <RelativeLayout
+        android:id="@+id/feed_item_layout_root"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card"
+        android:clickable="true" >
+
+        <RelativeLayout
+            android:id="@+id/feed_item_layout_topcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip" >
+
+            <RelativeLayout
+                android:id="@+id/feed_item_layout_avatar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="6dip" >
+
+                <ImageView
+                    android:id="@+id/feed_item_iv_avatar"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_alignParentLeft="true"
+                    android:focusable="false"
+                    android:scaleType="fitXY" />
+
+                <LinearLayout
+                    android:id="@+id/feed_item_layout_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center" >
+
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:id="@+id/feed_item_htv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_value"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip"
+                    android:layout_toLeftOf="@+id/feed_item_layout_time"
+                    android:layout_toRightOf="@+id/feed_item_iv_avatar"
+                    android:gravity="center_vertical"
+                    android:minHeight="36dip"
+                    android:orientation="vertical" >
+
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:id="@+id/feed_item_htv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/font_value"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <com.immomo.momo.android.view.EmoticonsTextView
+                android:id="@+id/feed_item_etv_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/feed_item_layout_avatar"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="3dip"
+                android:textColor="@color/font_attribute"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/feed_item_iv_content"
+                android:layout_width="80dip"
+                android:layout_height="80dip"
+                android:layout_below="@+id/feed_item_etv_content"
+                android:layout_marginTop="3dip"
+                android:scaleType="centerCrop" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/feed_item_layout_bottomcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_below="@+id/feed_item_layout_topcontent"
+            android:background="@drawable/bg_card_inner_bottom"
+            android:duplicateParentState="true" >
+
+            <ImageButton
+                android:id="@+id/feed_item_ib_more"
+                android:layout_width="50dip"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_card_inner_bottom_right"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/ic_feed_more" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/feed_item_ib_more"
+                android:background="#ffdfdfdf"
+                android:focusable="false" />
+
+            <LinearLayout
+                android:id="@+id/feed_item_layout_commentcount"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/feed_item_ib_more"
+                android:background="@drawable/bg_card_inner_bottom_center"
+                android:gravity="center"
+                android:minWidth="50dip" 
+                android:clickable="true">
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="fill_parent"
+                    android:background="#ffdfdfdf" />
+
+                <LinearLayout
+                    android:id="@+id/feed_item_layout_comment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dip" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dip"
+                        android:src="@drawable/ic_feed_comment" />
+
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:id="@+id/feed_item_htv_commentcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dip"
+                        android:background="@null"
+                        android:textColor="@color/font_value"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/feed_item_layout_site"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="20dip"
+                android:layout_toLeftOf="@+id/feed_item_layout_commentcount"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dip"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_user_location" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/feed_item_htv_site"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:duplicateParentState="true"
+                    android:ellipsize="middle"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:textColor="@color/feed_site_textcolor"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

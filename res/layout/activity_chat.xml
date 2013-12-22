@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg_chat_repeat" >
+
+    <include
+        android:id="@+id/chat_header"
+        layout="@layout/include_header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/chat_header" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <com.immomo.momo.android.view.ChatListView
+                android:id="@+id/chat_clv_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@+id/chat_layout_editor"
+                android:cacheColorHint="@color/transparent"
+                android:divider="#00000000"
+                android:dividerHeight="0dip"
+                android:fadingEdge="none"
+                android:listSelector="@drawable/list_selector_transition"
+                android:paddingLeft="4dip"
+                android:paddingRight="4dip"
+                android:scrollbars="none"
+                android:scrollingCache="false" />
+
+            <LinearLayout
+                android:id="@+id/chat_layout_editor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/chat_layout_emote"
+                android:background="@drawable/bg_chatbar_textmode"
+                android:orientation="vertical" >
+
+                <com.immomo.momo.android.view.ScrollLayout
+                    android:id="@+id/chat_slayout_scroll"
+                    android:layout_width="fill_parent"
+                    android:layout_height="52dip" >
+
+                    <include layout="@layout/include_message_textditor" />
+
+                    <include layout="@layout/include_message_audioditor" />
+                </com.immomo.momo.android.view.ScrollLayout>
+
+                <LinearLayout
+                    android:id="@+id/chat_layout_rounds"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dip"
+                    android:layout_marginTop="2dip"
+                    android:focusable="false"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/chat_layout_emote"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/msg_editor_backgroud" >
+
+                <com.immomo.momo.android.view.EmoteInputView
+                    android:id="@+id/chat_eiv_inputview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <include layout="@layout/include_fullscreen_mask" />
+
+            <include
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/chat_layout_editor"
+                android:layout_marginBottom="5dip"
+                android:layout_marginLeft="5dip"
+                layout="@layout/message_plus" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

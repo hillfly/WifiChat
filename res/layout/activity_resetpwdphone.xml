@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_normal" >
+
+    <include
+        android:id="@+id/resetpwdphone_header"
+        layout="@layout/include_header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/resetpwdphone_header"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scrollbars="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip" >
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:padding="10dip"
+                    android:text="第一步：发送重置短信"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/blue"
+                    android:orientation="vertical" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/resetpwdphone_htv_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:layout_marginTop="8dip"
+                    android:text="使用已绑定的手机号,编辑短信内容MMCZ发送到106902291602。收到短信验证码后,继续以下操作。此操作仅扣取正常短信费用。"
+                    android:textColor="@color/font_attribute"
+                    android:textSize="18sp" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:padding="10dip"
+                    android:text="第二步：设置新密码"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/blue"
+                    android:orientation="vertical" />
+
+                <EditText
+                    android:id="@+id/resetpwdphone_et_validatecode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:layout_marginTop="8dip"
+                    android:background="@drawable/edittext_default"
+                    android:hint="输入短信验证码"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+                <com.immomo.momo.android.view.HandyTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:singleLine="true"
+                    android:text="如长时间收不到验证码，请重新操作"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/resetpwdphone_et_newpwd"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:layout_marginTop="20dip"
+                    android:background="@drawable/edittext_default"
+                    android:hint="输入新密码"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLength="16"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/resetpwdphone_et_renewpwd"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:background="@drawable/edittext_default"
+                    android:hint="再次输入新密码"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLength="16"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_unlogin_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dip"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="4dip" >
+
+            <Button
+                android:id="@+id/resetpwdphone_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginRight="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="返    回"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/resetpwdphone_btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginLeft="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="提    交"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/resetpwdphone_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="false" />
+
+</RelativeLayout>
