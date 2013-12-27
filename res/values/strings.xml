@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WifiChat</string>    
-    <string name="cancel">取消</string> 
-    <string name="sure">确认</string>
-    <string name="confirm">确定</string>   
-    <string name="notify">提示</string>  
+    <string name="app_name">WifiChat</string> 
     <string name="wt">创建连接</string>
     <string name="connect">点击连接</string>
     <string name="disconnect">点击断开</string>
@@ -19,7 +15,7 @@
     <string name="opened_ap_prompt">是否关闭当前热点去搜索其他热点？</string>
     <string name="close_ap_prompt">您确定需要关闭热点？</string>
     <string name="wt_connect_ok">热点连接成功</string>
-    <string name="pre_wt_connect_ok">热点创建成功！</string>
-    <string name="middle_wt_connect_ok">\n热点名：</string>
-    <string name="suf_wt_connect_ok">\n连接密码：wifichat123</string>
+    <string name="create_connect_ok">热点创建成功！</string>
+    <string name="ssid_connect_ok">\n热点名：</string>
+    <string name="password_connect_ok">\n连接密码：wifichat123</string>
 </resources>
