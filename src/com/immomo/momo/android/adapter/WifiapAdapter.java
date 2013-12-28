@@ -25,6 +25,7 @@ public class WifiapAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ScanResult> mList;
     private Context mContext;
+    private final String TAG = "SZU_Wifiap";
 
     public WifiapAdapter(Context context, List<ScanResult> list) {
         this.mContext = context;
@@ -35,7 +36,7 @@ public class WifiapAdapter extends BaseAdapter {
     // 新加的一个函数，用来更新数据
     public void setData(List<ScanResult> list) {
         this.mList = list;
-        Log.i("wifiap", "m_listWifi size = " + mList.size());
+        Log.i(TAG, "m_listWifi size = " + mList.size());
         notifyDataSetChanged();
     }
 
