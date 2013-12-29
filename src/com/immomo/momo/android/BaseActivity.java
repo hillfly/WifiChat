@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings.Global;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,7 +26,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected BaseApplication mApplication;
 	protected NetWorkUtils mNetWorkUtils;
 	protected FlippingLoadingDialog mLoadingDialog;
-
+    protected String GlobalSharedName = "myConnectionInfo"; // 全局SharedPreferences文件名
 	/**
 	 * 屏幕的宽度、高度、密度
 	 */
