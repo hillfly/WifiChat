@@ -30,3 +30,4 @@ proguard/
 
 # Other
 lint.xml
+.gitignore
