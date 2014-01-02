@@ -11,20 +11,20 @@ import android.util.Log;
 public class WifiapBroadcast extends BroadcastReceiver {
     public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
     private NetworkInfo mNetworkInfo;
-    private final String TAG = "SZU_WifiStatus";
+    private final String TAG = "SZU_WifiaoBroadcase";
 
     public void onReceive(Context paramContext, Intent paramIntent) {
 
         // 搜索到wifi热点
         if (paramIntent.getAction().equals("android.net.wifi.SCAN_RESULTS")) {
-            Log.i(TAG, "android.net.wifi.SCAN_RESULTS");
+            Log.d(TAG, "android.net.wifi.SCAN_RESULTS");
             for (int j = 0; j < ehList.size(); j++)
                 ((EventHandler) ehList.get(j)).scanResultsAvailable();
 
         // wifi打开或关闭
         } else if (paramIntent.getAction().equals(
                 "android.net.wifi.WIFI_STATE_CHANGED")) {
-            Log.i(TAG, "android.net.wifi.WIFI_STATE_CHANGED | "
+            Log.d(TAG, "android.net.wifi.WIFI_STATE_CHANGED | "
                     + paramIntent.getIntExtra("wifi_state", -1) + " | "
                     + paramIntent.getIntExtra("previous_wifi_state", -1));
             for (int j = 0; j < ehList.size(); j++)
@@ -34,7 +34,7 @@ public class WifiapBroadcast extends BroadcastReceiver {
         } else if (paramIntent.getAction().equals(
                 "android.net.wifi.STATE_CHANGE")) {
             mNetworkInfo = paramIntent.getParcelableExtra("networkInfo");
-            Log.i(TAG, "android.net.wifi.STATE_CHANGE | "
+            Log.d(TAG, "android.net.wifi.STATE_CHANGE | "
                     + mNetworkInfo.getDetailedState());
 
             // 当 DetailedState 变化为 CONNECTED 时，说明已连接成功，则通知Handler更新

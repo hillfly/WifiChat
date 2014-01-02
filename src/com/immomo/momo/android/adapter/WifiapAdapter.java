@@ -25,7 +25,7 @@ public class WifiapAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ScanResult> mList;
     private Context mContext;
-    private final String TAG = "SZU_Wifiap";
+    private final String TAG = "SZU_WifiapAdapter";
 
     public WifiapAdapter(Context context, List<ScanResult> list) {
         this.mContext = context;

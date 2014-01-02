@@ -24,14 +24,9 @@ import com.immomo.momo.android.dialog.SimpleListDialog.onSimpleListItemClickList
 import com.immomo.momo.android.view.HandyTextView;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
-import com.immomo.momo.sql.userDAO;
-import com.immomo.momo.sql.userInfo;
 
 public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener {
-
-    private userDAO mUserDAO; // 数据库操作实例
-    private userInfo mUserInfo; // 用户信息类实例
 
     private HeaderLayout mHeaderLayout;
     private LinearLayout mLlayoutMain; // 首次登陆主界面
@@ -54,14 +49,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private int mAvatar;
     private int mOnlineStateInt = 0; // 默认登录状态编号
     private String[] mOnlineStateType;
-    private static final String TAG = "SZU_login";
+    private static final String TAG = "SZU_loginActivity";
 
     @Override
     protected void onCreate(
             Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        mUserDAO = new userDAO(this); // 实例化数据库操作类
+        setContentView(R.layout.activity_login);      
         mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         initViews();
         initEvents();
@@ -82,7 +76,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
                 Context.MODE_PRIVATE);
         mNickname = mSharedPreferences.getString("Nickname", "");
-
+        
+        // 若mNickname有内容，则读取本地存储的用户信息
         if (mNickname.length() != 0) {
             mTvExistNickmame = (TextView) findViewById(R.id.login_tv_existName);
             mImgExistAvatar = (ImageView) findViewById(R.id.login_img_existImg);
@@ -125,12 +120,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 break;
 
             // 更换用户,清空数据
-            case R.id.login_btn_changeUser:
-                mGender = null;
-                mAvatar = 0;
+            case R.id.login_btn_changeUser:                
                 mNickname = "";
+                mGender = null;
+                mIMEI = null;
                 mOnlineStateStr = "在线"; // 默认登录状态
+                mAvatar = 0;
                 mOnlineStateInt = 0; // 默认登录状态编号
+                mApplication.clearSession(); // 清空Session数据                
                 mLlayoutMain.setVisibility(View.VISIBLE);
                 mLlayoutExistMain.setVisibility(View.GONE);
                 break;
@@ -225,17 +222,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             }
 
             @Override
-            protected Boolean doInBackground(
-                    Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
                     Log.i(TAG, "mNickname:" + mNickname + " mGender:" + mGender + " mOnlineState:"
                             + mOnlineStateStr + "|" + mOnlineStateInt + " mAvatar:" + mAvatar
                             + " IMEI:" + mIMEI);
-
-                    mUserInfo = new userInfo(mNickname, mGender, mIMEI, mOnlineStateInt, mAvatar);
-                    mUserDAO.add(mUserInfo);
-
+                    
                     return true;
                 }
                 catch (Exception e) {
@@ -246,15 +239,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             }
 
             @Override
-            protected void onPostExecute(
-                    Boolean result) {
+            protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (result) {
-                    Intent intent = new Intent(LoginActivity.this, WifiapActivity.class);
-                    intent.putExtra("mIMEI", mIMEI).putExtra("mNickname", mNickname)
-                            .putExtra("mGender", mGender).putExtra("mAvatar", mAvatar)
-                            .putExtra("mOnlineStateInt", mOnlineStateInt);
+                if (result) {                    
+                    mApplication.setIMEI(mIMEI);
+                    mApplication.setNickname(mNickname);
+                    mApplication.setGender(mGender);
+                    mApplication.setAvatar(mAvatar);
+                    mApplication.setOnlineStateInt(mOnlineStateInt);
+                    
+                    Intent intent = new Intent(LoginActivity.this, WifiapActivity.class);         
                     startActivity(intent);
                     finish();
                 }

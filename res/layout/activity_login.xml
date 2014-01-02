@@ -142,7 +142,7 @@
 			android:orientation="vertical"
 			android:paddingLeft="10dip"
 			android:paddingRight="10dip"
-			android:paddingTop="15dip" 
+			android:paddingTop="15dip"
 			android:visibility="gone" >
 
 			<RelativeLayout
@@ -156,9 +156,9 @@
 					android:layout_height="wrap_content"
 					android:layout_centerInParent="true"
 					android:adjustViewBounds="true"
-					android:background="@drawable/bg_avatar_corners"
-					android:maxHeight="190dp"
-					android:maxWidth="190dp"
+					android:background="@drawable/corners_avatar"
+					android:maxHeight="210dp"
+					android:maxWidth="210dp"
 					android:padding="10dp" />
 
 				<TextView
@@ -167,28 +167,26 @@
 					android:layout_height="wrap_content"
 					android:layout_below="@id/login_img_existImg"
 					android:layout_centerHorizontal="true"
-					android:layout_marginTop="7dp"				
-					android:textSize="16sp" />
-
-			<!-- 	<View
-					android:layout_width="fill_parent"
-					android:layout_height="1dip"
-					android:layout_below="@id/login_tv_existName"
-					android:layout_marginTop="30dp"
-					android:background="@color/devideline" /> -->
-				
+					android:layout_marginTop="7dp"
+					android:textSize="18sp" />
 			</RelativeLayout>
+
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="1dip"
+				android:layout_marginTop="15dp"
+				android:background="@color/devideline" />
 
 			<Button
 				android:id="@+id/login_btn_changeUser"
-				android:layout_width="100dp"
-				android:layout_height="40dp"				
+				android:layout_width="160dp"
+				android:layout_height="50dp"
 				android:layout_gravity="center"
-				android:layout_marginTop="20dp"
-				android:background="@drawable/btn_default_white"
-				android:text="更换账户"
-				android:textColor="#ff465579" />
-			
+				android:layout_marginTop="15dp"
+				android:background="@drawable/btn_default"
+				android:text="更  换  账  户"
+				android:textColor="#636363"
+				android:textSize="20sp" />
 		</LinearLayout>
 
 		<LinearLayout
