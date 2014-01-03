@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
@@ -126,7 +125,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 localIPaddress = m_wiFiAdmin.getLocalIPAddress();
                 serverIPaddres = m_wiFiAdmin.getServerIPAddress();
 
-                Log.i(TAG, "localIPaddress:" + localIPaddress
+                showLogInfo(TAG, "localIPaddress:" + localIPaddress
                         + " serverIPaddres:" + serverIPaddres);
 
                 break;
@@ -152,12 +151,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     localIPaddress = m_wiFiAdmin.getServerIPAddress(); // 获取本地IP
                     serverIPaddres = localIPaddress; // 热点IP与本机IP相同
 
-                    Log.i(TAG, "localIPaddress:" + localIPaddress
+                    showLogInfo(TAG, "localIPaddress:" + localIPaddress
                             + " serverIPaddres:" + serverIPaddres);
                 } else {
                     m_btnCreateWT.setVisibility(View.VISIBLE);
-                    m_btnCreateWT
-                            .setBackgroundResource(R.drawable.wifiap_create);
+                    m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
                     m_textVPromptAP.setText(R.string.create_ap_fail);
                 }
                 break;
@@ -266,7 +264,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         m_listWifi.add(m_wiFiAdmin.mWifiManager
                                 .getScanResults().get(i));
                 }
-                Log.i(TAG, "wifi size:"
+                showLogInfo(TAG, "wifi size:"
                         + m_wiFiAdmin.mWifiManager.getScanResults().size());
             }
             m_wTAdapter.setData(m_listWifi);
@@ -342,7 +340,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
      * 
      * @return boolean 返回是否为正确， 正确(true),不正确(false)
      */
-    private boolean validate() {
+    private boolean isValidated() {
         String NullIP = "0.0.0.0";
         if (localIPaddress.equals(NullIP) || serverIPaddres.equals(NullIP)) {
             showCustomToast("请创建热点或者连接一个热点");
@@ -352,15 +350,15 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     }
 
     /** 执行登陆 **/
-    private void login() {
-        if ((!validate())) {
+    private void doLogin() {
+        if ((!isValidated())) {
             return;
         }
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                showLoadingDialog("正在配置连接信息...");
+                showLoadingDialog("正在存储连接信息...");
             }
 
             @Override
@@ -381,14 +379,12 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setIsOnline(mOnlineStateInt);
                         mUserInfo.setName(mNickname);
                         mUserInfo.setSex(mGender);
-                        mUserDAO.update(mUserInfo);
-                        mUserDAO.close();
+                        mUserDAO.update(mUserInfo);                        
                     } else {
                         mUserInfo = new userInfo(mNickname, 0, mGender, mIMEI,
                                 localIPaddress, mOnlineStateInt, mAvatar);
                         mUserDAO.add(mUserInfo);
-                        mID = mUserDAO.getID(mIMEI); // 返回该用户id
-                        mUserDAO.close();
+                        mID = mUserDAO.getID(mIMEI); // 返回该用户id                     
                     }
                     
                     // 设置全局Session
@@ -407,16 +403,18 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                             .putInt("OnlineStateInt", mOnlineStateInt);
                     mEditor.commit();
                     
-                    Log.i(TAG, "mNickname:" + mNickname + " mGender:" + mGender
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:" + mGender
                             + " mOnlineStateInt:" + mOnlineStateInt
                             + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
-                    Log.i(TAG, "ID:" + mID + " isClient:" + isClient + " serverIPaddress:"
+                    showLogInfo(TAG, "ID:" + mID + " isClient:" + isClient + " serverIPaddress:"
                             + serverIPaddres + " localIPaddress:"
                             + localIPaddress);
 
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    mUserDAO.close();
                 }
                 return false;
             }
@@ -425,13 +423,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (result) {
-                    Intent intent = new Intent(WifiapActivity.this,
-                            MainTabActivity.class);
-                    startActivity(intent);
+                if (result) {                
+                    startActivity(MainTabActivity.class);
                     finish();
                 } else {
-                    showCustomToast("操作失败,请检查软件是否安装正确");
+                    showCustomToast("操作失败,请检查网络是否正常。");
                 }
             }
         });
@@ -659,7 +655,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
         // 下一步按钮
         case R.id.wifiap_btn_login:
             m_Dialog.dismiss();
-            login();
+            doLogin();
             break;
 
         }

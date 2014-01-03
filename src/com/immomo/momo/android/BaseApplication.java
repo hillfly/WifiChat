@@ -426,8 +426,7 @@ public class BaseApplication extends Application {
         GlobalSession.put("OnlineStateInt", "0");
         GlobalSession.put("isClient", "false");
         GlobalSession.put("localIPaddress", "0.0.0.0");
-        GlobalSession.put("serverIPaddress", "0.0.0.0");
-        Log.i("SZU_BaseApplication", "clearSession");
+        GlobalSession.put("serverIPaddress", "0.0.0.0");    
     }
     
 }

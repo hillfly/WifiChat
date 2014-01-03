@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 break;
 
             case R.id.login_btn_next:
-                login_next();
+                doLoginNext();
                 break;
         }
     }
@@ -173,7 +173,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
      * 
      * @return boolean 返回是否为完整， 完整(true),不完整(false)
      */
-    private boolean validate() {
+    private boolean isValidated() {
         mNickname = null;
         mGender = null;
         if (isNull(mEtNickname)) {
@@ -208,9 +208,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
      * 
      * @return boolean 返回是否执行跳转， 是(true),否(false)
      */
-    private void login_next() {
+    private void doLoginNext() {
         if (mNickname.length() == 0)
-            if ((!validate())) {
+            if ((!isValidated())) {
                 return;
             }
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
@@ -225,7 +225,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             protected Boolean doInBackground(Void... params) {
                 try {
                     mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    Log.i(TAG, "mNickname:" + mNickname + " mGender:" + mGender + " mOnlineState:"
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:" + mGender + " mOnlineState:"
                             + mOnlineStateStr + "|" + mOnlineStateInt + " mAvatar:" + mAvatar
                             + " IMEI:" + mIMEI);
                     
@@ -247,10 +247,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                     mApplication.setNickname(mNickname);
                     mApplication.setGender(mGender);
                     mApplication.setAvatar(mAvatar);
-                    mApplication.setOnlineStateInt(mOnlineStateInt);
-                    
-                    Intent intent = new Intent(LoginActivity.this, WifiapActivity.class);         
-                    startActivity(intent);
+                    mApplication.setOnlineStateInt(mOnlineStateInt);                    
+                  
+                    startActivity(WifiapActivity.class);
                     finish();
                 }
                 else {

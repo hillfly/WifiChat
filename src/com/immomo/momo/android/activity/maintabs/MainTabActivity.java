@@ -32,13 +32,14 @@ public class MainTabActivity extends TabActivity {
 
         // 附近
         // common_bottombar_tab_nearby存放该Tab布局，inflate可将xml实例化成View
-        View nearbyView = inflater.inflate(
-                R.layout.common_bottombar_tab_nearby, null);
+        View nearbyView = inflater.inflate(R.layout.common_bottombar_tab_nearby, null);
+        
         //创建TabHost.TabSpec的对象，并设置该对象的tag，最后关联该Tab的View
         TabHost.TabSpec nearbyTabSpec = mTabHost.newTabSpec(
                 NearByActivity.class.getName()).setIndicator(nearbyView); 
         nearbyTabSpec.setContent(new Intent(MainTabActivity.this, // 跳转activity
                 NearByActivity.class));
+        
         mTabHost.addTab(nearbyTabSpec); // 添加该Tab, addTab(TabHost.TabSpec mTabSpec)
 
         // 留言板

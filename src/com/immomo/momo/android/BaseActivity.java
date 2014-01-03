@@ -140,6 +140,11 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected void showLogDebug(String tag, String msg) {
 		Log.d(tag, msg);
 	}
+	
+	/** Info输出Log日志 **/
+    protected void showLogInfo(String tag, String msg) {
+        Log.i(tag, msg);
+    }
 
 	/** Error输出Log日志 **/
 	protected void showLogError(String tag, String msg) {
