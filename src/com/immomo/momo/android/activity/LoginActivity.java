@@ -1,12 +1,11 @@
 package com.immomo.momo.android.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,7 +29,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
     private HeaderLayout mHeaderLayout;
     private LinearLayout mLlayoutMain; // 首次登陆主界面
-    private LinearLayout mLlayoutExistMain; // 缓存的登陆页面
+    private LinearLayout mLlayoutExistMain; // 二次登陆页面
     private HandyTextView mHtvSelectOnlineState;
     private EditText mEtNickname;
     private TextView mTvExistNickmame;
@@ -52,10 +51,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private static final String TAG = "SZU_loginActivity";
 
     @Override
-    protected void onCreate(
-            Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);      
+        setContentView(R.layout.activity_login);
         mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         initViews();
         initEvents();
@@ -76,7 +74,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
                 Context.MODE_PRIVATE);
         mNickname = mSharedPreferences.getString("Nickname", "");
-        
+
         // 若mNickname有内容，则读取本地存储的用户信息
         if (mNickname.length() != 0) {
             mTvExistNickmame = (TextView) findViewById(R.id.login_tv_existName);
@@ -105,8 +103,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     }
 
     @Override
-    public void onClick(
-            View v) {
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_htv_onlinestate:
                 mOnlineStateType = getResources().getStringArray(R.array.onlinestate_type);
@@ -120,14 +117,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 break;
 
             // 更换用户,清空数据
-            case R.id.login_btn_changeUser:                
+            case R.id.login_btn_changeUser:
                 mNickname = "";
                 mGender = null;
                 mIMEI = null;
                 mOnlineStateStr = "在线"; // 默认登录状态
                 mAvatar = 0;
                 mOnlineStateInt = 0; // 默认登录状态编号
-                mApplication.clearSession(); // 清空Session数据                
+                mApplication.clearSession(); // 清空Session数据
                 mLlayoutMain.setVisibility(View.VISIBLE);
                 mLlayoutExistMain.setVisibility(View.GONE);
                 break;
@@ -143,8 +140,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     }
 
     @Override
-    public void onItemClick(
-            int position) {
+    public void onItemClick(int position) {
         mOnlineStateStr = mOnlineStateType[position];
         mOnlineStateInt = position; // 获取在线状态编号
         mHtvSelectOnlineState.requestFocus();
@@ -159,8 +155,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
      *            需要判断是否为空的EditText对象
      * @return boolean 返回是否为空,空(true),非空(false)
      */
-    private boolean isNull(
-            EditText editText) {
+    private boolean isNull(EditText editText) {
         String text = editText.getText().toString().trim();
         if (text != null && text.length() > 0) {
             return false;
@@ -225,10 +220,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             protected Boolean doInBackground(Void... params) {
                 try {
                     mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:" + mGender + " mOnlineState:"
-                            + mOnlineStateStr + "|" + mOnlineStateInt + " mAvatar:" + mAvatar
-                            + " IMEI:" + mIMEI);
-                    
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:" + mGender
+                            + " mOnlineState:" + mOnlineStateStr + "|" + mOnlineStateInt
+                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
+
                     return true;
                 }
                 catch (Exception e) {
@@ -242,13 +237,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (result) {                    
+                if (result) {
                     mApplication.setIMEI(mIMEI);
                     mApplication.setNickname(mNickname);
                     mApplication.setGender(mGender);
                     mApplication.setAvatar(mAvatar);
-                    mApplication.setOnlineStateInt(mOnlineStateInt);                    
-                  
+                    mApplication.setOnlineStateInt(mOnlineStateInt);
+
                     startActivity(WifiapActivity.class);
                     finish();
                 }

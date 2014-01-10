@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings.Global;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,12 +18,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.immomo.momo.android.dialog.FlippingLoadingDialog;
+import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.util.NetWorkUtils;
 import com.immomo.momo.android.view.HandyTextView;
 
 public abstract class BaseActivity extends FragmentActivity {
 	protected BaseApplication mApplication;
-	protected NetWorkUtils mNetWorkUtils;
+	protected NetWorkUtils mNetWorkUtils;    
 	protected FlippingLoadingDialog mLoadingDialog;
     protected String GlobalSharedName = "myConnectionInfo"; // 全局SharedPreferences文件名
 	/**
@@ -39,7 +39,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mApplication = (BaseApplication) getApplication();
+		mApplication = (BaseApplication) getApplication();	
 		mNetWorkUtils = new NetWorkUtils(this);
 		mLoadingDialog = new FlippingLoadingDialog(this, "请求提交中");
 

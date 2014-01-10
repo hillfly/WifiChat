@@ -15,11 +15,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
 import com.immomo.momo.android.entity.NearByGroup;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.socket.UDPSocketThread;
 
 public class BaseApplication extends Application {
     private Bitmap mDefaultAvatar;
@@ -38,17 +36,18 @@ public class BaseApplication extends Application {
     public static List<String> mEmoticons = new ArrayList<String>();
     public static Map<String, Integer> mEmoticonsId = new HashMap<String, Integer>();
     public static List<String> mEmoticons_Zem = new ArrayList<String>();
-    public static List<String> mEmoticons_Zemoji = new ArrayList<String>();
+    public static List<String> mEmoticons_Zemoji = new ArrayList<String>();  
 
-    public LocationClient mLocationClient;
     public double mLongitude;
     public double mLatitude;
-    private Map<String, String> GlobalSession; // 全局Session
-
+    
+    private static Map<String, String> GlobalSession; // 全局Session
+    public UDPSocketThread mUDPSocketThread; // UDP Socket线程类
+   
     @Override
     public void onCreate() {
         super.onCreate();
-        GlobalSession = new HashMap<String, String>(); // 存储用户登陆信息
+        GlobalSession = new HashMap<String, String>(); // 存储用户登陆信息    
         mDefaultAvatar = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_common_def_header);
         for (int i = 1; i < 64; i++) {
@@ -68,27 +67,6 @@ public class BaseApplication extends Application {
             mEmoticonsId.put(emoticonsName, emoticonsId);
         }
 
-        // 获取当前用户位置
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.setAK("60b43d1a9513d904b6aa2948b27b4a20");
-        mLocationClient.registerLocationListener(new BDLocationListener() {
-
-            @Override
-            public void onReceivePoi(BDLocation arg0) {
-
-            }
-
-            @Override
-            public void onReceiveLocation(BDLocation arg0) {
-                mLongitude = arg0.getLongitude();
-                mLatitude = arg0.getLatitude();
-                Log.i("地理位置", "经度:" + mLongitude + ",纬度:" + mLatitude);
-                mLocationClient.stop();
-            }
-        });
-        mLocationClient.start();
-        mLocationClient.requestOfflineLocation();
-        System.out.println("开始获取");
     }
 
     @Override

@@ -49,8 +49,7 @@ public class JsonResolveUtils {
 	public static boolean resolveNearbyPeople(BaseApplication application) {
 		if (application.mNearByPeoples != null
 				&& application.mNearByPeoples.isEmpty()) {
-			String json = TextUtils.getJson(
-					application.getApplicationContext(), NEARBY_PEOPLE);
+			String json = TextUtils.getJson(application.getApplicationContext(), NEARBY_PEOPLE);
 			if (json != null) {
 				try {
 					JSONArray array = new JSONArray(json);

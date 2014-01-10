@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.WifiapActivity;
+import com.immomo.momo.android.activity.wifiap.WifiApConst;
 import com.immomo.momo.android.util.WifiUtils;
 
 public class WifiapAdapter extends BaseAdapter {
@@ -83,14 +84,14 @@ public class WifiapAdapter extends BaseAdapter {
             public void onClick(View v) {
                 WifiConfiguration localWifiConfiguration = wifiAdmin
                         .createWifiInfo(localScanResult.SSID,
-                                WifiapActivity.WIFI_AP_PASSWORD, 3, "wt");
+                                WifiApConst.WIFI_AP_PASSWORD, 3, "wt");
                 wifiAdmin.addNetwork(localWifiConfiguration);
                 viewHolder.textConnect.setVisibility(View.GONE);
                 viewHolder.progressBConnecting.setVisibility(View.VISIBLE);
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);
                 Handler localHandler = ((WifiapActivity) mContext).handler;
                 localHandler.sendEmptyMessageDelayed(
-                        WifiapActivity.m_nApConnected, 3500L);
+                        WifiApConst.ApConnected, 3500L);
             }
         });
         // 点击断开处理事件
@@ -105,7 +106,7 @@ public class WifiapAdapter extends BaseAdapter {
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);
                 Handler localHandler = ((WifiapActivity) mContext).handler;
                 localHandler.sendEmptyMessageDelayed(
-                        WifiapActivity.m_nApConnected, 3500L);
+                        WifiApConst.ApConnected, 3500L);
             }
         });
 
