@@ -22,10 +22,12 @@ public class UDPSocketThread implements Runnable {
     private String mIMEI; // 个人IMEI
     private String mNickname;
     private String mGender;
+    private String mLocalIPaddress;
 
     private byte[] receiveBuffer = new byte[BUFFERLENGTH];
     private byte[] sendBuffer = new byte[BUFFERLENGTH];
 
+    private static BaseApplication mBaseApplication;
     private boolean isThreadRunning = false;
     private Thread mThread;
 
@@ -43,8 +45,9 @@ public class UDPSocketThread implements Runnable {
      * @return instance
      */
     public static UDPSocketThread getInstance(BaseApplication paramApplication) {
+        mBaseApplication = paramApplication;
         if (instance == null) {
-            instance = new UDPSocketThread(paramApplication);
+            instance = new UDPSocketThread();
         }
         return instance;
     }
@@ -55,10 +58,10 @@ public class UDPSocketThread implements Runnable {
      * 
      * @param paramApplication
      */
-    private UDPSocketThread(BaseApplication paramApplication) {
-        mIMEI = paramApplication.getIMEI();
-        mNickname = paramApplication.getNickname();
-        mGender = paramApplication.getGender();
+    private UDPSocketThread() {
+        mIMEI = mBaseApplication.getIMEI();
+        mNickname = mBaseApplication.getNickname();
+        mGender = mBaseApplication.getGender();
     }
 
     @Override
@@ -121,8 +124,8 @@ public class UDPSocketThread implements Runnable {
                     mIPMSGSend.setCommandNo(IPMSGConst.IPMSG_ANSENTRY);
                     mIPMSGSend.setAdditionalSection(mNickname + "\0" + mGender);
 
-                    sendUDPdata(mIPMSGSend.getProtocolString() + "\0", receiveDatagramPacket.getAddress(),
-                            receiveDatagramPacket.getPort());
+                    sendUDPdata(mIPMSGSend.getProtocolString() + "\0",
+                            receiveDatagramPacket.getAddress(), receiveDatagramPacket.getPort());
                     Log.i(TAG, "成功发送上线应答");
                 }
                     break;
@@ -186,7 +189,21 @@ public class UDPSocketThread implements Runnable {
         catch (SocketException e) {
             e.printStackTrace();
         }
+    }
 
+    public void startUDPSocketThread() {
+        if (mThread == null) {
+            mThread = new Thread(this);
+            mThread.start();
+        }
+        isThreadRunning = true;
+        Log.i(TAG, "startUDPSocketThread() 线程启动成功");
+    }
+
+    public void stopUDPSocketThread() {
+        if (mThread != null)
+            mThread.interrupt();
+        Log.i(TAG, "stopUDPSocketThread() 线程停止成功");
     }
 
     /** 用户上线通知 **/
@@ -207,7 +224,6 @@ public class UDPSocketThread implements Runnable {
             e.printStackTrace();
             Log.e(TAG, "notifyOnline() 广播地址有误");
         }
-
     }
 
     /** 用户下线通知 **/
@@ -229,10 +245,9 @@ public class UDPSocketThread implements Runnable {
             e.printStackTrace();
             Log.e(TAG, "noticeOnline()....广播地址有误");
         }
-
     }
 
-    public void sendUDPdata(String sendStr, InetAddress targetIP, int sendPort) {
+    public synchronized void sendUDPdata(String sendStr, InetAddress targetIP, int sendPort) {
         try {
             sendBuffer = sendStr.getBytes("gbk");
             sendDatagramPacket = new DatagramPacket(sendBuffer, sendBuffer.length, targetIP,
@@ -249,21 +264,43 @@ public class UDPSocketThread implements Runnable {
         finally {
             sendDatagramPacket = null;
         }
-
     }
 
-    public void startUDPSocketThread() {
-        if (mThread == null) {
-            mThread = new Thread(this);
-            mThread.start();
+    // 添加用户到Users的Map中
+    private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {
+        mLocalIPaddress = mBaseApplication.getLocalIPaddress();
+        String receiveIP = receiveDatagramPacket.getAddress().getHostAddress();
+        User user = new User();
+        user.setAlias(paramIPMSGProtocol.getSenderIMEI()); // 别名暂定发送者名称
+
+        String extraInfo = paramIPMSGProtocol.getAdditionalSection();
+        String[] userInfo = extraInfo.split("\0"); // 对附加信息进行分割,得到用户名和分组名
+        if (userInfo.length < 1) {
+            user.setUserName(paramIPMSGProtocol.getSenderIMEI());
+            if (receiveIP.equals(mLocalIPaddress))
+                user.setGroupName("自己");
+            else
+                user.setGroupName("对方未分组好友");
         }
-        isThreadRunning = true;
-        Log.i(TAG, "startUDPSocketThread() 线程启动成功");
-    }
+        else if (userInfo.length == 1) {
+            user.setUserName(userInfo[0]);
+            if (receiveIP.equals(mLocalIPaddress))
+                user.setGroupName("自己");
+            else
+                user.setGroupName("对方未分组好友");
+        }
+        else {
+            user.setUserName(userInfo[0]);
+            if (receiveIP.equals(mLocalIPaddress))
+                user.setGroupName("自己");
+            else
+                user.setGroupName(userInfo[1]);
+        }
 
-    public void stopUDPSocketThread() {
-        if (mThread != null)
-            mThread.interrupt();
-        Log.i(TAG, "stopUDPSocketThread() 线程停止成功");
+        user.setIp(receiveIP);
+        user.setHostName(paramIPMSGProtocol.getSenderHost());
+        user.setMac(""); // 暂时没用这个字段
+        users.put(receiveIP, user);
+        Log.i(TAG, "成功添加ip为" + receiveIP + "的用户");
     }
 }

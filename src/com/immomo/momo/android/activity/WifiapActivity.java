@@ -126,8 +126,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     m_createAPProcess.stop();
                     m_progBarCreatingAP.setVisibility(View.GONE);
                     if (((m_wiFiAdmin.getWifiApState() == 3) || (m_wiFiAdmin.getWifiApState() == 13))
-                            && (m_wiFiAdmin.getApSSID()
-                                    .startsWith(WifiApConst.WIFI_AP_HEADER))) {
+                            && (m_wiFiAdmin.getApSSID().startsWith(WifiApConst.WIFI_AP_HEADER))) {
                         m_textVWTPrompt.setVisibility(View.GONE);
                         m_linearLCreateAP.setVisibility(View.VISIBLE);
                         m_btnCreateWT.setVisibility(View.VISIBLE);
@@ -372,7 +371,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setSex(mGender);
                         mUserDAO.update(mUserInfo);
                     }
-                    else {
+                    else {                       
                         mUserInfo = new userInfo(mNickname, 0, mGender, mIMEI, localIPaddress,
                                 mOnlineStateInt, mAvatar);
                         mUserDAO.add(mUserInfo);
@@ -403,7 +402,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                }                
+                }
+                finally {
+                    if(mUserDAO!=null)
+                    mUserDAO.close(); // 关闭数据库连接
+                }
                 return false;
             }
 
@@ -412,7 +415,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 super.onPostExecute(result);
                 dismissLoadingDialog();
                 if (result) {
-                    mUserDAO.close(); // 关闭数据库连接
                     mApplication.mUDPSocketThread.connectUDPSocket(); // 新建Socket线程
                     mApplication.mUDPSocketThread.notifyOnline(); // 发送上线广播
                     startActivity(MainTabActivity.class);
@@ -627,10 +629,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     m_FrameLWTSearchAnimation.stopAnimation();
                 }
                 m_wiFiAdmin.closeWifi();
-                m_wiFiAdmin.createWiFiAP(
-                        m_wiFiAdmin.createWifiInfo(WifiApConst.WIFI_AP_HEADER
-                                + getLocalHostName(), WifiApConst.WIFI_AP_PASSWORD, 3, "ap"),
-                        true);
+                m_wiFiAdmin.createWiFiAP(m_wiFiAdmin.createWifiInfo(WifiApConst.WIFI_AP_HEADER
+                        + getLocalHostName(), WifiApConst.WIFI_AP_PASSWORD, 3, "ap"), true);
                 m_createAPProcess.start();
                 m_listWifi.clear();
                 m_wTAdapter.setData(m_listWifi);
@@ -674,8 +674,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
                         m_imgRadar.setVisibility(View.GONE);
                         m_wiFiAdmin.createWiFiAP(m_wiFiAdmin.createWifiInfo(
-                                m_wiFiAdmin.getApSSID(), WifiApConst.WIFI_AP_PASSWORD, 3,
-                                "ap"), false);
+                                m_wiFiAdmin.getApSSID(), WifiApConst.WIFI_AP_PASSWORD, 3, "ap"),
+                                false);
 
                         m_wiFiAdmin.OpenWifi();
                         m_wtSearchProcess.start();
@@ -719,8 +719,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         if (m_createAPProcess.running)
                             m_createAPProcess.stop();
                         m_wiFiAdmin.createWiFiAP(m_wiFiAdmin.createWifiInfo(
-                                m_wiFiAdmin.getApSSID(), WifiApConst.WIFI_AP_PASSWORD, 3,
-                                "ap"), false);
+                                m_wiFiAdmin.getApSSID(), WifiApConst.WIFI_AP_PASSWORD, 3, "ap"),
+                                false);
                         m_wiFiAdmin.OpenWifi();
                         m_wtSearchProcess.start();
                         m_FrameLWTSearchAnimation.startAnimation();

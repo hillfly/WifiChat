@@ -176,6 +176,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mEtNickname.requestFocus();
             return false;
         }
+        mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
         switch (mRgGender.getCheckedRadioButtonId()) {
             case R.id.login_baseinfo_rb_female:
                 mGender = "女";
@@ -186,8 +187,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             default:
                 showCustomToast("请选择性别");
                 return false;
-        }
-        mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
+        }      
         mAvatar = (int) (Math.random() * 12 + 1); // 获取头像编号
         return true;
     }
@@ -204,10 +204,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
      * @return boolean 返回是否执行跳转， 是(true),否(false)
      */
     private void doLoginNext() {
-        if (mNickname.length() == 0)
+        if (mNickname.length() == 0){
             if ((!isValidated())) {
                 return;
             }
+        }
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
             @Override

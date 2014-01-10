@@ -44,6 +44,7 @@ public class chattingDAO
 		{
 			 ids.add(Integer.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
 		}
+		cursor.close();
 		return ids;
 	}
 	
@@ -63,6 +64,7 @@ public class chattingDAO
 					cursor.getString(cursor.getColumnIndex("chatting")),
 					cursor.getString(cursor.getColumnIndex("date"))));
 		}
+		cursor.close();
 		return infos;
 	}
 	/* 参数：chattinginfo类
@@ -104,10 +106,12 @@ public class chattingDAO
 				"id=?", new String[]{ String.valueOf(id) }, null, null, null);
 		if (cursor.moveToNext())
 		{
-			return new chattingInfo(cursor.getInt(cursor.getColumnIndex("id")),
-					cursor.getInt(cursor.getColumnIndex("sendID")),cursor.getInt(cursor.getColumnIndex("receiverID")),
-					cursor.getString(cursor.getColumnIndex("chatting")),
-					cursor.getString(cursor.getColumnIndex("date")));
+		    chattingInfo chattingInfo=new chattingInfo(cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("sendID")),cursor.getInt(cursor.getColumnIndex("receiverID")),
+                    cursor.getString(cursor.getColumnIndex("chatting")),
+                    cursor.getString(cursor.getColumnIndex("date")));
+		    cursor.close();
+			return chattingInfo;
 		}
 		return null;
 	}
@@ -149,6 +153,7 @@ public class chattingDAO
 					cursor.getString(cursor.getColumnIndex("chatting")),
 					cursor.getString(cursor.getColumnIndex("date"))));
 		}
+		cursor.close();
 		return info;
 	}
 	
@@ -162,7 +167,9 @@ public class chattingDAO
 		{ "count(*)" }, null, null, null, null, null);
 		if (cursor.moveToNext())
 		{
-			return cursor.getLong(0);
+		    long count=cursor.getLong(0);
+		    cursor.close();
+			return count;
 		}
 		return 0;
 	}

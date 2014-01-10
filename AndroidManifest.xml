@@ -149,16 +149,6 @@
             android:screenOrientation="portrait" >
         </activity>
         
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-            <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" >
-                </action>
-            </intent-filter>
-        </service>
-        
         <receiver android:name="com.immomo.momo.android.activity.wifiap.WifiapBroadcast" >
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
