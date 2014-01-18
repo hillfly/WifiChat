@@ -35,7 +35,7 @@
 
 				<EditText
 					android:id="@+id/login_et_nickname"
-					android:layout_width="fill_parent"
+					android:layout_width="wrap_content"
 					android:layout_height="fill_parent"
 					android:layout_marginRight="10dip"
 					android:layout_weight="1"
@@ -43,12 +43,25 @@
 					android:hint="输入您的昵称"
 					android:maxLength="8"
 					android:singleLine="true" />
+				
+				<EditText
+				    android:id="@+id/login_et_age"
+				    android:layout_width="wrap_content"
+				    android:layout_height="fill_parent"
+				    android:layout_weight="2"
+				    android:layout_marginRight="10dip"
+				    android:background="@drawable/edittext_default"	
+				    android:gravity="center"			    
+				    android:hint="年龄"
+				    android:maxLength="3"
+				    android:digits="0123456789"
+				    android:singleLine="true" />
 
 				<com.immomo.momo.android.view.HandyTextView
 					android:id="@+id/login_htv_onlinestate"
-					android:layout_width="fill_parent"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_weight="3"
+					android:layout_weight="2"
 					android:background="@drawable/edittext_default"
 					android:clickable="true"
 					android:gravity="center"

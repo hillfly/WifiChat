@@ -15,16 +15,35 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.immomo.momo.android.entity.CopyOfNearByPeople;
 import com.immomo.momo.android.entity.NearByGroup;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.socket.UDPSocketThread;
 
 public class BaseApplication extends Application {
-    private Bitmap mDefaultAvatar;
     private static final String AVATAR_DIR = "avatar/";
     private static final String PHOTO_ORIGINAL_DIR = "photo/original/";
     private static final String PHOTO_THUMBNAIL_DIR = "photo/thumbnail/";
     private static final String STATUS_PHOTO_DIR = "statusphoto/";
+
+    /** 用户信息常量 **/
+    public static final String ID = "ID";
+    public static final String NICKNAME = "Nickname";
+    public static final String GENDER = "Gender";
+    public static final String IMEI = "IMEI";
+    public static final String AVATAR = "Avatar";
+    public static final String AGE = "Age";
+    public static final String ONLINESTATEINT = "OnlineStateInt";
+    public static final String ISCLIENT = "isClient";
+    public static final String LOCALIPADDRESS = "localIPaddress";
+    public static final String SERVERIPADDRESS = "serverIPaddress";
+    public static final String LOGINTIME = "LoginTime";
+
+    public static Map<String, Integer> mEmoticonsId = new HashMap<String, Integer>();
+    public static List<String> mEmoticons = new ArrayList<String>();
+    public static List<String> mEmoticons_Zem = new ArrayList<String>();
+    public static List<String> mEmoticons_Zemoji = new ArrayList<String>();
+
     public Map<String, SoftReference<Bitmap>> mAvatarCache = new HashMap<String, SoftReference<Bitmap>>();
     public Map<String, SoftReference<Bitmap>> mPhotoOriginalCache = new HashMap<String, SoftReference<Bitmap>>();
     public Map<String, SoftReference<Bitmap>> mPhotoThumbnailCache = new HashMap<String, SoftReference<Bitmap>>();
@@ -33,21 +52,18 @@ public class BaseApplication extends Application {
     public List<NearByPeople> mNearByPeoples = new ArrayList<NearByPeople>();
     public List<NearByGroup> mNearByGroups = new ArrayList<NearByGroup>();
 
-    public static List<String> mEmoticons = new ArrayList<String>();
-    public static Map<String, Integer> mEmoticonsId = new HashMap<String, Integer>();
-    public static List<String> mEmoticons_Zem = new ArrayList<String>();
-    public static List<String> mEmoticons_Zemoji = new ArrayList<String>();  
-
     public double mLongitude;
     public double mLatitude;
-    
+    private Bitmap mDefaultAvatar;
+
     private static Map<String, String> GlobalSession; // 全局Session
+    public Map<String, CopyOfNearByPeople> OnlineUsers; // 当前所有用户的集合，以IP为KEY
     public UDPSocketThread mUDPSocketThread; // UDP Socket线程类
-   
+
     @Override
     public void onCreate() {
         super.onCreate();
-        GlobalSession = new HashMap<String, String>(); // 存储用户登陆信息    
+        GlobalSession = new HashMap<String, String>(); // 存储用户登陆信息
         mDefaultAvatar = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_common_def_header);
         for (int i = 1; i < 64; i++) {
@@ -214,7 +230,7 @@ public class BaseApplication extends Application {
             }
         }
     }
-    
+
     /****************************
      * 全局Session设置 _Hill3
      ****************************/
@@ -225,7 +241,7 @@ public class BaseApplication extends Application {
      * @return localIPaddress
      */
     public String getLocalIPaddress() {
-        return GlobalSession.get("localIPaddress");
+        return GlobalSession.get(LOCALIPADDRESS);
     }
 
     /**
@@ -234,7 +250,7 @@ public class BaseApplication extends Application {
      * @return serverIPaddress
      */
     public String getServerIPaddress() {
-        return GlobalSession.get("serverIPaddress");
+        return GlobalSession.get(SERVERIPADDRESS);
     }
 
     /**
@@ -243,7 +259,7 @@ public class BaseApplication extends Application {
      * @return Nickname
      */
     public String getNickname() {
-        return GlobalSession.get("Nickname");
+        return GlobalSession.get(NICKNAME);
     }
 
     /**
@@ -252,7 +268,7 @@ public class BaseApplication extends Application {
      * @return Gender
      */
     public String getGender() {
-        return GlobalSession.get("Gender");
+        return GlobalSession.get(GENDER);
     }
 
     /**
@@ -261,7 +277,7 @@ public class BaseApplication extends Application {
      * @return IMEI
      */
     public String getIMEI() {
-        return GlobalSession.get("IMEI");
+        return GlobalSession.get(IMEI);
     }
 
     /**
@@ -269,9 +285,9 @@ public class BaseApplication extends Application {
      * 
      * @return id
      */
-    public int getID() {
-        return Integer.parseInt(GlobalSession.get("ID"));
-    }
+    // public int getID() {
+    // return Integer.parseInt(GlobalSession.get(ID));
+    // }
 
     /**
      * 获取头像编号
@@ -279,7 +295,16 @@ public class BaseApplication extends Application {
      * @return AvatarNum
      */
     public int getAvatar() {
-        return Integer.parseInt(GlobalSession.get("Avatar"));
+        return Integer.parseInt(GlobalSession.get(AVATAR));
+    }
+
+    /**
+     * 获取年龄
+     * 
+     * @return Age
+     */
+    public int getAge() {
+        return Integer.parseInt(GlobalSession.get(AGE));
     }
 
     /**
@@ -288,7 +313,7 @@ public class BaseApplication extends Application {
      * @return OnlineStateInt
      */
     public int getOnlineStateInt() {
-        return Integer.parseInt(GlobalSession.get("OnlineStateInt"));
+        return Integer.parseInt(GlobalSession.get(ONLINESTATEINT));
     }
 
     /**
@@ -297,7 +322,25 @@ public class BaseApplication extends Application {
      * @return isClient
      */
     public boolean getIsClient() {
-        return Boolean.parseBoolean(GlobalSession.get("isClient"));
+        return Boolean.parseBoolean(GlobalSession.get(ISCLIENT));
+    }
+
+    /**
+     * 获取登录时间
+     * 
+     * @return Data 登录时间 年月日
+     */
+    public String getLoginTime() {
+        return GlobalSession.get(LOGINTIME);
+    }
+
+    /**
+     * 设置登录时间
+     * 
+     * @param paramLoginTime
+     */
+    public void setLoginTime(String paramLoginTime) {
+        GlobalSession.put(LOGINTIME, paramLoginTime);
     }
 
     /**
@@ -307,7 +350,7 @@ public class BaseApplication extends Application {
      *            本地IP地址值
      */
     public void setLocalIPaddress(String paramLocalIPaddress) {
-        GlobalSession.put("localIPaddress", paramLocalIPaddress);
+        GlobalSession.put(LOCALIPADDRESS, paramLocalIPaddress);
     }
 
     /**
@@ -317,7 +360,7 @@ public class BaseApplication extends Application {
      *            热点IP地址值
      */
     public void setServerIPaddress(String paramServerIPaddress) {
-        GlobalSession.put("serverIPaddress", paramServerIPaddress);
+        GlobalSession.put(SERVERIPADDRESS, paramServerIPaddress);
     }
 
     /**
@@ -327,7 +370,7 @@ public class BaseApplication extends Application {
      *            设置的昵称
      */
     public void setNickname(String paramNickname) {
-        GlobalSession.put("Nickname", paramNickname);
+        GlobalSession.put(NICKNAME, paramNickname);
     }
 
     /**
@@ -337,7 +380,7 @@ public class BaseApplication extends Application {
      *            设置的性别
      */
     public void setGender(String paramGender) {
-        GlobalSession.put("Gender", paramGender);
+        GlobalSession.put(GENDER, paramGender);
     }
 
     /**
@@ -347,7 +390,7 @@ public class BaseApplication extends Application {
      *            本机的IMEI值
      */
     public void setIMEI(String paramIMEI) {
-        GlobalSession.put("IMEI", paramIMEI);
+        GlobalSession.put(IMEI, paramIMEI);
     }
 
     /**
@@ -356,9 +399,9 @@ public class BaseApplication extends Application {
      * @param paramID
      *            该用户IMEI在数据库中对应的id编号
      */
-    public void setID(int paramID) {
-        GlobalSession.put("ID", String.valueOf(paramID));
-    }
+    // public void setID(int paramID) {
+    // GlobalSession.put(ID, String.valueOf(paramID));
+    // }
 
     /**
      * 设置登陆状态编码
@@ -371,8 +414,7 @@ public class BaseApplication extends Application {
      *            登陆状态的具体编码
      */
     public void setOnlineStateInt(int paramOnlineStateInt) {
-        GlobalSession
-                .put("OnlineStateInt", String.valueOf(paramOnlineStateInt));
+        GlobalSession.put(ONLINESTATEINT, String.valueOf(paramOnlineStateInt));
     }
 
     /**
@@ -382,7 +424,16 @@ public class BaseApplication extends Application {
      *            选择的头像编号
      */
     public void setAvatar(int paramAvatar) {
-        GlobalSession.put("Avatar", String.valueOf(paramAvatar));
+        GlobalSession.put(AVATAR, String.valueOf(paramAvatar));
+    }
+
+    /**
+     * 设置年龄
+     * 
+     * @param paramAge
+     */
+    public void setAge(int paramAge) {
+        GlobalSession.put(AGE, String.valueOf(paramAge));
     }
 
     /**
@@ -391,21 +442,22 @@ public class BaseApplication extends Application {
      * @param paramIsClient
      */
     public void setIsClient(boolean paramIsClient) {
-        GlobalSession.put("isClient", String.valueOf(paramIsClient));
+        GlobalSession.put(ISCLIENT, String.valueOf(paramIsClient));
     }
 
     /** 清空全局登陆Session信息 **/
     public void clearSession() {
-        GlobalSession.put("ID", "0");
-        GlobalSession.put("Nickname", null);
-        GlobalSession.put("Gender", null);
-        GlobalSession.put("IMEI", null);
-        GlobalSession.put("Avatar", "0");
-        GlobalSession.put("OnlineStateInt", "0");
-        GlobalSession.put("isClient", "false");
-        GlobalSession.put("localIPaddress", "0.0.0.0");
-        GlobalSession.put("serverIPaddress", "0.0.0.0");    
+        GlobalSession.put(ID, "0");
+        GlobalSession.put(NICKNAME, null);
+        GlobalSession.put(GENDER, null);
+        GlobalSession.put(IMEI, null);
+        GlobalSession.put(AVATAR, "0");
+        GlobalSession.put(AGE, "0");
+        GlobalSession.put(ONLINESTATEINT, "0");
+        GlobalSession.put(ISCLIENT, "false");
+        GlobalSession.put(LOCALIPADDRESS, "0.0.0.0");
+        GlobalSession.put(SERVERIPADDRESS, "0.0.0.0");
+        GlobalSession.put(LOGINTIME, null);
     }
-    
-}
 
+}

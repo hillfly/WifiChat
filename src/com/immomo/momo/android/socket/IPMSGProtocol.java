@@ -24,7 +24,7 @@ public class IPMSGProtocol {
     private String version; // 版本号 目前都为1
     private String packetNo;// 数据包编号
     private String senderIMEI; // 发送者IMEI
-    private String senderHost; // 发送主机名
+    private String senderDevice; // 发送主机名
     private int commandNo; // 命令
     private String additionalSection; // 附加数据
 
@@ -38,7 +38,7 @@ public class IPMSGProtocol {
         version = args[0];
         packetNo = args[1];
         senderIMEI = args[2];
-        senderHost = args[3];
+        senderDevice = args[3];
         commandNo = Integer.parseInt(args[4]);
         if (args.length >= 6) { // 是否有附加数据
             additionalSection = args[5];
@@ -51,13 +51,13 @@ public class IPMSGProtocol {
         }
     }
 
-    public IPMSGProtocol(String paramSenderIMEI, String paramSenderHost, int paramCommandNo,
+    public IPMSGProtocol(String paramSenderIMEI, String paramSenderDevice, int paramCommandNo,
             String paramAdditionalSection) {
         super();
         this.version = "1";
         this.packetNo = getSeconds();
         this.senderIMEI = paramSenderIMEI;
-        this.senderHost = paramSenderHost;
+        this.senderDevice = paramSenderDevice;
         this.commandNo = paramCommandNo;
         this.additionalSection = paramAdditionalSection;
     }
@@ -86,12 +86,12 @@ public class IPMSGProtocol {
         this.senderIMEI = paramSenderIMEI;
     }
 
-    public String getSenderHost() {
-        return senderHost;
+    public String getSenderDevice() {
+        return senderDevice;
     }
 
-    public void setSenderHost(String paramsenderHost) {
-        this.senderHost = paramsenderHost;
+    public void setSenderDevice(String paramsenderDevice) {
+        this.senderDevice = paramsenderDevice;
     }
 
     public int getCommandNo() {
@@ -116,7 +116,7 @@ public class IPMSGProtocol {
         sb.append(version)
           .append(":" + packetNo)
           .append(":" + senderIMEI)
-          .append(":" + senderHost)
+          .append(":" + senderDevice)
           .append(":" + commandNo + ":");
         if (additionalSection != null)
             sb.append(additionalSection);

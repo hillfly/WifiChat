@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.immomo.momo.android.BaseActivity;
+import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.adapter.SimpleListDialogAdapter;
 import com.immomo.momo.android.dialog.SimpleListDialog;
@@ -24,6 +24,11 @@ import com.immomo.momo.android.view.HandyTextView;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 
+/**
+ * @fileName LoginActivity.java
+ * @description 用户登陆类
+ * @author _Hill3
+ */
 public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener {
 
@@ -32,6 +37,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private LinearLayout mLlayoutExistMain; // 二次登陆页面
     private HandyTextView mHtvSelectOnlineState;
     private EditText mEtNickname;
+    private EditText mEtAge;
     private TextView mTvExistNickmame;
     private ImageView mImgExistAvatar;
     private Button mBtnBack;
@@ -43,6 +49,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
     private String mNickname = "";
     private String mGender;
+    private int mAge;
     private String mIMEI = null;
     private String mOnlineStateStr = "在线"; // 默认登录状态
     private int mAvatar;
@@ -65,6 +72,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
         mHeaderLayout.setDefaultTitle("登录", null);
         mEtNickname = (EditText) findViewById(R.id.login_et_nickname);
+        mEtAge = (EditText) findViewById(R.id.login_et_age);
         mHtvSelectOnlineState = (HandyTextView) findViewById(R.id.login_htv_onlinestate);
         mRgGender = (RadioGroup) findViewById(R.id.login_baseinfo_rg_gender);
         mBtnBack = (Button) findViewById(R.id.login_btn_back);
@@ -73,7 +81,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
         SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
                 Context.MODE_PRIVATE);
-        mNickname = mSharedPreferences.getString("Nickname", "");
+        mNickname = mSharedPreferences.getString(BaseApplication.NICKNAME, "");
 
         // 若mNickname有内容，则读取本地存储的用户信息
         if (mNickname.length() != 0) {
@@ -84,9 +92,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mLlayoutMain.setVisibility(View.GONE);
             mLlayoutExistMain.setVisibility(View.VISIBLE);
 
-            mAvatar = mSharedPreferences.getInt("Avatar", 0);
-            mOnlineStateInt = mSharedPreferences.getInt("OnlineStateInt", 0);
-            mGender = mSharedPreferences.getString("Gender", null);
+            mAvatar = mSharedPreferences.getInt(BaseApplication.AVATAR, 0);
+            mOnlineStateInt = mSharedPreferences.getInt(BaseApplication.ONLINESTATEINT, 0);
+            mGender = mSharedPreferences.getString(BaseApplication.GENDER, null);
+            mAge = mSharedPreferences.getInt(BaseApplication.AGE, -1);
 
             mImgExistAvatar.setImageResource(getResources().getIdentifier("avatar" + mAvatar,
                     "drawable", getPackageName())); // 通过getIdentifier获取图片id
@@ -119,6 +128,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             // 更换用户,清空数据
             case R.id.login_btn_changeUser:
                 mNickname = "";
+                mAge = -1;
                 mGender = null;
                 mIMEI = null;
                 mOnlineStateStr = "在线"; // 默认登录状态
@@ -164,19 +174,25 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     }
 
     /**
-     * 登录资料（昵称与性别）完整性验证，不完整则无法登陆，完整则记录输入的信息。
+     * 登录资料完整性验证，不完整则无法登陆，完整则记录输入的信息。
      * 
      * @return boolean 返回是否为完整， 完整(true),不完整(false)
      */
     private boolean isValidated() {
-        mNickname = null;
+        mNickname = "";
         mGender = null;
         if (isNull(mEtNickname)) {
             showCustomToast("请输入您的聊天昵称");
             mEtNickname.requestFocus();
             return false;
-        }
-        mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
+        }     
+        
+        if (isNull(mEtAge) || mAge == -1) {
+            showCustomToast("请输入您的年龄");
+            mEtAge.requestFocus();
+            return false;
+        }      
+        
         switch (mRgGender.getCheckedRadioButtonId()) {
             case R.id.login_baseinfo_rb_female:
                 mGender = "女";
@@ -187,7 +203,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             default:
                 showCustomToast("请选择性别");
                 return false;
-        }      
+        } 
+        
+        mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
+        mAge = Integer.parseInt(mEtAge.getText().toString().trim()); // 获取年龄
         mAvatar = (int) (Math.random() * 12 + 1); // 获取头像编号
         return true;
     }
@@ -195,10 +214,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     /**
      * 执行下一步跳转
      * <p>
-     * 同时获取客户端的IMIE信息，异步创建db，并存储IMIE、登陆资料
+     * 同时获取客户端的IMIE信息
      * </p>
      * <p>
-     * 若无法获取IMIE、无法创建db、无法存储信息，则返回false，不执行跳转
+     * 若无法获取IMIE，则返回false，不执行跳转
      * </p>
      * 
      * @return boolean 返回是否执行跳转， 是(true),否(false)
@@ -221,7 +240,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             protected Boolean doInBackground(Void... params) {
                 try {
                     mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:" + mGender
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge + " mGender:" + mGender
                             + " mOnlineState:" + mOnlineStateStr + "|" + mOnlineStateInt
                             + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
 
@@ -241,6 +260,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 if (result) {
                     mApplication.setIMEI(mIMEI);
                     mApplication.setNickname(mNickname);
+                    mApplication.setAge(mAge);
                     mApplication.setGender(mGender);
                     mApplication.setAvatar(mAvatar);
                     mApplication.setOnlineStateInt(mOnlineStateInt);
