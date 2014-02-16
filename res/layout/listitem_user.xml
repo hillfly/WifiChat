@@ -21,7 +21,7 @@
                 android:id="@+id/user_item_iv_avatar"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -56,57 +56,12 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:id="@+id/user_item_iv_icon_vip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_vip" 
-                        android:visibility="gone"/>
-
-                    <ImageView
                         android:id="@+id/user_item_iv_icon_group_role"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dip"
                         android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_group" 
-                        android:visibility="gone"/>
-
-                    <ImageView
-                        android:id="@+id/user_item_iv_icon_industry"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_weibo"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/user_item_iv_icon_weibo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_weibo" 
-                        android:visibility="gone"/>
-
-                    <ImageView
-                        android:id="@+id/user_item_iv_icon_txweibo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_tweibo" 
-                        android:visibility="gone"/>
-
-                    <ImageView
-                        android:id="@+id/user_item_iv_icon_renren"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_renren"
+                        android:src="@drawable/ic_userinfo_group"
                         android:visibility="gone" />
 
                     <ImageView
@@ -115,17 +70,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dip"
                         android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_apple" 
-                        android:visibility="gone"/>
-
-                    <ImageView
-                        android:id="@+id/user_item_iv_icon_relation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dip"
-                        android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_bothfollow" 
-                        android:visibility="gone"/>
+                        android:src="@drawable/ic_userinfo_apple"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/user_item_iv_icon_multipic"
@@ -133,8 +79,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dip"
                         android:layout_marginRight="1dip"
-                        android:src="@drawable/ic_userinfo_multipic" 
-                        android:visibility="gone"/>
+                        android:src="@drawable/ic_userinfo_multipic"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <com.immomo.momo.android.view.HandyTextView
@@ -186,33 +132,13 @@
                 </LinearLayout>
 
                 <com.immomo.momo.android.view.HandyTextView
-                    android:id="@+id/user_item_htv_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_value"
-                    android:textSize="12sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:orientation="horizontal" >
-
-                    <com.immomo.momo.android.view.HandyTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" | "
-                        android:textColor="@color/font_value"
-                        android:textSize="12sp" />
-
-                    <com.immomo.momo.android.view.HandyTextView
                         android:id="@+id/user_item_htv_time"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/font_value"
                         android:textSize="12sp" />
-                </LinearLayout>
+              
             </LinearLayout>
 
             <com.immomo.momo.android.view.HandyTextView

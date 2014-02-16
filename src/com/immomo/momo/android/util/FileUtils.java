@@ -91,7 +91,8 @@ public class FileUtils {
 		}
 		String[] tempList = file.list();
 		File temp = null;
-		for (int i = 0; i < tempList.length; i++) {
+		int mLength = tempList.length;
+		for (int i = 0; i < mLength; i++) {
 			if (path.endsWith(File.separator)) {
 				temp = new File(path + tempList[i]);
 			} else {

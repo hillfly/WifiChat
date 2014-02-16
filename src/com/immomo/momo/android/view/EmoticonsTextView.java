@@ -1,5 +1,6 @@
 package com.immomo.momo.android.view;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,11 +39,12 @@ public class EmoticonsTextView extends HandyTextView {
 	}
 
 	private Pattern buildPattern() {
-		StringBuilder patternString = new StringBuilder(
-				BaseApplication.mEmoticons.size() * 3);
+	    List<String> cachemEmoticons = BaseApplication.mEmoticons;
+        int mLength = cachemEmoticons.size();
+		StringBuilder patternString = new StringBuilder(mLength * 3);
 		patternString.append('(');
-		for (int i = 0; i < BaseApplication.mEmoticons.size(); i++) {
-			String s = BaseApplication.mEmoticons.get(i);
+		for (int i = 0; i < mLength; i++) {
+			String s = cachemEmoticons.get(i);
 			patternString.append(Pattern.quote(s));
 			patternString.append('|');
 		}

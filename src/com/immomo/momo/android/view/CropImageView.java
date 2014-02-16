@@ -67,7 +67,8 @@ public class CropImageView extends ImageViewTouchBase {
 	@Override
 	protected void postTranslate(float deltaX, float deltaY) {
 		super.postTranslate(deltaX, deltaY);
-		for (int i = 0; i < mHighlightViews.size(); i++) {
+		int mLength = mHighlightViews.size();
+		for (int i = 0; i < mLength; i++) {
 			HighlightView hv = mHighlightViews.get(i);
 			hv.mMatrix.postTranslate(deltaX, deltaY);
 			hv.invalidate();
@@ -77,13 +78,14 @@ public class CropImageView extends ImageViewTouchBase {
 	// According to the event's position, change the focus to the first
 	// hitting cropping rectangle.
 	private void recomputeFocus(MotionEvent event) {
-		for (int i = 0; i < mHighlightViews.size(); i++) {
+	    int mLength = mHighlightViews.size();
+		for (int i = 0; i < mLength; i++) {
 			HighlightView hv = mHighlightViews.get(i);
 			hv.setFocus(false);
 			hv.invalidate();
 		}
 
-		for (int i = 0; i < mHighlightViews.size(); i++) {
+		for (int i = 0; i < mLength; i++) {
 			HighlightView hv = mHighlightViews.get(i);
 			int edge = hv.getHit(event.getX(), event.getY());
 			if (edge != HighlightView.GROW_NONE) {
@@ -109,7 +111,8 @@ public class CropImageView extends ImageViewTouchBase {
 			if (cropImage.mWaitingToPick) {
 				recomputeFocus(event);
 			} else {
-				for (int i = 0; i < mHighlightViews.size(); i++) { // CR:
+			    int mLength = mHighlightViews.size();
+				for (int i = 0; i < mLength; i++) { // CR:
 																	// iterator
 																	// for; if
 																	// not, then
@@ -134,11 +137,12 @@ public class CropImageView extends ImageViewTouchBase {
 		// CR: vertical space before case blocks.
 		case MotionEvent.ACTION_UP:
 			if (cropImage.mWaitingToPick) {
-				for (int i = 0; i < mHighlightViews.size(); i++) {
+			    int mLength = mHighlightViews.size();
+				for (int i = 0; i < mLength; i++) {
 					HighlightView hv = mHighlightViews.get(i);
 					if (hv.hasFocus()) {
-						cropImage.mCrop = hv;
-						for (int j = 0; j < mHighlightViews.size(); j++) {
+						cropImage.mCrop = hv;						
+						for (int j = 0; j < mLength; j++) {
 							if (j == i) { // CR: if j != i do your shit; no need
 											// for continue.
 								continue;
@@ -245,7 +249,8 @@ public class CropImageView extends ImageViewTouchBase {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		for (int i = 0; i < mHighlightViews.size(); i++) {
+		int mLength = mHighlightViews.size();
+		for (int i = 0; i < mLength; i++) {
 			mHighlightViews.get(i).draw(canvas);
 		}
 	}

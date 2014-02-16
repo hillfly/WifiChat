@@ -90,7 +90,8 @@ public class ImageFactoryFliter extends ImageFactory {
 		mFliterBlocks[5] = findViewById(R.id.imagefactory_fliter_item_6);
 		mFliterBlocks[6] = findViewById(R.id.imagefactory_fliter_item_7);
 		mFliterBlocks[7] = findViewById(R.id.imagefactory_fliter_item_8);
-		for (int i = 0; i < mFilterItems.size(); i++) {
+		int mLength = mFilterItems.size();
+		for (int i = 0; i < mLength; i++) {
 			View cover = mFliterBlocks[i].findViewById(R.id.filter_item_cover);
 			cover.setTag(i);
 			cover.setOnClickListener(new OnClickListener() {
@@ -114,7 +115,8 @@ public class ImageFactoryFliter extends ImageFactory {
 	}
 
 	private void refreshBlockBg() {
-		for (int i = 0; i < mFilterItems.size(); i++) {
+	    int mLength = mFilterItems.size();
+		for (int i = 0; i < mLength; i++) {
 			View cover = mFliterBlocks[i].findViewById(R.id.filter_item_cover);
 			if (mSelectBlock == i) {
 				cover.setSelected(true);

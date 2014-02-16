@@ -12,8 +12,8 @@ public class TextMessageItem extends MessageItem implements OnLongClickListener 
 
 	private EmoticonsTextView mEtvContent;
 
-	public TextMessageItem(Message msg, Context context) {
-		super(msg, context);
+	public TextMessageItem(Message paramMsg, Context paramContext) {
+		super(paramMsg, paramContext);
 	}
 	
 
@@ -21,9 +21,8 @@ public class TextMessageItem extends MessageItem implements OnLongClickListener 
 	protected void onInitViews() {
 		View view = mInflater.inflate(R.layout.message_text, null);
 		mLayoutMessageContainer.addView(view);
-		mEtvContent = (EmoticonsTextView) view
-				.findViewById(R.id.message_etv_msgtext);
-		mEtvContent.setText(mMsg.getContent());
+		mEtvContent = (EmoticonsTextView) view.findViewById(R.id.message_etv_msgtext);
+		mEtvContent.setText(mMsg.getMsgContent());
 		mEtvContent.setOnLongClickListener(this);
 		mLayoutMessageContainer.setOnLongClickListener(this);
 	}

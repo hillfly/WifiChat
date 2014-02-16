@@ -1,7 +1,6 @@
 ﻿package com.immomo.momo.android.util;
 
 import java.lang.reflect.Field;
-
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
@@ -115,7 +114,7 @@ public class WifiUtils {
         localWifiConfiguration1.allowedKeyManagement.clear();
         localWifiConfiguration1.allowedPairwiseCiphers.clear();
         localWifiConfiguration1.allowedProtocols.clear();
-        if (paramString3.equals("wt")) {
+        if ("wt".equals(paramString3)) {
             localWifiConfiguration1.SSID = ("\"" + ssid + "\"");
             WifiConfiguration localWifiConfiguration2 = isExsits(ssid);
             if (localWifiConfiguration2 != null)

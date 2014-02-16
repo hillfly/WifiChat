@@ -67,7 +67,8 @@ public class WifiapSearchAnimationFrameLayout extends FrameLayout {
 
 	// 重置，停止动画
 	public final void stopAnimation() {
-		for (int i = 0; i < m_imageVRadars.length; ++i) {
+	    int mLength = m_imageVRadars.length;
+		for (int i = 0; i < mLength; ++i) {
 			if (m_bitmapRipple != null) {
 				Bitmap localBitmap = (Bitmap) m_bitmapRipple.get();
 				if ((localBitmap != null) && (!localBitmap.isRecycled()))
@@ -85,7 +86,8 @@ public class WifiapSearchAnimationFrameLayout extends FrameLayout {
 	public final void startAnimation() {
 		if (m_bitmapRipple == null)
 			loadRadarBitmap();
-		for (int i = 0; i < m_imageVRadars.length; ++i) {
+		int mLength = m_imageVRadars.length;
+		for (int i = 0; i < mLength; ++i) {
 			ImageView localImageView;
 			long l;
 			while (true) {

@@ -40,7 +40,8 @@ public class StepPhoto extends RegisterStep implements OnClickListener {
 
 	private void initAvatarsItem() {
 		initMemberBlocks();
-		for (int i = 0; i < mMemberBlocks.length; i++) {
+		int mLength = mMemberBlocks.length;
+		for (int i = 0; i < mLength; i++) {
 			((ImageView) mMemberBlocks[i]
 					.findViewById(R.id.welcome_item_iv_avatar))
 					.setImageBitmap(getBaseApplication().getAvatar(mAvatars[i]));
@@ -63,7 +64,8 @@ public class StepPhoto extends RegisterStep implements OnClickListener {
 				TypedValue.COMPLEX_UNIT_DIP, 4, mContext.getResources()
 						.getDisplayMetrics());
 		int widthAndHeight = (getScreenWidth() - margin * 12) / 6;
-		for (int i = 0; i < mMemberBlocks.length; i++) {
+		int mLength = mMemberBlocks.length;
+		for (int i = 0; i < mLength; i++) {
 			ViewGroup.LayoutParams params = mMemberBlocks[i].findViewById(
 					R.id.welcome_item_iv_avatar).getLayoutParams();
 			params.width = widthAndHeight;

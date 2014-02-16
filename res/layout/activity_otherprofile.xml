@@ -21,15 +21,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <include layout="@layout/include_otherprofile_photos" />
-
             <include layout="@layout/include_otherprofile_feed" />
 
             <include layout="@layout/include_otherprofile_accountinfo" />
-
-            <include layout="@layout/include_otherprofile_bindinfo" />
-
-            <include layout="@layout/include_otherprofile_selfintroduction" />
 
             <include layout="@layout/include_otherprofile_joingroup" />
         </LinearLayout>

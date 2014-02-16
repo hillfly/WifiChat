@@ -55,6 +55,7 @@
 				    android:hint="年龄"
 				    android:maxLength="3"
 				    android:digits="0123456789"
+				    android:inputType="number"
 				    android:singleLine="true" />
 
 				<com.immomo.momo.android.view.HandyTextView

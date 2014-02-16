@@ -7,15 +7,15 @@ import java.util.Date;
  * <p>
  * IPMSG协议格式：版本号(默认为1):数据包编号:发送人IMEI:发送主机名:命令:附加数据
  * <p>
- * 数据包编号，一般是取毫秒数。用来唯一地区别每个数据包；
+ * 数据包编号：一般是取毫秒数。用来唯一地区别每个数据包；
  * <p>
- * SendeIMEI指的是发送者的设备IMEI
+ * SenderIMEI：指的是发送者的设备IMEI
  * <p>
- * 发送主机名，指的是发送者的主机名，在此用来区分是移动设备还是PC，移动设备默认为android.
+ * 发送主机名：指的是发送者的主机名，在此用来区分是移动设备还是PC，移动设备默认为android.
  * <p>
- * 命令，指的是飞鸽协议中定义的一系列命令，具体见下文；
+ * 命令：指的是飞鸽协议中定义的一系列命令，具体见下文；
  * <p>
- * 附加数据，额外发送的数据。当为上线应答报文时，附加信息内容是昵称、性别，中间用"\0"分隔
+ * 附加数据：额外发送的数据。当为上线应答报文时，附加信息内容是昵称、性别，中间用"\0"分隔
  * 
  * @see IPMSGConst
  * 
@@ -42,7 +42,8 @@ public class IPMSGProtocol {
         commandNo = Integer.parseInt(args[4]);
         if (args.length >= 6) { // 是否有附加数据
             additionalSection = args[5];
-            for (int i = 6; i < args.length; i++) { // 处理附加数据中有:的情况
+            int mLength = args.length;
+            for (int i = 6; i < mLength; i++) { // 处理附加数据中有:的情况
                 additionalSection += (":" + args[i]);
             }
         }

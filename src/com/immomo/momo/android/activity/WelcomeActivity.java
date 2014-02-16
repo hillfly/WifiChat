@@ -35,7 +35,6 @@ public class WelcomeActivity extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         initViews();
@@ -62,7 +61,8 @@ public class WelcomeActivity extends BaseActivity implements OnClickListener {
 
     private void initAvatarsItem() {
         initMemberBlocks();
-        for (int i = 0; i < mMemberBlocks.length; i++) {
+        int mLength = mMemberBlocks.length;
+        for (int i = 0; i < mLength; i++) {
             ((ImageView) mMemberBlocks[i]
                     .findViewById(R.id.welcome_item_iv_avatar))
                     .setImageBitmap(mApplication.getAvatar(mAvatars[i]));
@@ -85,7 +85,8 @@ public class WelcomeActivity extends BaseActivity implements OnClickListener {
                 TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                         .getDisplayMetrics());
         int widthAndHeight = (mScreenWidth - margin * 12) / 6;
-        for (int i = 0; i < mMemberBlocks.length; i++) {
+        int mLength = mMemberBlocks.length;
+        for (int i = 0; i < mLength; i++) {
             ViewGroup.LayoutParams params = mMemberBlocks[i].findViewById(
                     R.id.welcome_item_iv_avatar).getLayoutParams();
             params.width = widthAndHeight;

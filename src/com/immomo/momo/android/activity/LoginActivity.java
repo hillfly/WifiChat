@@ -2,7 +2,6 @@ package com.immomo.momo.android.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -15,11 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.immomo.momo.android.BaseActivity;
-import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.adapter.SimpleListDialogAdapter;
 import com.immomo.momo.android.dialog.SimpleListDialog;
 import com.immomo.momo.android.dialog.SimpleListDialog.onSimpleListItemClickListener;
+import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.view.HandyTextView;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
@@ -31,6 +30,8 @@ import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
  */
 public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener {
+
+    private static final String TAG = "SZU_loginActivity";
 
     private HeaderLayout mHeaderLayout;
     private LinearLayout mLlayoutMain; // 首次登陆主界面
@@ -50,16 +51,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private String mNickname = "";
     private String mGender;
     private int mAge;
-    private String mIMEI = null;
+    private String mIMEI;
     private String mOnlineStateStr = "在线"; // 默认登录状态
     private int mAvatar;
     private int mOnlineStateInt = 0; // 默认登录状态编号
     private String[] mOnlineStateType;
-    private static final String TAG = "SZU_loginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_login);
         mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         initViews();
@@ -71,17 +71,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         mHeaderLayout = (HeaderLayout) findViewById(R.id.login_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
         mHeaderLayout.setDefaultTitle("登录", null);
+
         mEtNickname = (EditText) findViewById(R.id.login_et_nickname);
         mEtAge = (EditText) findViewById(R.id.login_et_age);
         mHtvSelectOnlineState = (HandyTextView) findViewById(R.id.login_htv_onlinestate);
         mRgGender = (RadioGroup) findViewById(R.id.login_baseinfo_rg_gender);
+
         mBtnBack = (Button) findViewById(R.id.login_btn_back);
         mBtnNext = (Button) findViewById(R.id.login_btn_next);
         mBtnChangeUser = (Button) findViewById(R.id.login_btn_changeUser);
 
-        SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
-                Context.MODE_PRIVATE);
-        mNickname = mSharedPreferences.getString(BaseApplication.NICKNAME, "");
+        SharedPreferences mSharedPreferences = getSharedPreferences(
+                GlobalSharedName, Context.MODE_PRIVATE);
+        mNickname = mSharedPreferences.getString(NearByPeople.NICKNAME, "");
 
         // 若mNickname有内容，则读取本地存储的用户信息
         if (mNickname.length() != 0) {
@@ -92,13 +94,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mLlayoutMain.setVisibility(View.GONE);
             mLlayoutExistMain.setVisibility(View.VISIBLE);
 
-            mAvatar = mSharedPreferences.getInt(BaseApplication.AVATAR, 0);
-            mOnlineStateInt = mSharedPreferences.getInt(BaseApplication.ONLINESTATEINT, 0);
-            mGender = mSharedPreferences.getString(BaseApplication.GENDER, null);
-            mAge = mSharedPreferences.getInt(BaseApplication.AGE, -1);
+            mAvatar = mSharedPreferences.getInt(NearByPeople.AVATAR, 0);
+            mOnlineStateInt = mSharedPreferences.getInt(
+                    NearByPeople.ONLINESTATEINT, 0);
+            mGender = mSharedPreferences.getString(NearByPeople.GENDER, null);
+            mAge = mSharedPreferences.getInt(NearByPeople.AGE, -1);
 
-            mImgExistAvatar.setImageResource(getResources().getIdentifier("avatar" + mAvatar,
-                    "drawable", getPackageName())); // 通过getIdentifier获取图片id
+            mImgExistAvatar.setImageBitmap(mApplication.getAvatar(NearByPeople.AVATAR
+                    + mAvatar));
             mTvExistNickmame.setText(mNickname);
         }
     }
@@ -114,38 +117,39 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_htv_onlinestate:
-                mOnlineStateType = getResources().getStringArray(R.array.onlinestate_type);
-                mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
-                mSimpleListDialog.setTitle("选择在线状态");
-                mSimpleListDialog.setTitleLineVisibility(View.GONE);
-                mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(LoginActivity.this,
-                        mOnlineStateType));
-                mSimpleListDialog.setOnSimpleListItemClickListener(LoginActivity.this);
-                mSimpleListDialog.show();
-                break;
+        case R.id.login_htv_onlinestate:
+            mOnlineStateType = getResources().getStringArray(
+                    R.array.onlinestate_type);
+            mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
+            mSimpleListDialog.setTitle("选择在线状态");
+            mSimpleListDialog.setTitleLineVisibility(View.GONE);
+            mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(
+                    LoginActivity.this, mOnlineStateType));
+            mSimpleListDialog.setOnSimpleListItemClickListener(LoginActivity.this);
+            mSimpleListDialog.show();
+            break;
 
-            // 更换用户,清空数据
-            case R.id.login_btn_changeUser:
-                mNickname = "";
-                mAge = -1;
-                mGender = null;
-                mIMEI = null;
-                mOnlineStateStr = "在线"; // 默认登录状态
-                mAvatar = 0;
-                mOnlineStateInt = 0; // 默认登录状态编号
-                mApplication.clearSession(); // 清空Session数据
-                mLlayoutMain.setVisibility(View.VISIBLE);
-                mLlayoutExistMain.setVisibility(View.GONE);
-                break;
+        // 更换用户,清空数据
+        case R.id.login_btn_changeUser:
+            mNickname = "";
+            mAge = -1;
+            mGender = null;
+            mIMEI = null;
+            mOnlineStateStr = "在线"; // 默认登录状态
+            mAvatar = 0;
+            mOnlineStateInt = 0; // 默认登录状态编号
+            mApplication.clearSession(); // 清空Session数据
+            mLlayoutMain.setVisibility(View.VISIBLE);
+            mLlayoutExistMain.setVisibility(View.GONE);
+            break;
 
-            case R.id.login_btn_back:
-                finish();
-                break;
+        case R.id.login_btn_back:
+            finish();
+            break;
 
-            case R.id.login_btn_next:
-                doLoginNext();
-                break;
+        case R.id.login_btn_next:
+            doLoginNext();
+            break;
         }
     }
 
@@ -155,7 +159,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         mOnlineStateInt = position; // 获取在线状态编号
         mHtvSelectOnlineState.requestFocus();
         mHtvSelectOnlineState.setText(mOnlineStateStr);
-
     }
 
     /**
@@ -185,26 +188,26 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             showCustomToast("请输入您的聊天昵称");
             mEtNickname.requestFocus();
             return false;
-        }     
-        
+        }
+
         if (isNull(mEtAge) || mAge == -1) {
             showCustomToast("请输入您的年龄");
             mEtAge.requestFocus();
             return false;
-        }      
-        
+        }
+
         switch (mRgGender.getCheckedRadioButtonId()) {
-            case R.id.login_baseinfo_rb_female:
-                mGender = "女";
-                break;
-            case R.id.login_baseinfo_rb_male:
-                mGender = "男";
-                break;
-            default:
-                showCustomToast("请选择性别");
-                return false;
-        } 
-        
+        case R.id.login_baseinfo_rb_female:
+            mGender = "女";
+            break;
+        case R.id.login_baseinfo_rb_male:
+            mGender = "男";
+            break;
+        default:
+            showCustomToast("请选择性别");
+            return false;
+        }
+
         mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
         mAge = Integer.parseInt(mEtAge.getText().toString().trim()); // 获取年龄
         mAvatar = (int) (Math.random() * 12 + 1); // 获取头像编号
@@ -215,63 +218,27 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
      * 执行下一步跳转
      * <p>
      * 同时获取客户端的IMIE信息
-     * </p>
-     * <p>
-     * 若无法获取IMIE，则返回false，不执行跳转
-     * </p>
-     * 
-     * @return boolean 返回是否执行跳转， 是(true),否(false)
      */
     private void doLoginNext() {
-        if (mNickname.length() == 0){
+        if (mNickname.length() == 0) {
             if ((!isValidated())) {
                 return;
             }
         }
-        putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
+        mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
+        showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge
+                + " mGender:" + mGender + " mOnlineState:" + mOnlineStateStr
+                + "|" + mOnlineStateInt + " mAvatar:" + mAvatar + " IMEI:"
+                + mIMEI);
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                showLoadingDialog("正在获取相关信息,请稍后...");
-            }
+        mApplication.setIMEI(mIMEI);
+        mApplication.setNickname(mNickname);
+        mApplication.setAge(mAge);
+        mApplication.setGender(mGender);
+        mApplication.setAvatar(mAvatar);
+        mApplication.setOnlineStateInt(mOnlineStateInt);
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge + " mGender:" + mGender
-                            + " mOnlineState:" + mOnlineStateStr + "|" + mOnlineStateInt
-                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
-
-                    return true;
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-                return false;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                super.onPostExecute(result);
-                dismissLoadingDialog();
-                if (result) {
-                    mApplication.setIMEI(mIMEI);
-                    mApplication.setNickname(mNickname);
-                    mApplication.setAge(mAge);
-                    mApplication.setGender(mGender);
-                    mApplication.setAvatar(mAvatar);
-                    mApplication.setOnlineStateInt(mOnlineStateInt);
-
-                    startActivity(WifiapActivity.class);
-                    finish();
-                }
-                else {
-                    showCustomToast("操作失败,请检查软件是否安装正确");
-                }
-            }
-        });
+        startActivity(WifiapActivity.class);
+        finish();
     }
 }

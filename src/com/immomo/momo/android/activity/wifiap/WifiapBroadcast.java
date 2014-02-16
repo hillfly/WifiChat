@@ -6,35 +6,37 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 public class WifiapBroadcast extends BroadcastReceiver {
+    
+    private static final String TAG = "SZU_WifiapBroadcase";    
+    
     public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
-    private NetworkInfo mNetworkInfo;
-    private final String TAG = "SZU_WifiaoBroadcase";
+    private NetworkInfo mNetworkInfo;  
 
     public void onReceive(Context paramContext, Intent paramIntent) {
 
         // 搜索到wifi热点
-        if (paramIntent.getAction().equals("android.net.wifi.SCAN_RESULTS")) {
-            Log.d(TAG, "android.net.wifi.SCAN_RESULTS");
-            for (int j = 0; j < ehList.size(); j++)
+        if (paramIntent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+            Log.d(TAG, WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+            int mLength = ehList.size();
+            for (int j = 0; j < mLength; j++)
                 ((EventHandler) ehList.get(j)).scanResultsAvailable();
 
         // wifi打开或关闭
-        } else if (paramIntent.getAction().equals(
-                "android.net.wifi.WIFI_STATE_CHANGED")) {
-            Log.d(TAG, "android.net.wifi.WIFI_STATE_CHANGED | "
+        } else if (paramIntent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
+            Log.d(TAG, WifiManager.WIFI_STATE_CHANGED_ACTION + " | "
                     + paramIntent.getIntExtra("wifi_state", -1) + " | "
                     + paramIntent.getIntExtra("previous_wifi_state", -1));
             for (int j = 0; j < ehList.size(); j++)
                 ((EventHandler) ehList.get(j)).wifiStatusNotification();
 
         // 连接 SSID
-        } else if (paramIntent.getAction().equals(
-                "android.net.wifi.STATE_CHANGE")) {
+        } else if (paramIntent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
             mNetworkInfo = paramIntent.getParcelableExtra("networkInfo");
-            Log.d(TAG, "android.net.wifi.STATE_CHANGE | "
+            Log.d(TAG, WifiManager.NETWORK_STATE_CHANGED_ACTION + " | "
                     + mNetworkInfo.getDetailedState());
 
             // 当 DetailedState 变化为 CONNECTED 时，说明已连接成功，则通知Handler更新

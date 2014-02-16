@@ -134,28 +134,12 @@
         <activity
             android:name=".activity.ImageBrowserActivity"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.OtherFeedListActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.FeedProfileActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
-        </activity>
+        </activity>       
         <activity
             android:name=".activity.message.ChatActivity"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity>        
         
-        <receiver android:name="com.immomo.momo.android.activity.wifiap.WifiapBroadcast" >
-            <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

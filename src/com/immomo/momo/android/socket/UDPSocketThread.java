@@ -7,26 +7,28 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.util.Log;
 
 import com.immomo.momo.android.BaseApplication;
-import com.immomo.momo.android.entity.CopyOfNearByPeople;
+import com.immomo.momo.android.entity.Message;
+import com.immomo.momo.android.entity.NearByPeople;
 
 public class UDPSocketThread implements Runnable {
 
     private static UDPSocketThread instance; // 唯一实例
 
-    private static final String TAG = "SZU_UDPSocketThread";
+    private static final String TAG = "SZU_UDPSocketThread"; 
     private static final int BUFFERLENGTH = 1024; // 缓冲大小
-    private String mDevice = "android"; // 用以区分是手机还是PC
-    private String mIMEI; // 个人IMEI
+
+    private String mDevice; // 用以区分是手机还是PC
+    private String mIMEI;
     private String mNickname;
     private String mGender;
-    private String nowTime; // 登录时间
+    private String mLogintime;
     private String mLocalIPaddress;
     private int mAvatar;
     private int mAge;
@@ -35,13 +37,33 @@ public class UDPSocketThread implements Runnable {
     private byte[] sendBuffer = new byte[BUFFERLENGTH];
 
     private static BaseApplication mBaseApplication;
-    private boolean isThreadRunning = false;
-    private Thread mThread;
+    private boolean isThreadRunning;       
+    private Thread receiveUDPThread; // 接收UDP数据线程
 
     private DatagramSocket UDPSocket;
     private DatagramPacket sendDatagramPacket;
-    private DatagramPacket receiveDatagramPacket;    
+    private DatagramPacket receiveDatagramPacket;
 
+    /** 初始化相关参数 **/
+    private UDPSocketThread() {
+        mBaseApplication.OnlineUsers = new LinkedHashMap<String, NearByPeople>(); // 在线列表
+        mBaseApplication.ReceiveMessages = new ConcurrentLinkedQueue<Message>(); // 消息队列
+        mBaseApplication.mReceiveMsgListener = new Vector<OnReceiveMsgListener>(); // ReceiveMsgListener容器
+        mDevice = mBaseApplication.getDevice();
+        mIMEI = mBaseApplication.getIMEI();
+        mNickname = mBaseApplication.getNickname();
+        mGender = mBaseApplication.getGender();
+        mAvatar = mBaseApplication.getAvatar();
+        mAge = mBaseApplication.getAge();
+        mLocalIPaddress = mBaseApplication.getLocalIPaddress();
+        if (mBaseApplication.getLoginTime() == null) {
+            mLogintime = mBaseApplication.getNowtime();
+            mBaseApplication.setLoginTime(mLogintime);
+        } else {
+            mLogintime = mBaseApplication.getLoginTime();
+        }
+    }
+    
     /**
      * <p>
      * 获取UDPSocketThread实例
@@ -59,21 +81,6 @@ public class UDPSocketThread implements Runnable {
         return instance;
     }
 
-    private UDPSocketThread() {
-        mBaseApplication.OnlineUsers = new HashMap<String, CopyOfNearByPeople>();
-        mIMEI = mBaseApplication.getIMEI();
-        mNickname = mBaseApplication.getNickname();
-        mGender = mBaseApplication.getGender();
-        mAvatar = mBaseApplication.getAvatar();
-        mAge = mBaseApplication.getAge();
-        if (mBaseApplication.getLoginTime() == null) {
-            nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            mBaseApplication.setLoginTime(nowTime);
-        } else {
-            nowTime = mBaseApplication.getLoginTime();
-        }
-    }
-
     @Override
     public void run() {
         // TODO Auto-generated method stub
@@ -81,7 +88,6 @@ public class UDPSocketThread implements Runnable {
             try {
                 UDPSocket.receive(receiveDatagramPacket);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 isThreadRunning = false;
                 receiveDatagramPacket = null;
 
@@ -90,7 +96,7 @@ public class UDPSocketThread implements Runnable {
                     UDPSocket = null;
                 }
 
-                mThread = null;
+                receiveUDPThread = null;
                 Log.e(TAG, "UDP数据包接收失败！线程停止");
                 e.printStackTrace();
                 break;
@@ -106,7 +112,6 @@ public class UDPSocketThread implements Runnable {
                 UDPListenResStr = new String(receiveBuffer, 0,
                         receiveDatagramPacket.getLength(), "gbk");
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
                 Log.e(TAG, "系统不支持GBK编码");
                 e.printStackTrace();
             }
@@ -130,7 +135,7 @@ public class UDPSocketThread implements Runnable {
                 mIPMSGSend.setSenderDevice(mDevice);
                 mIPMSGSend.setCommandNo(IPMSGConst.IPMSG_ANSENTRY);
                 mIPMSGSend.setAdditionalSection(mNickname + "\0" + mGender
-                        + "\0" + mAvatar + "\0" + mAge + "\0" + nowTime); // 附加：昵称、性别、头像编号、年龄、登录时间
+                        + "\0" + mAvatar + "\0" + mAge + "\0" + mLogintime); // 附加：昵称、性别、头像编号、年龄、登录时间
 
                 sendUDPdata(mIPMSGSend.getProtocolString() + "\0",
                         receiveDatagramPacket.getAddress(),
@@ -149,8 +154,7 @@ public class UDPSocketThread implements Runnable {
 
             // 收到下线广播
             case IPMSGConst.IPMSG_BR_EXIT: {
-                String userIp = receiveDatagramPacket.getAddress()
-                        .getHostAddress();
+                String userIp = receiveDatagramPacket.getAddress().getHostAddress();
                 mBaseApplication.OnlineUsers.remove(userIp); // 移除用户
                 // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
 
@@ -177,10 +181,11 @@ public class UDPSocketThread implements Runnable {
             UDPSocket.close();
             UDPSocket = null;
         }
-        mThread = null;
+        receiveUDPThread = null;
 
     }
 
+    /** 建立Socket连接 **/
     public void connectUDPSocket() {
         try {
             // 绑定端口
@@ -200,18 +205,21 @@ public class UDPSocketThread implements Runnable {
         }
     }
 
+    /** 开始监听线程 **/
     public void startUDPSocketThread() {
-        if (mThread == null) {
-            mThread = new Thread(this);
-            mThread.start();
+        if (receiveUDPThread == null) {
+            receiveUDPThread = new Thread(this);
+            receiveUDPThread.start();
         }
         isThreadRunning = true;
         Log.i(TAG, "startUDPSocketThread() 线程启动成功");
     }
 
+    /** 暂停监听线程 **/
     public void stopUDPSocketThread() {
-        if (mThread != null)
-            mThread.interrupt();
+        if (receiveUDPThread != null)
+            receiveUDPThread.interrupt();
+        isThreadRunning = false;
         Log.i(TAG, "stopUDPSocketThread() 线程停止成功");
     }
 
@@ -223,7 +231,7 @@ public class UDPSocketThread implements Runnable {
         mIpmsgProtocol.setSenderDevice(mDevice);
         mIpmsgProtocol.setCommandNo(IPMSGConst.IPMSG_BR_ENTRY); // 上线命令
         mIpmsgProtocol.setAdditionalSection(mNickname + "\0" + mGender + "\0"
-                + mAvatar + "\0" + mAge + "\0" + nowTime); // 附加：昵称、性别、头像编号、年龄、登录时间
+                + mAvatar + "\0" + mAge + "\0" + mLogintime); // 附加：昵称、性别、头像编号、年龄、登录时间
 
         InetAddress broadcastAddr;
         try {
@@ -231,7 +239,6 @@ public class UDPSocketThread implements Runnable {
             sendUDPdata(mIpmsgProtocol.getProtocolString() + "\0",
                     broadcastAddr, IPMSGConst.PORT);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             Log.e(TAG, "notifyOnline() 广播地址有误");
         }
@@ -251,12 +258,51 @@ public class UDPSocketThread implements Runnable {
             sendUDPdata(mIpmsgProtocol.getProtocolString() + "\0",
                     broadcastAddr, IPMSGConst.PORT);
         } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             Log.e(TAG, "noticeOnline()....广播地址有误");
         }
     }
+    
+    /** 添加listener到容器中 **/
+    public void addReceiveMsgListener(OnReceiveMsgListener paramListener) {
+        if (!(mBaseApplication.mReceiveMsgListener.contains(paramListener))) {
+            mBaseApplication.mReceiveMsgListener.add(paramListener);
+        }
+    }
 
+    /** 从容器中移除相应listener **/
+    public void removeReceiveMsgListener(OnReceiveMsgListener paramListener) {
+        if (mBaseApplication.mReceiveMsgListener.contains(paramListener)) {
+            mBaseApplication.mReceiveMsgListener.remove(paramListener);
+        }
+    }
+
+    /**
+     * 判断是否有已打开的聊天窗口来接收对应的数据。
+     * @param paramMsg
+     * @return
+     */
+    private boolean isActivityActive(Message paramMsg) {
+        int mLength = mBaseApplication.mReceiveMsgListener.size();
+        for (int i = 0; i < mLength; i++) {
+            OnReceiveMsgListener listener = mBaseApplication.mReceiveMsgListener.get(i);
+            if (listener.isThisActivityMsg(paramMsg)) {
+                return true;
+            }
+        }
+        return false;
+    }
+   
+    /**
+     * 发送Socket UDP数据包
+     * 
+     * @param sendStr
+     *            发送内容
+     * @param targetIP
+     *            发送IP
+     * @param sendPort
+     *            通信端口
+     */
     public synchronized void sendUDPdata(String sendStr, InetAddress targetIP, int sendPort) {
         try {
             sendBuffer = sendStr.getBytes("gbk");
@@ -266,7 +312,6 @@ public class UDPSocketThread implements Runnable {
             UDPSocket.send(sendDatagramPacket);
             Log.i(TAG, "sendUDPdata() 数据发送成功");
         } catch (Exception e) {
-            // TODO: handle exception
             Log.e(TAG, "sendUDPdata() 发送UDP数据包失败");
             e.printStackTrace();
         } finally {
@@ -274,14 +319,25 @@ public class UDPSocketThread implements Runnable {
         }
     }
 
-    // 添加用户到Users的Map中
-    private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {
-        mLocalIPaddress = mBaseApplication.getLocalIPaddress();
-        String receiveIP = receiveDatagramPacket.getAddress().getHostAddress();
-        if (!(receiveIP.equals(mLocalIPaddress))) {
-            CopyOfNearByPeople user = new CopyOfNearByPeople();
-            user.setIMEI(paramIPMSGProtocol.getSenderIMEI());
-            user.setIP(receiveIP);
+    /** 刷新用户列表 **/
+    public void refreshUsers() {
+        mBaseApplication.OnlineUsers.clear(); // 清空在线用户列表
+        notifyOnline(); // 发送上线通知
+        // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
+    }
+
+    /**
+     * 添加用户到在线列表中 (线程安全的)
+     * 
+     * @param paramIPMSGProtocol
+     *            包含用户信息的IPMSGProtocol字符串
+     */
+    private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {     
+        String receiveIMEI =paramIPMSGProtocol.getSenderIMEI();
+        if (!(mLocalIPaddress.equals(receiveIMEI))) {
+            NearByPeople user = new NearByPeople();
+            user.setIMEI(receiveIMEI);
+            user.setIP(receiveDatagramPacket.getAddress().getHostAddress());
             user.setDevice(paramIPMSGProtocol.getSenderDevice());
 
             // 获取附加信息中的数据
@@ -292,8 +348,21 @@ public class UDPSocketThread implements Runnable {
             user.setAvatar(Integer.parseInt(args[2]));
             user.setAge(Integer.parseInt(args[3]));
             user.setLogintime(args[4]);
-            mBaseApplication.OnlineUsers.put(receiveIP, user);
-            Log.i(TAG, "成功添加ip为" + receiveIP + "的用户");
+            mBaseApplication.OnlineUsers.put(receiveIMEI, user);
+            Log.i(TAG, "成功添加ip为" + receiveIMEI + "的用户");
         }
     }
+    
+    /** 接收消息监听的listener接口 **/
+    public interface OnReceiveMsgListener {
+        
+        /**
+         * 判断收到的消息是否匹配已打开的聊天窗口
+         * @param paramMsg 收到的消息对象
+         * @return
+         */
+        public boolean isThisActivityMsg(Message paramMsg);
+    }
+    
+    
 }

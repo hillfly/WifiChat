@@ -1,5 +1,9 @@
 package com.immomo.momo.android.activity.maintabs;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,13 +21,14 @@ import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.OtherProfileActivity;
 import com.immomo.momo.android.adapter.NearByPeopleAdapter;
 import com.immomo.momo.android.entity.NearByPeople;
-import com.immomo.momo.android.util.JsonResolveUtils;
 import com.immomo.momo.android.view.MoMoRefreshListView;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnCancelListener;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnRefreshListener;
 
 public class NearByPeopleFragment extends BaseFragment implements
         OnItemClickListener, OnRefreshListener, OnCancelListener {
+
+    private static List<NearByPeople> mNearByPeoples;
 
     private MoMoRefreshListView mMmrlvList;
     private NearByPeopleAdapter mAdapter;
@@ -32,14 +37,12 @@ public class NearByPeopleFragment extends BaseFragment implements
         super();
     }
 
-    public NearByPeopleFragment(BaseApplication application, Activity activity,
-            Context context) {
+    public NearByPeopleFragment(BaseApplication application, Activity activity, Context context) {
         super(application, activity, context);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_nearbypeople, container,
                 false);
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -65,58 +68,53 @@ public class NearByPeopleFragment extends BaseFragment implements
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         int position = (int) arg3;
-        NearByPeople people = mApplication.mNearByPeoples.get(position);
-        String uid = null;
-        String name = null;
-        String avatar = null;
-        if (position > 3) {
-            uid = "momo_p_other";
-        } else {
-            uid = people.getUid();
-        }
-        name = people.getName();
-        avatar = people.getAvatar();
+        NearByPeople people = mNearByPeoples.get(position);
         Intent intent = new Intent(mContext, OtherProfileActivity.class);
-        intent.putExtra("uid", uid);
-        intent.putExtra("name", name);
-        intent.putExtra("avatar", avatar);
-        intent.putExtra("entity_people", people);
+        intent.putExtra(NearByPeople.ENTITY_PEOPLE, people);
         startActivity(intent);
     }
 
     private void getPeoples() {
-        if (mApplication.mNearByPeoples.isEmpty()) {
-            putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
+        putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    showLoadingDialog("正在加载,请稍后...");
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showLoadingDialog("正在加载,请稍后...");
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                refreshUserList(mApplication);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                super.onPostExecute(result);
+                dismissLoadingDialog();
+                if (!result) {
+                    showCustomToast("数据加载失败...");
+                } else {
+                    mAdapter = new NearByPeopleAdapter(mApplication, mContext, mNearByPeoples);
+                    mMmrlvList.setAdapter(mAdapter);
                 }
+            }
 
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    return JsonResolveUtils.resolveNearbyPeople(mApplication);
-                }
+        });
 
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    super.onPostExecute(result);
-                    dismissLoadingDialog();
-                    if (!result) {
-                        showCustomToast("数据加载失败...");
-                    } else {
-                        mAdapter = new NearByPeopleAdapter(mApplication,
-                                mContext, mApplication.mNearByPeoples);
-                        mMmrlvList.setAdapter(mAdapter);
-                    }
-                }
+    }
 
-            });
-        } else {
-            mAdapter = new NearByPeopleAdapter(mApplication, mContext,
-                    mApplication.mNearByPeoples);
-            mMmrlvList.setAdapter(mAdapter);
+    /**
+     * 将HashMap转成ArrayList 以便ListView刷新
+     * 
+     * @param application
+     */
+    private void refreshUserList(BaseApplication application) {
+        Map<String, NearByPeople> mMap = application.OnlineUsers;
+        mNearByPeoples = new ArrayList<NearByPeople>(mMap.size());
+        for (Map.Entry<String, NearByPeople> entry : mMap.entrySet()) {
+            mNearByPeoples.add(entry.getValue());
         }
     }
 

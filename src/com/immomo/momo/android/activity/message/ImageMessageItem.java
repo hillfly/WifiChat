@@ -41,30 +41,26 @@ public class ImageMessageItem extends MessageItem implements
 		View view = mInflater.inflate(R.layout.message_image, null);
 		mLayoutMessageContainer.addView(view);
 		mIvImage = (ImageView) view.findViewById(R.id.message_iv_msgimage);
-		mLayoutLoading = (LinearLayout) view
-				.findViewById(R.id.message_layout_loading);
+		mLayoutLoading = (LinearLayout) view.findViewById(R.id.message_layout_loading);
 		mIvLoading = (ImageView) view.findViewById(R.id.message_iv_loading);
-		mHtvLoadingText = (HandyTextView) view
-				.findViewById(R.id.message_htv_loading_text);
+		mHtvLoadingText = (HandyTextView) view.findViewById(R.id.message_htv_loading_text);
 		mIvImage.setOnClickListener(this);
 		mIvImage.setOnLongClickListener(this);
 	}
 
 	@Override
 	protected void onFillMessage() {
-		mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getContent());
+		mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getMsgContent());
 		mHandler.sendEmptyMessage(0);
 	}
 
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent(mContext, ImageBrowserActivity.class);
-		intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
-				ImageBrowserActivity.TYPE_PHOTO);
-		intent.putExtra("path", mMsg.getContent());
+		intent.putExtra(ImageBrowserActivity.IMAGE_TYPE, ImageBrowserActivity.TYPE_PHOTO);
+		intent.putExtra(ImageBrowserActivity.PATH, mMsg.getMsgContent());
 		mContext.startActivity(intent);
-		((ChatActivity) mContext).overridePendingTransition(R.anim.zoom_enter,
-				0);
+		((ChatActivity) mContext).overridePendingTransition(R.anim.zoom_enter, 0);
 	}
 
 	@Override

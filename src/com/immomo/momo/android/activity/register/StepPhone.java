@@ -137,7 +137,8 @@ public class StepPhone extends RegisterStep implements OnClickListener,
 			mHtvNotice.setVisibility(View.VISIBLE);
 			char[] chars = s.toString().toCharArray();
 			StringBuffer buffer = new StringBuffer();
-			for (int i = 0; i < chars.length; i++) {
+			int mLength = chars.length;
+			for (int i = 0; i < mLength; i++) {
 				if (i % 4 == 2) {
 					buffer.append(chars[i] + "  ");
 				} else {

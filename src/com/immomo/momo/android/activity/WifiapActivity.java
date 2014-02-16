@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
@@ -25,13 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.immomo.momo.android.BaseActivity;
-import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.BaseDialog;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.maintabs.MainTabActivity;
 import com.immomo.momo.android.activity.wifiap.WifiApConst;
 import com.immomo.momo.android.activity.wifiap.WifiapBroadcast;
 import com.immomo.momo.android.adapter.WifiapAdapter;
+import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.util.WifiUtils;
 import com.immomo.momo.android.view.HeaderLayout;
@@ -50,11 +51,12 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
         onRightImageButtonClickListener, WifiapBroadcast.EventHandler,
         DialogInterface.OnClickListener {
 
-    private final String TAG = "SZU_WifiapActivity";
+    private static final String TAG = "SZU_WifiapActivity";
 
     private int wifiapOperateEnum = WifiApConst.NOTHING;
     private String localIPaddress = "0.0.0.0"; // 本地WifiIP
     private String serverIPaddres = "0.0.0.0"; // 热点IP
+    private String mDevice = getLocalHostName(); // 手机品牌型号
     private boolean isClient; // 客户端标识
 
     private WifiapSearchAnimationFrameLayout m_FrameLWTSearchAnimation;
@@ -76,6 +78,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     private userDAO mUserDAO; // 数据库操作实例
     private userInfo mUserInfo; // 用户信息类实例
     ArrayList<ScanResult> m_listWifi = new ArrayList<ScanResult>();
+    WifiapBroadcast mWifiapBroadcast = new WifiapBroadcast();
 
     /** handler 异步更新UI **/
     public Handler handler = new Handler() {
@@ -170,6 +173,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifiap);
+        initBroadcast(); // 注册广播
         m_wtSearchProcess = new WTSearchProcess();
         m_createAPProcess = new CreateAPProcess();
         m_wiFiAdmin = WifiUtils.getInstance(this);
@@ -188,10 +192,23 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        unregisterReceiver(mWifiapBroadcast); // 撤销广播
         WifiapBroadcast.ehList.remove(this);
         m_wtSearchProcess.stop();
         m_createAPProcess.stop();
+        super.onDestroy();
+    }
+
+    /**
+     * 动态注册广播
+     */
+    public void initBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(mWifiapBroadcast, filter);
     }
 
     /** 初始化视图 获取控件对象 **/
@@ -344,7 +361,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
      */
     private boolean isValidated() {
         String NullIP = "0.0.0.0";
-        if (localIPaddress.equals(NullIP) || serverIPaddres.equals(NullIP)) {
+        if (NullIP.equals(localIPaddress) || NullIP.equals(serverIPaddres)) {
             showCustomToast("请创建热点或者连接一个热点");
             return false;
         }
@@ -382,14 +399,19 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setName(mNickname);
                         mUserInfo.setSex(mGender);
                         mUserInfo.setAge(mAge);
+                        // mUserInfo.setDevice(mDevice);
                         mUserDAO.update(mUserInfo);
                     } else {
                         mUserInfo = new userInfo(mNickname, mAge, mGender,
                                 mIMEI, localIPaddress, mOnlineStateInt, mAvatar);
+                        // mUserInfo = new userInfo(mNickname, mAge, mGender,
+                        // mIMEI, localIPaddress, mOnlineStateInt, mAvatar,
+                        // mDevice);
                         mUserDAO.add(mUserInfo);
                     }
 
                     // 设置全局Session
+                    mApplication.setDevice(mDevice);
                     mApplication.setIsClient(isClient);
                     mApplication.setLocalIPaddress(localIPaddress);
                     mApplication.setServerIPaddress(serverIPaddres);
@@ -397,17 +419,20 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     // 在SD卡中存储登陆信息
                     SharedPreferences.Editor mEditor = getSharedPreferences(
                             GlobalSharedName, Context.MODE_PRIVATE).edit();
-                    mEditor.putString(BaseApplication.IMEI, mIMEI)
-                            .putString(BaseApplication.NICKNAME, mNickname)
-                            .putString(BaseApplication.GENDER, mGender)
-                            .putInt(BaseApplication.AVATAR, mAvatar)
-                            .putInt(BaseApplication.AGE, mAge)
-                            .putInt(BaseApplication.ONLINESTATEINT, mOnlineStateInt);
+                    mEditor.putString(NearByPeople.IMEI, mIMEI)
+                            .putString(NearByPeople.DEVICE, mDevice)
+                            .putString(NearByPeople.NICKNAME, mNickname)
+                            .putString(NearByPeople.GENDER, mGender)
+                            .putInt(NearByPeople.AVATAR, mAvatar)
+                            .putInt(NearByPeople.AGE, mAge)
+                            .putInt(NearByPeople.ONLINESTATEINT,
+                                    mOnlineStateInt);
                     mEditor.commit();
 
                     showLogInfo(TAG, "mNickname:" + mNickname + " mGender:"
                             + mGender + " mOnlineStateInt:" + mOnlineStateInt
-                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
+                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI
+                            + " Device:" + mDevice);
                     showLogInfo(TAG, " isClient:" + isClient
                             + " serverIPaddress:" + serverIPaddres
                             + " localIPaddress:" + localIPaddress);
@@ -643,9 +668,10 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 m_FrameLWTSearchAnimation.stopAnimation();
             }
             m_wiFiAdmin.closeWifi();
-            m_wiFiAdmin.createWiFiAP(m_wiFiAdmin.createWifiInfo(
-                    WifiApConst.WIFI_AP_HEADER + getLocalHostName(),
-                    WifiApConst.WIFI_AP_PASSWORD, 3, "ap"), true);
+            m_wiFiAdmin.createWiFiAP(
+                    m_wiFiAdmin.createWifiInfo(WifiApConst.WIFI_AP_HEADER
+                            + mDevice, WifiApConst.WIFI_AP_PASSWORD, 3, "ap"),
+                    true);
             m_createAPProcess.start();
             m_listWifi.clear();
             m_wTAdapter.setData(m_listWifi);
@@ -710,7 +736,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 }
                 m_wiFiAdmin.closeWifi();
                 m_wiFiAdmin.createWiFiAP(m_wiFiAdmin.createWifiInfo(
-                        WifiApConst.WIFI_AP_HEADER + getLocalHostName(),
+                        WifiApConst.WIFI_AP_HEADER + mDevice,
                         WifiApConst.WIFI_AP_PASSWORD, 3, "ap"), true);
                 m_createAPProcess.start();
                 m_listWifi.clear();

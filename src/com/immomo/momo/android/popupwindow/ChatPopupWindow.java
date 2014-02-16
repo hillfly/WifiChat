@@ -14,7 +14,7 @@ public class ChatPopupWindow extends BasePopupWindow implements OnClickListener 
 	private HandyTextView mHtvCreate;
 	private HandyTextView mHtvSynchronous;
 
-	private onChatPopupItemClickListener mOnChatPopupItemClickListener;
+	private OnChatPopupItemClickListener mOnChatPopupItemClickListener;
 
 	public ChatPopupWindow(Context context, int width, int height) {
 		super(LayoutInflater.from(context).inflate(
@@ -66,11 +66,11 @@ public class ChatPopupWindow extends BasePopupWindow implements OnClickListener 
 	}
 
 	public void setOnChatPopupItemClickListener(
-			onChatPopupItemClickListener listener) {
+			OnChatPopupItemClickListener listener) {
 		mOnChatPopupItemClickListener = listener;
 	}
 
-	public interface onChatPopupItemClickListener {
+	public interface OnChatPopupItemClickListener {
 		void onVoiceModeClick();
 
 		void onCreateClick();

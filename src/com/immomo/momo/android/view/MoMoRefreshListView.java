@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
+import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.R;
 
 public class MoMoRefreshListView extends HandyListView {
@@ -96,7 +97,7 @@ public class MoMoRefreshListView extends HandyListView {
         mHeader.invalidate();
 
         mHtvTitle.setText("下拉刷新");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日  HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat(BaseApplication.FORMATTIMESTR);
         String date = format.format(new Date());
         mHtvTime.setText("最后刷新: " + date);
 
@@ -279,9 +280,10 @@ public class MoMoRefreshListView extends HandyListView {
         }
     }
 
+    /** 下拉刷新 **/
     public void onRefreshComplete() {
         mState = DONE;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日  HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat(BaseApplication.FORMATTIMESTR);
         String date = format.format(new Date());
         mHtvTime.setText("最后刷新: " + date);
         changeHeaderViewByState();

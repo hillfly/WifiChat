@@ -35,7 +35,8 @@ public class NearByGroupAdapter extends BaseObjectListAdapter implements
 		mNearByGroups = (List<NearByGroup>) datas;
 		mPositions = new int[mNearByGroups.size()];
 		int position = 0;
-		for (int i = 0; i < mNearByGroups.size(); i++) {
+		int mLength = mNearByGroups.size();
+		for (int i = 0; i < mLength; i++) {
 			mPositions[i] = position;
 			position += mNearByGroups.get(i).getGroupCount();
 		}

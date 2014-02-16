@@ -1,79 +1,149 @@
 package com.immomo.momo.android.entity;
 
+
+/**
+ * 消息实体类
+ * 
+ * @author _Hill3
+ */
 public class Message extends Entity {
 
-	private String avatar;
-	private long time;
-	private String distance;
-	private String content;
+    private String senderIMEI;
+    private String senderName;
+    private String sendTime;
+    private String MsgContent;
+    private CONTENT_TYPE contentType;
+    private boolean isSelfMsg; // 是否为自己发的信息
 
-	private CONTENT_TYPE contentType;
-	private MESSAGE_TYPE messageType;
+    public Message() {
+        isSelfMsg = false; // 消息默认为非本人所发
+    }
 
-	public Message(String avatar, long time, String distance, String content,
-			CONTENT_TYPE contentType, MESSAGE_TYPE messageType) {
-		super();
-		this.avatar = avatar;
-		this.time = time;
-		this.distance = distance;
-		this.content = content;
-		this.contentType = contentType;
-		this.messageType = messageType;
-	}
+    public Message(String paramSenderIMEI, String paramSenderName, String paramSendTime, 
+            String paramMsgContent, CONTENT_TYPE paramContentType) {
+        this.senderIMEI = paramSenderIMEI;
+        this.senderName = paramSenderName;
+        this.sendTime = paramSendTime;
+        this.MsgContent = paramMsgContent;
+        this.contentType = paramContentType;
+        this.isSelfMsg = false; // 消息默认为非本人所发
+    }
 
-	public String getAvatar() {
-		return avatar;
-	}
+    /** 消息内容类型 **/
+    public enum CONTENT_TYPE {
+        TEXT, IMAGE, FILE, VOICE;
+    }
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
+    /**
+     * 获取消息发送方IMEI
+     * 
+     * @return
+     */
+    public String getSenderIMEI() {
+        return senderIMEI;
+    }
 
-	public long getTime() {
-		return time;
-	}
+    /**
+     * 设置消息发送方IMEI
+     * 
+     * @param paramSenderIMEI
+     *            
+     */
+    public void setSenderIMEI(String paramSenderIMEI) {
+        this.senderIMEI = paramSenderIMEI;
+    }
 
-	public void setTime(long time) {
-		this.time = time;
-	}
+    /**
+     * 获取消息发送者姓名
+     * 
+     * @return
+     */
+    public String getSenderName() {
+        return senderName;
+    }
 
-	public String getDistance() {
-		return distance;
-	}
+    /**
+     * 设置消息发送者姓名
+     * 
+     * @param paramSenderName
+     *            姓名
+     */
+    public void setSenderName(String paramSenderName) {
+        this.senderName = paramSenderName;
+    }
 
-	public void setDistance(String distance) {
-		this.distance = distance;
-	}
+    /**
+     * 获取消息发送时间
+     * 
+     * @return
+     */
+    public String getSendTime() {
+        return sendTime;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    /**
+     * 设置消息发送时间
+     * 
+     * @param paramSendTime
+     *            发送时间,格式 xx年xx月xx日 xx:xx:xx
+     */
+    public void setSendTime(String paramSendTime) {
+        this.sendTime = paramSendTime;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    /**
+     * 获取消息内容
+     * 
+     * @return
+     */
+    public String getMsgContent() {
+        return MsgContent;
+    }
 
-	public CONTENT_TYPE getContentType() {
-		return contentType;
-	}
+    /**
+     * 设置消息内容
+     * 
+     * @param paramMsgContent
+     */
+    public void setMsgContent(String paramMsgContent) {
+        this.MsgContent = paramMsgContent;
+    }
 
-	public void setContentType(CONTENT_TYPE contentType) {
-		this.contentType = contentType;
-	}
+    /**
+     * 获取消息内容类型
+     * 
+     * @return
+     * @see CONTENT_TYPE
+     */
+    public CONTENT_TYPE getContentType() {
+        return contentType;
+    }
 
-	public MESSAGE_TYPE getMessageType() {
-		return messageType;
-	}
+    /**
+     * 设置消息内容类型
+     * 
+     * @param paramContentType
+     * @see CONTENT_TYPE
+     */
+    public void setContentType(CONTENT_TYPE paramContentType) {
+        this.contentType = paramContentType;
+    }
 
-	public void setMessageType(MESSAGE_TYPE messageType) {
-		this.messageType = messageType;
-	}
+    /**
+     * 获取是否自己发送的消息
+     * 
+     * @return
+     */
+    public boolean getIsSelfMsg() {
+        return isSelfMsg;
+    }
 
-	public enum CONTENT_TYPE {
-		TEXT, IMAGE, MAP, VOICE;
-	}
-
-	public enum MESSAGE_TYPE {
-		RECEIVER, SEND;
-	}
+    /**
+     * 设置是否为自己发的消息
+     * 
+     * @param paramIsSelfMsg
+     */
+    public void setIsSelfMsg(Boolean paramIsSelfMsg) {
+        this.isSelfMsg = paramIsSelfMsg;
+    }
 }

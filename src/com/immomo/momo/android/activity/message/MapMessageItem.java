@@ -1,6 +1,5 @@
 package com.immomo.momo.android.activity.message;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -30,8 +29,7 @@ public class MapMessageItem extends MessageItem implements OnClickListener,
 
 	public MapMessageItem(Message msg, Context context) {
 		super(msg, context);
-		mApplication = ((BaseApplication) ((Activity) mContext)
-				.getApplication());
+		mApplication = BaseApplication.getInstance();
 		mImageMapUtils = ImageMapUtils.create(context);
 	}
 

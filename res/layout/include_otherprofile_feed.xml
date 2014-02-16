@@ -54,7 +54,7 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!-- <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dip"
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_value"
-                android:textSize="13sp" />
+                android:textSize="13sp" /> -->
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -92,85 +92,6 @@
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/otherprofile_layout_feed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dip"
-        android:background="@drawable/bg_groupparty_desc"
-        android:padding="10dip"
-        android:clickable="true" >
-
-        <LinearLayout
-            android:id="@+id/otherprofile_layout_feed_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dip"
-            android:gravity="center" >
-
-            <com.immomo.momo.android.view.RoundImageView
-                android:id="@+id/otherprofile_riv_feed_pic"
-                android:layout_width="40dip"
-                android:layout_height="40dip" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dip"
-                android:src="@drawable/ic_common_arrow" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/otherprofile_layout_feed_pic"
-            android:orientation="vertical" >
-
-            <com.immomo.momo.android.view.HandyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:text="个人动态"
-                android:textColor="@color/font_attribute"
-                android:textSize="16sp" />
-
-            <com.immomo.momo.android.view.HandyTextView
-                android:id="@+id/otherprofile_htv_feed_sign"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:singleLine="true"
-                android:textColor="@color/font_value"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dip"
-                    android:src="@drawable/ic_user_location" />
-
-                <com.immomo.momo.android.view.HandyTextView
-                    android:id="@+id/otherprofile_htv_feed_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="3dip"
-                    android:singleLine="true"
-                    android:textColor="@color/font_value"
-                    android:textSize="14sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
+    </RelativeLayout>    
 
 </LinearLayout>
