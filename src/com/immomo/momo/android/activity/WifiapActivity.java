@@ -34,6 +34,7 @@ import com.immomo.momo.android.activity.wifiap.WifiapBroadcast;
 import com.immomo.momo.android.adapter.WifiapAdapter;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.socket.UDPSocketThread;
+import com.immomo.momo.android.util.DateUtils;
 import com.immomo.momo.android.util.WifiUtils;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
@@ -57,6 +58,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     private String localIPaddress = "0.0.0.0"; // 本地WifiIP
     private String serverIPaddres = "0.0.0.0"; // 热点IP
     private String mDevice = getLocalHostName(); // 手机品牌型号
+    private String mLogintime; // 登录时间
     private boolean isClient; // 客户端标识
 
     private WifiapSearchAnimationFrameLayout m_FrameLWTSearchAnimation;
@@ -100,8 +102,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     for (int i = 0; i < size; ++i) {
                         ScanResult scanResult = m_wiFiAdmin.mWifiManager
                                 .getScanResults().get(i);
-                        if (scanResult.SSID
-                                .startsWith(WifiApConst.WIFI_AP_HEADER)) {
+                        if (scanResult.SSID.startsWith(WifiApConst.WIFI_AP_HEADER)) {
                             m_listWifi.add(scanResult);
                         }
                     }
@@ -386,9 +387,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     String mIMEI = mApplication.getIMEI();
                     String mNickname = mApplication.getNickname();
                     String mGender = mApplication.getGender();
+                    String mConstellation = mApplication.getConstellation();
                     int mAge = mApplication.getAge();
                     int mAvatar = mApplication.getAvatar();
                     int mOnlineStateInt = mApplication.getOnlineStateInt();
+                    mLogintime = DateUtils.getNowtime();
 
                     // 录入数据库
                     // 若数据库中有IMEI对应的用户记录，则更新此记录; 无则创建新用户
@@ -399,14 +402,16 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setName(mNickname);
                         mUserInfo.setSex(mGender);
                         mUserInfo.setAge(mAge);
-                        // mUserInfo.setDevice(mDevice);
+                        mUserInfo.setDevice(mDevice);
+                        mUserInfo.setConstellation(mConstellation);
+                        mUserInfo.setLastDate(mLogintime);
                         mUserDAO.update(mUserInfo);
                     } else {
                         mUserInfo = new userInfo(mNickname, mAge, mGender,
-                                mIMEI, localIPaddress, mOnlineStateInt, mAvatar);
-                        // mUserInfo = new userInfo(mNickname, mAge, mGender,
-                        // mIMEI, localIPaddress, mOnlineStateInt, mAvatar,
-                        // mDevice);
+                                mIMEI, localIPaddress, mOnlineStateInt, mAvatar);  
+                        mUserInfo.setLastDate(mLogintime);
+                        mUserInfo.setDevice(mDevice);
+                        mUserInfo.setConstellation(mConstellation);
                         mUserDAO.add(mUserInfo);
                     }
 
@@ -415,6 +420,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     mApplication.setIsClient(isClient);
                     mApplication.setLocalIPaddress(localIPaddress);
                     mApplication.setServerIPaddress(serverIPaddres);
+                    mApplication.setLoginTime(mLogintime);
 
                     // 在SD卡中存储登陆信息
                     SharedPreferences.Editor mEditor = getSharedPreferences(
@@ -425,18 +431,10 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                             .putString(NearByPeople.GENDER, mGender)
                             .putInt(NearByPeople.AVATAR, mAvatar)
                             .putInt(NearByPeople.AGE, mAge)
-                            .putInt(NearByPeople.ONLINESTATEINT,
-                                    mOnlineStateInt);
+                            .putInt(NearByPeople.ONLINESTATEINT, mOnlineStateInt)
+                            .putString(NearByPeople.CONSTELLATION, mConstellation)
+                            .putString(NearByPeople.LOGINTIME, mLogintime);
                     mEditor.commit();
-
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mGender:"
-                            + mGender + " mOnlineStateInt:" + mOnlineStateInt
-                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI
-                            + " Device:" + mDevice);
-                    showLogInfo(TAG, " isClient:" + isClient
-                            + " serverIPaddress:" + serverIPaddres
-                            + " localIPaddress:" + localIPaddress);
-
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -451,9 +449,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (result) {
-                    mApplication.mUDPSocketThread = UDPSocketThread
-                            .getInstance(mApplication); // 初始化Thread
+                if (result) { // 初始化Thread
+                    mApplication.mUDPSocketThread = UDPSocketThread.getInstance(mApplication);
                     mApplication.mUDPSocketThread.connectUDPSocket(); // 新建Socket线程
                     mApplication.mUDPSocketThread.notifyOnline(); // 发送上线广播
                     startActivity(MainTabActivity.class);

@@ -7,6 +7,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -16,20 +17,22 @@ import android.util.Log;
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.util.DateUtils;
 
 public class UDPSocketThread implements Runnable {
 
     private static UDPSocketThread instance; // 唯一实例
 
-    private static final String TAG = "SZU_UDPSocketThread"; 
+    private static final String TAG = "SZU_UDPSocketThread";
     private static final int BUFFERLENGTH = 1024; // 缓冲大小
 
-    private String mDevice; // 用以区分是手机还是PC
+    private String mDevice;
     private String mIMEI;
     private String mNickname;
     private String mGender;
     private String mLogintime;
     private String mLocalIPaddress;
+    private String mConstellation;
     private int mAvatar;
     private int mAge;
 
@@ -37,7 +40,7 @@ public class UDPSocketThread implements Runnable {
     private byte[] sendBuffer = new byte[BUFFERLENGTH];
 
     private static BaseApplication mBaseApplication;
-    private boolean isThreadRunning;       
+    private boolean isThreadRunning;
     private Thread receiveUDPThread; // 接收UDP数据线程
 
     private DatagramSocket UDPSocket;
@@ -49,6 +52,7 @@ public class UDPSocketThread implements Runnable {
         mBaseApplication.OnlineUsers = new LinkedHashMap<String, NearByPeople>(); // 在线列表
         mBaseApplication.ReceiveMessages = new ConcurrentLinkedQueue<Message>(); // 消息队列
         mBaseApplication.mReceiveMsgListener = new Vector<OnReceiveMsgListener>(); // ReceiveMsgListener容器
+        mBaseApplication.LastMsgCache = new HashMap<String, String>(); // 最后一条消息，KEY为IMEI
         mDevice = mBaseApplication.getDevice();
         mIMEI = mBaseApplication.getIMEI();
         mNickname = mBaseApplication.getNickname();
@@ -56,14 +60,10 @@ public class UDPSocketThread implements Runnable {
         mAvatar = mBaseApplication.getAvatar();
         mAge = mBaseApplication.getAge();
         mLocalIPaddress = mBaseApplication.getLocalIPaddress();
-        if (mBaseApplication.getLoginTime() == null) {
-            mLogintime = mBaseApplication.getNowtime();
-            mBaseApplication.setLoginTime(mLogintime);
-        } else {
-            mLogintime = mBaseApplication.getLoginTime();
-        }
+        mConstellation = mBaseApplication.getConstellation();        
+        mLogintime = mBaseApplication.getLoginTime();
     }
-    
+
     /**
      * <p>
      * 获取UDPSocketThread实例
@@ -83,7 +83,6 @@ public class UDPSocketThread implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         while (isThreadRunning) {
             try {
                 UDPSocket.receive(receiveDatagramPacket);
@@ -113,66 +112,70 @@ public class UDPSocketThread implements Runnable {
                         receiveDatagramPacket.getLength(), "gbk");
             } catch (UnsupportedEncodingException e) {
                 Log.e(TAG, "系统不支持GBK编码");
-                e.printStackTrace();
             }
             Log.i(TAG, "接收到的UDP数据内容为:" + UDPListenResStr);
 
             IPMSGProtocol mIPMSGRes = new IPMSGProtocol(UDPListenResStr);
             int commandNo = mIPMSGRes.getCommandNo(); // 获取命令字
 
-            switch (0x000000FF & (mIPMSGRes.getCommandNo())) {
+            if (!(mIMEI.equals(mIPMSGRes.getSenderIMEI()))) { // 过滤自己发送的广播
 
-            // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
-            case IPMSGConst.IPMSG_BR_ENTRY: {
-                Log.i(TAG, "收到上线通知");
-                addUser(mIPMSGRes); // 增加用户至在线列表
-                // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
+                switch (0x000000FF & (mIPMSGRes.getCommandNo())) {
 
-                // 构造上线应答报文内容
-                IPMSGProtocol mIPMSGSend = new IPMSGProtocol();
-                mIPMSGSend.setVersion(String.valueOf(IPMSGConst.VERSION));
-                mIPMSGSend.setSenderIMEI(mIMEI);
-                mIPMSGSend.setSenderDevice(mDevice);
-                mIPMSGSend.setCommandNo(IPMSGConst.IPMSG_ANSENTRY);
-                mIPMSGSend.setAdditionalSection(mNickname + "\0" + mGender
-                        + "\0" + mAvatar + "\0" + mAge + "\0" + mLogintime); // 附加：昵称、性别、头像编号、年龄、登录时间
+                // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
+                case IPMSGConst.IPMSG_BR_ENTRY: {
+                    Log.i(TAG, "收到上线通知");
+                    addUser(mIPMSGRes); // 增加用户至在线列表
+                    // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
 
-                sendUDPdata(mIPMSGSend.getProtocolString() + "\0",
-                        receiveDatagramPacket.getAddress(),
-                        receiveDatagramPacket.getPort());
-                Log.i(TAG, "成功发送上线应答");
-            }
-                break;
+                    // 构造上线应答报文内容
+                    IPMSGProtocol mIPMSGSend = new IPMSGProtocol();
+                    mIPMSGSend.setVersion(String.valueOf(IPMSGConst.VERSION));
+                    mIPMSGSend.setSenderIMEI(mIMEI);
+                    mIPMSGSend.setSenderDevice(mDevice);
+                    mIPMSGSend.setCommandNo(IPMSGConst.IPMSG_ANSENTRY);
+                    mIPMSGSend.setAdditionalSection(mNickname + "\0" + mGender
+                            + "\0" + mAvatar + "\0" + mAge + "\0"
+                            + mConstellation + "\0" + mLogintime);
+                    // 附加：昵称、性别、头像编号、年龄、星座、登录时间
 
-            // 收到上线应答，更新在线用户列表
-            case IPMSGConst.IPMSG_ANSENTRY: {
-                Log.i(TAG, "收到上线应答");
-                addUser(mIPMSGRes); // 增加用户至在线列表
-                // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_ANSENTRY);
-            }
-                break;
+                    sendUDPdata(mIPMSGSend.getProtocolString() + "\0",
+                            receiveDatagramPacket.getAddress(),
+                            receiveDatagramPacket.getPort());
+                    Log.i(TAG, "成功发送上线应答");
+                }
+                    break;
 
-            // 收到下线广播
-            case IPMSGConst.IPMSG_BR_EXIT: {
-                String userIp = receiveDatagramPacket.getAddress().getHostAddress();
-                mBaseApplication.OnlineUsers.remove(userIp); // 移除用户
-                // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
+                // 收到上线应答，更新在线用户列表
+                case IPMSGConst.IPMSG_ANSENTRY: {
+                    Log.i(TAG, "收到上线应答");
+                    addUser(mIPMSGRes); // 增加用户至在线列表
+                    // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_ANSENTRY);
+                }
+                    break;
 
-                Log.i(TAG, "根据下线报文成功删除ip为" + userIp + "的用户");
-            }
-                break;
+                // 收到下线广播
+                case IPMSGConst.IPMSG_BR_EXIT: {
+                    String imei = mIPMSGRes.getSenderIMEI();
+                    mBaseApplication.OnlineUsers.remove(imei); // 移除用户
+                    // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
 
-            // 拒绝接受文件
-            case IPMSGConst.IPMSG_RELEASEFILES: {
-                // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
-            }
-                break;
+                    Log.i(TAG, "根据下线报文成功删除imei为" + imei + "的用户");
+                }
+                    break;
 
-            } // End of switch
+                // 拒绝接受文件
+                case IPMSGConst.IPMSG_RELEASEFILES: {
+                    // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
+                }
+                    break;
 
-            // 每次接收完UDP数据后，重置长度。否则可能会导致下次收到数据包被截断。
-            if (receiveDatagramPacket != null) {
-                receiveDatagramPacket.setLength(BUFFERLENGTH);
+                } // End of switch
+
+                // 每次接收完UDP数据后，重置长度。否则可能会导致下次收到数据包被截断。
+                if (receiveDatagramPacket != null) {
+                    receiveDatagramPacket.setLength(BUFFERLENGTH);
+                }
             }
         }
 
@@ -231,7 +234,9 @@ public class UDPSocketThread implements Runnable {
         mIpmsgProtocol.setSenderDevice(mDevice);
         mIpmsgProtocol.setCommandNo(IPMSGConst.IPMSG_BR_ENTRY); // 上线命令
         mIpmsgProtocol.setAdditionalSection(mNickname + "\0" + mGender + "\0"
-                + mAvatar + "\0" + mAge + "\0" + mLogintime); // 附加：昵称、性别、头像编号、年龄、登录时间
+                + mAvatar + "\0" + mAge + "\0" + mConstellation + "\0"
+                + mLogintime);
+        // 附加：昵称、性别、头像编号、年龄、星座、登录时间
 
         InetAddress broadcastAddr;
         try {
@@ -262,7 +267,7 @@ public class UDPSocketThread implements Runnable {
             Log.e(TAG, "noticeOnline()....广播地址有误");
         }
     }
-    
+
     /** 添加listener到容器中 **/
     public void addReceiveMsgListener(OnReceiveMsgListener paramListener) {
         if (!(mBaseApplication.mReceiveMsgListener.contains(paramListener))) {
@@ -279,6 +284,7 @@ public class UDPSocketThread implements Runnable {
 
     /**
      * 判断是否有已打开的聊天窗口来接收对应的数据。
+     * 
      * @param paramMsg
      * @return
      */
@@ -292,7 +298,7 @@ public class UDPSocketThread implements Runnable {
         }
         return false;
     }
-   
+
     /**
      * 发送Socket UDP数据包
      * 
@@ -332,8 +338,8 @@ public class UDPSocketThread implements Runnable {
      * @param paramIPMSGProtocol
      *            包含用户信息的IPMSGProtocol字符串
      */
-    private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {     
-        String receiveIMEI =paramIPMSGProtocol.getSenderIMEI();
+    private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {
+        String receiveIMEI = paramIPMSGProtocol.getSenderIMEI();
         if (!(mLocalIPaddress.equals(receiveIMEI))) {
             NearByPeople user = new NearByPeople();
             user.setIMEI(receiveIMEI);
@@ -347,22 +353,24 @@ public class UDPSocketThread implements Runnable {
             user.setGender(args[1]);
             user.setAvatar(Integer.parseInt(args[2]));
             user.setAge(Integer.parseInt(args[3]));
-            user.setLogintime(args[4]);
+            user.setConstellation(args[4]);
+            user.setLogintime(args[5]);
             mBaseApplication.OnlineUsers.put(receiveIMEI, user);
             Log.i(TAG, "成功添加ip为" + receiveIMEI + "的用户");
         }
     }
-    
+
     /** 接收消息监听的listener接口 **/
     public interface OnReceiveMsgListener {
-        
+
         /**
          * 判断收到的消息是否匹配已打开的聊天窗口
-         * @param paramMsg 收到的消息对象
+         * 
+         * @param paramMsg
+         *            收到的消息对象
          * @return
          */
         public boolean isThisActivityMsg(Message paramMsg);
     }
-    
-    
+
 }

@@ -32,11 +32,15 @@ public class DBHelper extends SQLiteOpenHelper
 	 * IMEI(varchar)
 	 * status(int)
 	 * avatar(int)
+	 * lastdate(text)
+	 * device(text)
+	 * constellation(text)
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		db.execSQL("create table " + T_NAME + " (id integer primary key,name varchar(20),sex char,age integer,IMEI varchar(20),ip varchar(20),status integer,avater integer)");
+		db.execSQL("create table " + T_NAME +
+				" (id integer primary key,name varchar(20),sex char,age integer,IMEI varchar(20),ip varchar(20),status integer,avater integer,lastdate text,device text,constellation text)");
 	}
 
 	/*该函数当检测到版本数增加时候会自动调用

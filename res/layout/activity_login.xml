@@ -1,250 +1,378 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:background="@color/background_normal"
-	android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_normal"
+    android:orientation="vertical" >
 
-	<include
-		android:id="@+id/login_header"
-		layout="@layout/include_header" />
+    <include
+        android:id="@+id/login_header"
+        layout="@layout/include_header" />
 
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_below="@+id/login_header"
-		android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/login_header"
+        android:orientation="vertical" >
 
-		<LinearLayout
-			android:id="@+id/login_linearlayout_main"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:layout_weight="1"
-			android:orientation="vertical"
-			android:paddingLeft="10dip"
-			android:paddingRight="10dip"
-			android:paddingTop="15dip" >
+        <LinearLayout
+            android:id="@+id/login_linearlayout_main"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="15dip" >
 
-			<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:focusable="true"
-				android:focusableInTouchMode="true"
-				android:orientation="horizontal" >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal" >
 
-				<EditText
-					android:id="@+id/login_et_nickname"
-					android:layout_width="wrap_content"
-					android:layout_height="fill_parent"
-					android:layout_marginRight="10dip"
-					android:layout_weight="1"
-					android:background="@drawable/edittext_default"
-					android:hint="输入您的昵称"
-					android:maxLength="8"
-					android:singleLine="true" />
-				
-				<EditText
-				    android:id="@+id/login_et_age"
-				    android:layout_width="wrap_content"
-				    android:layout_height="fill_parent"
-				    android:layout_weight="2"
-				    android:layout_marginRight="10dip"
-				    android:background="@drawable/edittext_default"	
-				    android:gravity="center"			    
-				    android:hint="年龄"
-				    android:maxLength="3"
-				    android:digits="0123456789"
-				    android:inputType="number"
-				    android:singleLine="true" />
+                <EditText
+                    android:id="@+id/login_et_nickname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="10dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_default"
+                    android:hint="输入您的昵称"
+                    android:maxLength="8"
+                    android:singleLine="true" />
 
-				<com.immomo.momo.android.view.HandyTextView
-					android:id="@+id/login_htv_onlinestate"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_weight="2"
-					android:background="@drawable/edittext_default"
-					android:clickable="true"
-					android:gravity="center"
-					android:singleLine="true"
-					android:text="在线"
-					android:textColor="@color/font_value"
-					android:textSize="18sp" />
-			</LinearLayout>
+                <com.immomo.momo.android.view.HandyTextView
+                    android:id="@+id/login_htv_onlinestate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@drawable/edittext_default"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="在线"
+                    android:textColor="@color/font_value"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-			<com.immomo.momo.android.view.HandyTextView
-				android:id="@+id/login_htv_nickname_note"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="8dip"
-				android:layout_marginRight="8dip"
-				android:layout_marginTop="8dip"
-				android:text="填写昵称将便于附近的朋友找到你"
-				android:textColor="@color/notes_color"
-				android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="15dip" >
 
-			<View
-				android:layout_width="fill_parent"
-				android:layout_height="1dip"
-				android:layout_marginTop="10dip"
-				android:background="@color/devideline" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip" >
 
-			<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:paddingLeft="10dip"
-				android:paddingRight="10dip"
-				android:paddingTop="8dip" >
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="出生日期"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp" />
 
-				<LinearLayout
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal" >
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:orientation="horizontal" >
 
-					<com.immomo.momo.android.view.HandyTextView
-						android:layout_width="wrap_content"
-						android:layout_height="fill_parent"
-						android:gravity="center"
-						android:text="选择性别"
-						android:textColor="@color/text_color"
-						android:textSize="17sp" />
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:id="@+id/login_birthday_htv_constellation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="20dip"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
 
-					<RadioGroup
-						android:id="@+id/login_baseinfo_rg_gender"
-						android:layout_width="fill_parent"
-						android:layout_height="fill_parent"
-						android:layout_gravity="right"
-						android:layout_weight="1"
-						android:gravity="right|center"
-						android:orientation="horizontal" >
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:id="@+id/login_birthday_htv_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
 
-						<RadioButton
-							android:id="@+id/login_baseinfo_rb_male"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content" />
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="岁"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
-						<com.immomo.momo.android.view.HandyTextView
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginRight="3.0dip"
-							android:text="男"
-							android:textColor="@color/text_color"
-							android:textSize="17sp" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/devideline" />
 
-						<RadioButton
-							android:id="@+id/login_baseinfo_rb_female"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="15dip" >
 
-						<com.immomo.momo.android.view.HandyTextView
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:text="女"
-							android:textColor="@color/text_color"
-							android:textSize="17sp" />
-					</RadioGroup>
-				</LinearLayout>
-			</LinearLayout>
-		</LinearLayout>
+                    <DatePicker
+                        android:id="@+id/login_birthday_dp_birthday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dip"
+                        android:calendarViewShown="false"
+                        android:spinnersShown="true" />
+                </LinearLayout>
+            </LinearLayout>
 
-		<LinearLayout
-			android:id="@+id/login_linearlayout_existmain"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:layout_weight="1"
-			android:orientation="vertical"
-			android:paddingLeft="10dip"
-			android:paddingRight="10dip"
-			android:paddingTop="15dip"
-			android:visibility="gone" >
+            <com.immomo.momo.android.view.HandyTextView
+                android:id="@+id/login_htv_nickname_note"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
+                android:layout_marginRight="8dip"
+                android:layout_marginTop="8dip"
+                android:text="提醒：您的出生日期不会出现在个人资料中。"
+                android:textColor="@color/notes_color"
+                android:textSize="14sp" />
 
-			<RelativeLayout
-				android:layout_width="fill_parent"
-				android:layout_height="280dp"
-				android:orientation="vertical" >
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_marginTop="10dip"
+                android:background="@color/devideline" />
 
-				<ImageView
-					android:id="@+id/login_img_existImg"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_centerInParent="true"
-					android:adjustViewBounds="true"
-					android:background="@drawable/corners_avatar"
-					android:maxHeight="210dp"
-					android:maxWidth="210dp"
-					android:padding="10dp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="8dip" >
 
-				<TextView
-					android:id="@+id/login_tv_existName"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/login_img_existImg"
-					android:layout_centerHorizontal="true"
-					android:layout_marginTop="7dp"
-					android:textSize="18sp" />
-			</RelativeLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
 
-			<View
-				android:layout_width="fill_parent"
-				android:layout_height="1dip"
-				android:layout_marginTop="15dp"
-				android:background="@color/devideline" />
+                    <com.immomo.momo.android.view.HandyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"
+                        android:text="选择性别"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp" />
 
-			<Button
-				android:id="@+id/login_btn_changeUser"
-				android:layout_width="160dp"
-				android:layout_height="50dp"
-				android:layout_gravity="center"
-				android:layout_marginTop="15dp"
-				android:background="@drawable/btn_default"
-				android:text="更  换  账  户"
-				android:textColor="#636363"
-				android:textSize="20sp" />
-		</LinearLayout>
+                    <RadioGroup
+                        android:id="@+id/login_baseinfo_rg_gender"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:orientation="horizontal" >
 
-		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:background="@drawable/bg_unlogin_bar"
-			android:gravity="center_vertical"
-			android:orientation="horizontal"
-			android:paddingBottom="4dp"
-			android:paddingLeft="8dp"
-			android:paddingRight="8dp"
-			android:paddingTop="4dp" >
+                        <RadioButton
+                            android:id="@+id/login_baseinfo_rb_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-			<Button
-				android:id="@+id/login_btn_back"
-				android:layout_width="wrap_content"
-				android:layout_height="42dip"
-				android:layout_marginRight="9dip"
-				android:layout_weight="1"
-				android:background="@drawable/btn_bottombar"
-				android:gravity="center"
-				android:text="返    回"
-				android:textColor="@color/profile_bottom_text_color"
-				android:textSize="14sp" />
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="3.0dip"
+                            android:text="男"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
 
-			<Button
-				android:id="@+id/login_btn_next"
-				android:layout_width="wrap_content"
-				android:layout_height="42dip"
-				android:layout_marginLeft="9dip"
-				android:layout_weight="1"
-				android:background="@drawable/btn_bottombar"
-				android:gravity="center"
-				android:text="下 一 步"
-				android:textColor="@color/profile_bottom_text_color"
-				android:textSize="14sp" />
-		</LinearLayout>
-	</LinearLayout>
+                        <RadioButton
+                            android:id="@+id/login_baseinfo_rb_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-	<ImageView
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/login_header"
-		android:background="@drawable/bg_topbar_shadow"
-		android:focusable="false" />
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="女"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+                    </RadioGroup>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/login_linearlayout_existmain"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="15dip"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="280dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/login_img_existImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/corners_avatar"
+                    android:maxHeight="210dp"
+                    android:maxWidth="2100dp"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:id="@+id/login_tv_existName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/login_tv_profile"
+                    android:layout_toRightOf="@id/login_img_existImg"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@id/login_tv_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/login_layout_Lastlogintime"
+                    android:layout_toRightOf="@id/login_img_existImg"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:id="@+id/login_layout_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="6dip"
+                        android:paddingRight="6dip" >
+
+                        <ImageView
+                            android:id="@+id/login_iv_gender"
+                            android:layout_width="8dip"
+                            android:layout_height="8dip"
+                            android:layout_marginRight="2dip"
+                            android:scaleType="fitXY" />
+
+                        <com.immomo.momo.android.view.HandyTextView
+                            android:id="@+id/login_htv_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/login_tv_constellation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@id/login_layout_Lastlogintime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/login_img_existImg"
+                    android:layout_toRightOf="@id/login_img_existImg"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"                    
+                        android:text="上次登录: "
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/login_tv_lastlogintime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"                        
+                        android:textSize="12sp" />
+                </LinearLayout>
+                
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_marginTop="15dp"
+                android:background="@color/devideline" />
+
+            <Button
+                android:id="@+id/login_btn_changeUser"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/btn_default"
+                android:text="更  换  账  户"
+                android:textColor="#636363"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_unlogin_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp" >
+
+            <Button
+                android:id="@+id/login_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginRight="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="返    回"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/login_btn_next"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginLeft="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="下 一 步"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="false" />
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import com.immomo.momo.android.BaseObjectListAdapter;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.util.DateUtils;
 import com.immomo.momo.android.view.HandyTextView;
 
 public class NearByPeopleAdapter extends BaseObjectListAdapter {
@@ -36,7 +37,7 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
             holder.mIvGender = (ImageView) convertView.findViewById(R.id.user_item_iv_gender);
             holder.mHtvAge = (HandyTextView) convertView.findViewById(R.id.user_item_htv_age);
             holder.mHtvTime = (HandyTextView) convertView.findViewById(R.id.user_item_htv_time);
-            holder.mHtvSign = (HandyTextView) convertView.findViewById(R.id.user_item_htv_sign);
+            holder.mHtvLastMsg = (HandyTextView) convertView.findViewById(R.id.user_item_htv_lastmsg);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -48,8 +49,8 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
         holder.mLayoutGender.setBackgroundResource(people.getGenderBgId());
         holder.mIvGender.setImageResource(people.getGenderId());
         holder.mHtvAge.setText(people.getAge() + "");
-        holder.mHtvTime.setText(people.getLogintime());
-//        holder.mHtvSign.setText(people.getSign());
+        holder.mHtvTime.setText(DateUtils.getBetweentime(people.getLogintime()));
+        holder.mHtvLastMsg.setText(mApplication.LastMsgCache.get(people.getIMEI()));
         holder.mIvDevice.setImageResource(R.drawable.ic_userinfo_android);         
         return convertView;
     }
@@ -63,6 +64,6 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
         ImageView mIvGender;
         HandyTextView mHtvAge;
         HandyTextView mHtvTime;
-        HandyTextView mHtvSign;
+        HandyTextView mHtvLastMsg;
     }
 }

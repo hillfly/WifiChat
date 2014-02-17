@@ -57,6 +57,9 @@ public class userDAO {
         values.put("ip", user.getIPAddr());
         values.put("status", user.getIsOnline());
         values.put("avater", user.getAvater());
+        values.put("lastdate", user.getLastDate());
+        values.put("device", user.getDevice());
+        values.put("constellation",user.getConstellation());
         db.insert(helper.getTableName(), "id", values);
     }
 
@@ -73,6 +76,9 @@ public class userDAO {
         values.put("ip", user.getIPAddr());
         values.put("status", user.getIsOnline());
         values.put("avater", user.getAvater());
+        values.put("lastdate", user.getLastDate());
+        values.put("device", user.getDevice());
+        values.put("constellation",user.getConstellation());
         db.update(helper.getTableName(), values, "id = ?",
                 new String[] { String.valueOf(user.getId()) });
     }
@@ -85,7 +91,7 @@ public class userDAO {
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
         Cursor cursor = db.query(helper.getTableName(), new String[] { "id", "name", "age", "IMEI",
-                "sex", "ip", "status", "avater" }, "id=?", new String[] { String.valueOf(id) },
+                "sex", "ip", "status", "avater","lastdate","device","constellation"}, "id=?", new String[] { String.valueOf(id) },
                 null, null, null);
         if (cursor.moveToNext()) {
             userInfo userInfo = new userInfo(cursor.getInt(cursor.getColumnIndex("id")),
@@ -95,7 +101,8 @@ public class userDAO {
                             .getColumnIndex("IMEI")),
                     cursor.getString(cursor.getColumnIndex("ip")), cursor.getInt(cursor
                             .getColumnIndex("status")), cursor.getInt(cursor
-                            .getColumnIndex("avater")));
+                            .getColumnIndex("avater")),cursor.getString(cursor.getColumnIndex("lastdate")),
+                            cursor.getString(cursor.getColumnIndex("device")),cursor.getString(cursor.getColumnIndex("constellation")));
             cursor.close();
             return userInfo;
         }
@@ -111,7 +118,7 @@ public class userDAO {
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
         Cursor cursor = db.query(helper.getTableName(), new String[] { "id", "name", "age", "IMEI",
-                "sex", "ip", "status", "avater" }, "IMEI=?", new String[] { imei }, null, null,
+                "sex", "ip", "status", "avater","lastdate","device","constellation"}, "IMEI=?", new String[] { imei }, null, null,
                 null);
         if (cursor.moveToNext()) {
             userInfo userInfo = new userInfo(cursor.getInt(cursor.getColumnIndex("id")),
@@ -121,7 +128,8 @@ public class userDAO {
                             .getColumnIndex("IMEI")),
                     cursor.getString(cursor.getColumnIndex("ip")), cursor.getInt(cursor
                             .getColumnIndex("status")), cursor.getInt(cursor
-                            .getColumnIndex("avater")));
+                            .getColumnIndex("avater")),cursor.getString(cursor.getColumnIndex("lastdate")),
+                            cursor.getString(cursor.getColumnIndex("device")),cursor.getString(cursor.getColumnIndex("constellation")));
             cursor.close();
             return userInfo;
         }
@@ -153,7 +161,7 @@ public class userDAO {
         List<userInfo> users = new ArrayList<userInfo>();
         // db = helper.getWritableDatabase();
         Cursor cursor = db.query(helper.getTableName(), new String[] { "id", "name", "age", "sex",
-                "IMEI", "ip", "status", "avater" }, null, null, null, null, "id desc", start + ","
+                "IMEI", "ip", "status", "avater","lastdate","device","constellation"}, null, null, null, null, "id desc", start + ","
                 + count);
         while (cursor.moveToNext()) {
             users.add(new userInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor
@@ -161,7 +169,8 @@ public class userDAO {
                     .getColumnIndex("age")), cursor.getString(cursor.getColumnIndex("sex")), cursor
                     .getString(cursor.getColumnIndex("IMEI")), cursor.getString(cursor
                     .getColumnIndex("ip")), cursor.getInt(cursor.getColumnIndex("status")), cursor
-                    .getInt(cursor.getColumnIndex("avater"))));
+                    .getInt(cursor.getColumnIndex("avater")),cursor.getString(cursor.getColumnIndex("lastdate")),
+                    cursor.getString(cursor.getColumnIndex("device")),cursor.getString(cursor.getColumnIndex("constellation"))));
         }
         cursor.close();
         return users;
@@ -218,7 +227,12 @@ public class userDAO {
                 jsonText.value(user.getIsOnline());
                 jsonText.key("avater");
                 jsonText.value(user.getAvater());
-
+                jsonText.key("lastdate");
+                jsonText.value(user.getLastDate());
+                jsonText.key("device");
+                jsonText.value(user.getDevice());
+                jsonText.key("constellation");
+                jsonText.value(user.getConstellation());
                 jsonText.endObject();
             }
             jsonText.endArray();

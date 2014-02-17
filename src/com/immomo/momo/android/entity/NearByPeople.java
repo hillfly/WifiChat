@@ -19,18 +19,20 @@ public class NearByPeople extends Entity implements Parcelable {
     public static final String DEVICE = "Device";
     public static final String AVATAR = "avatar";
     public static final String AGE = "Age";
+    public static final String CONSTELLATION = "Constellation";
     public static final String ONLINESTATEINT = "OnlineStateInt";
     public static final String ISCLIENT = "isClient";
     public static final String LOCALIPADDRESS = "localIPaddress";
     public static final String SERVERIPADDRESS = "serverIPaddress";
     public static final String LOGINTIME = "LoginTime";
-    public static final String ENTITY_PEOPLE = "entity_people";  
+    public static final String ENTITY_PEOPLE = "entity_people";
     public static final String ENTITY_PROFILE = "entity_profile";
 
     private String mIMEI; // IMEI
     private int mAvatar; // 头像
     private String mDevice; // 设备 Android PC
     private String mNickname; // 昵称
+    private String mConstellation; // 星座
     private String mGender; // 性别
     private int mGenderId; // 性别对应的图片资源ResId
     private int mGenderBgId; // 性别对应的背景资源ResId
@@ -43,8 +45,7 @@ public class NearByPeople extends Entity implements Parcelable {
         msgCount = 0; // 初始化为0
     }
 
-    public NearByPeople(String paramIMEI, int paramAvatar, String paramDevice, String paramNickname,
-            String paramGender, int paramAge, String paramIP, String paramLogintime) {
+    public NearByPeople(String paramIMEI, int paramAvatar, String paramDevice, String paramNickname, String paramGender, int paramAge, String paramConstellation, String paramIP, String paramLogintime) {
         super();
         this.mIMEI = paramIMEI;
         this.mAvatar = paramAvatar;
@@ -52,8 +53,9 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mNickname = paramNickname;
         setGender(paramGender);
         this.mAge = paramAge;
+        this.mConstellation = paramConstellation;
         this.mIP = paramIP;
-        this.mLogintime = paramLogintime;        
+        this.mLogintime = paramLogintime;
     }
 
     public String getIMEI() {
@@ -127,6 +129,14 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mAge = paramAge;
     }
 
+    public String getConstellation() {
+        return this.mConstellation;
+    }
+
+    public void setConstellation(String paramConstellation) {
+        this.mConstellation = paramConstellation;
+    }
+
     public String getIP() {
         return mIP;
     }
@@ -150,7 +160,7 @@ public class NearByPeople extends Entity implements Parcelable {
     public void setMsgCount(int paramMsgCount) {
         this.msgCount = paramMsgCount;
     }
-    
+
     public static Parcelable.Creator<NearByPeople> getCreator() {
         return CREATOR;
     }
@@ -163,6 +173,7 @@ public class NearByPeople extends Entity implements Parcelable {
         dest.writeString(mNickname);
         dest.writeString(mGender);
         dest.writeInt(mAge);
+        dest.writeString(mConstellation);
         dest.writeString(mIP);
         dest.writeString(mLogintime);
         dest.writeInt(msgCount);
@@ -172,15 +183,16 @@ public class NearByPeople extends Entity implements Parcelable {
 
         @Override
         public NearByPeople createFromParcel(Parcel source) {
-            NearByPeople people = new NearByPeople();      
+            NearByPeople people = new NearByPeople();
             people.setIMEI(source.readString());
             people.setAvatar(source.readInt());
             people.setDevice(source.readString());
             people.setNickname(source.readString());
             people.setGender(source.readString());
             people.setAge(source.readInt());
+            people.setConstellation(source.readString());
             people.setIP(source.readString());
-            people.setLogintime(source.readString());  
+            people.setLogintime(source.readString());
             people.setMsgCount(source.readInt());
             return people;
         }

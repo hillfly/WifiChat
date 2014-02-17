@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +13,6 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.app.Application;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -28,8 +24,6 @@ import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.socket.UDPSocketThread.OnReceiveMsgListener;
 
 public class BaseApplication extends Application {
-
-    public static String FORMATTIMESTR = "yyyy年MM月dd日 HH:mm:ss"; // 时间格式化格式
 
     /** mEmoticons 表情 **/
     public static Map<String, Integer> mEmoticonsId = new HashMap<String, Integer>();
@@ -73,9 +67,9 @@ public class BaseApplication extends Application {
         if (instance == null) {
             instance = this;
         }
-        GlobalSession = new HashMap<String, String>(); // 存储用户登陆信息        
+        GlobalSession = new HashMap<String, String>(13); // 存储用户登陆信息
         mDefaultAvatar = BitmapFactory.decodeResource(getResources(),
-                R.drawable.ic_common_def_header);        
+                R.drawable.ic_common_def_header);
         for (int i = 1; i < 64; i++) {
             String emoticonsName = "[zem" + i + "]";
             int emoticonsId = getResources().getIdentifier("zem" + i,
@@ -132,15 +126,11 @@ public class BaseApplication extends Application {
 
     public Bitmap getAvatarFromRes(String paramAvatarName) {
         Bitmap returnBitmap = null;
-        int avatarID = 0;
-        Resources res = null;
         InputStream is = null;
         Bitmap bitmap = null;
         try {
-            res = this.getResources();
-            avatarID = res.getIdentifier(paramAvatarName, "drawable",
-                    getPackageName());
-            is = res.openRawResource(avatarID);
+            is = this.getResources().openRawResource(
+                    getIDfromDrawable(paramAvatarName));
             bitmap = BitmapFactory.decodeStream(is);
             if (bitmap == null) {
                 throw new FileNotFoundException(paramAvatarName + "is not find");
@@ -160,7 +150,11 @@ public class BaseApplication extends Application {
             }
         }
         return returnBitmap;
+    }
 
+    public int getIDfromDrawable(String paramAvatarName) {
+        return this.getResources().getIdentifier(paramAvatarName, "drawable",
+                getPackageName());
     }
 
     /****************************
@@ -238,6 +232,14 @@ public class BaseApplication extends Application {
     public int getAvatar() {
         return Integer.parseInt(GlobalSession.get(NearByPeople.AVATAR));
     }
+    
+    /**
+     * 获取星座
+     * @return
+     */
+    public String getConstellation(){
+        return GlobalSession.get(NearByPeople.CONSTELLATION);
+    }
 
     /**
      * 获取年龄
@@ -308,17 +310,26 @@ public class BaseApplication extends Application {
      * 设置昵称
      * 
      * @param paramNickname
-     *            设置的昵称
+     *
      */
     public void setNickname(String paramNickname) {
         GlobalSession.put(NearByPeople.NICKNAME, paramNickname);
+    }
+    
+    /**
+     * 设置星座
+     * 
+     * @param paramConstellation
+     */
+    public void setConstellation(String paramConstellation){
+        GlobalSession.put(NearByPeople.CONSTELLATION, paramConstellation);
     }
 
     /**
      * 设置性别
      * 
      * @param paramGender
-     *            设置的性别
+     *
      */
     public void setGender(String paramGender) {
         GlobalSession.put(NearByPeople.GENDER, paramGender);
@@ -390,46 +401,4 @@ public class BaseApplication extends Application {
     public void clearSession() {
         GlobalSession.clear();
     }
-
-    /**
-     * 返回此时时间
-     * 
-     * @return String: XXX年XX月XX日 XX:XX:XX
-     */
-    public String getNowtime() {
-        return new SimpleDateFormat(FORMATTIMESTR).format(new Date());
-    }
-
-    /**
-     * 格式化输出指定时间点与现在的差
-     * 
-     * @param paramTime
-     *            指定的时间点
-     * @return 格式化后的时间差，类似 X秒前、X小时前、X年前
-     */
-    public String getBetweentime(String paramTime) {
-        String returnStr = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMATTIMESTR);
-        try {
-            Date nowData = new Date();
-            Date mDate = dateFormat.parse(paramTime);
-            long betweenForSec = Math.abs(mDate.getTime() - nowData.getTime()) / 1000; // 秒
-            if (betweenForSec < 60) {
-                returnStr = betweenForSec + "秒前";
-            } else if (betweenForSec < (60 * 60)) {
-                returnStr = betweenForSec / 60 + "分钟前";
-            } else if (betweenForSec < (60 * 60 * 24)) {
-                returnStr = betweenForSec / (60 * 60) + "小时前";
-            } else if (betweenForSec < (60 * 60 * 24 * 30)) {
-                returnStr = betweenForSec / (60 * 60 * 24) + "天前";
-            } else if (betweenForSec < (60 * 60 * 24 * 30 * 12)) {
-                returnStr = betweenForSec / (60 * 60 * 24 * 30) + "个月前";
-            } else
-                returnStr = betweenForSec / (60 * 60 * 24 * 30 * 12) + "年前";
-        } catch (ParseException e) {
-            returnStr = "TimeError"; // 错误提示
-        }
-        return returnStr;
-    }
-
 }

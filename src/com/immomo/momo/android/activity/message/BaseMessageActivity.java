@@ -60,6 +60,7 @@ public abstract class BaseMessageActivity extends BaseActivity implements
     protected EmoticonsEditText mEetTextDitorEditer;
     protected Button mBtnTextDitorSend;
     protected ImageView mIvTextDitorAudio;
+    protected ImageView mIvAvatar;
 
     protected ImageButton mIbAudioDitorPlus;
     protected ImageButton mIbAudioDitorKeyBoard;

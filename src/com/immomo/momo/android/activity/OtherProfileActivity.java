@@ -23,17 +23,18 @@ public class OtherProfileActivity extends BaseActivity implements
 
     private HeaderLayout mHeaderLayout;// 标题栏
     private LinearLayout mLayoutChat;// 对话
+    private ImageView mIvAvatar; // 头像
 
     private LinearLayout mLayoutGender;// 性别根布局
     private ImageView mIvGender;// 性别
     private HandyTextView mHtvAge;// 年龄
+    private HandyTextView mHtvConstellation;// 星座
     private HandyTextView mHtvTime;// 登陆时间
     private HandyTextView mHtvIPaddress; // IP地址
     private HandyTextView mHtvDevice; // 设备品牌型号
 
     private LinearLayout mLayoutJoinGroup;// 群组
 
-    private String mNickname;// 姓名
     private NearByPeople mPeople;// 用户实体
 
     @Override
@@ -50,10 +51,12 @@ public class OtherProfileActivity extends BaseActivity implements
         mHeaderLayout = (HeaderLayout) findViewById(R.id.otherprofile_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
         mLayoutChat = (LinearLayout) findViewById(R.id.otherprofile_bottom_layout_chat);
+        mIvAvatar = (ImageView) findViewById(R.id.header_iv_logo);
 
         mLayoutGender = (LinearLayout) findViewById(R.id.otherprofile_layout_gender);
         mIvGender = (ImageView) findViewById(R.id.otherprofile_iv_gender);
         mHtvAge = (HandyTextView) findViewById(R.id.otherprofile_htv_age);
+        mHtvConstellation = (HandyTextView) findViewById(R.id.otherprofile_htv_constellation);
         mHtvTime = (HandyTextView) findViewById(R.id.otherprofile_htv_time);
         mHtvIPaddress = (HandyTextView) findViewById(R.id.otherprofile_htv_ipaddress);
         mHtvDevice = (HandyTextView) findViewById(R.id.otherprofile_htv_device);
@@ -93,10 +96,10 @@ public class OtherProfileActivity extends BaseActivity implements
                 mPeople = intent.getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
                 if (mPeople == null) {
                     return false;
-                } else {
-                    mNickname = mPeople.getNickname();
-                    mPeople.getAvatar();
-                    mHeaderLayout.setDefaultTitle(mNickname, null);
+                } else {                    
+                    mHeaderLayout.setDefaultTitle(mPeople.getNickname(), null);
+                    mIvAvatar.setImageBitmap(mApplication.getAvatar(NearByPeople.AVATAR 
+                            + mPeople.getAvatar()));
                     return true;
                 }
             }
@@ -119,6 +122,7 @@ public class OtherProfileActivity extends BaseActivity implements
         mLayoutGender.setBackgroundResource(mPeople.getGenderBgId());
         mIvGender.setImageResource(mPeople.getGenderId());
         mHtvAge.setText(mPeople.getAge() + "");
+        mHtvConstellation.setText(mPeople.getConstellation());
         mHtvTime.setText(mPeople.getLogintime());
         mHtvIPaddress.setText(mPeople.getIP());
         mHtvDevice.setText(mPeople.getDevice());

@@ -54,20 +54,6 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <!-- <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginRight="4dip"
-                android:layout_marginTop="1dip"
-                android:src="@drawable/ic_user_location" />
-
-            <com.immomo.momo.android.view.HandyTextView
-                android:id="@+id/otherprofile_htv_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/font_value"
-                android:textSize="13sp" /> -->
 
             <LinearLayout
                 android:layout_width="wrap_content"

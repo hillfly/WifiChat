@@ -24,6 +24,7 @@ import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.Message.CONTENT_TYPE;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.socket.UDPSocketThread.OnReceiveMsgListener;
+import com.immomo.momo.android.util.DateUtils;
 import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.PhotoUtils;
 import com.immomo.momo.android.view.ChatListView;
@@ -71,6 +72,8 @@ public class ChatActivity extends BaseMessageActivity implements
     protected void initViews() {
         mHeaderLayout = (HeaderLayout) findViewById(R.id.chat_header);
         mHeaderLayout.init(HeaderStyle.TITLE_CHAT);
+        mIvAvatar = (ImageView) findViewById(R.id.header_iv_logo);
+
         mClvList = (ChatListView) findViewById(R.id.chat_clv_list);
         mLayoutScroll = (ScrollLayout) findViewById(R.id.chat_slayout_scroll);
         mLayoutRounds = (LinearLayout) findViewById(R.id.chat_layout_rounds);
@@ -121,9 +124,11 @@ public class ChatActivity extends BaseMessageActivity implements
         mNickName = mApplication.getNickname();
         mIMEI = mApplication.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
-        mHeaderLayout.setTitleChat(R.drawable.ic_chat_dis_1,
-                R.drawable.bg_chat_dis_active, mPeople.getNickname(),
-                mPeople.getLogintime(), R.drawable.ic_topbar_profile,
+        mHeaderLayout.setTitleChat(
+                mApplication.getIDfromDrawable(NearByPeople.AVATAR
+                        + mPeople.getAvatar()), R.drawable.bg_chat_dis_active,
+                mPeople.getNickname(), mPeople.getLogintime(),
+                R.drawable.ic_topbar_profile,
                 new OnMiddleImageButtonClickListener(),
                 R.drawable.ic_topbar_more,
                 new OnRightImageButtonClickListener());
@@ -132,7 +137,8 @@ public class ChatActivity extends BaseMessageActivity implements
         initPopupWindow();
         initSynchronousDialog();
 
-        mAdapter = new ChatAdapter(mApplication, ChatActivity.this, mMessagesList);
+        mAdapter = new ChatAdapter(mApplication, ChatActivity.this,
+                mMessagesList);
         mClvList.setAdapter(mAdapter);
     }
 
@@ -189,7 +195,7 @@ public class ChatActivity extends BaseMessageActivity implements
             if (!TextUtils.isEmpty(content)) {
                 mEetTextDitorEditer.setText(null);
                 mMessagesList.add(new Message(mIMEI, mNickName,
-                        mApplication.getNowtime(), content, CONTENT_TYPE.TEXT));
+                        DateUtils.getNowtime(), content, CONTENT_TYPE.TEXT));
                 mAdapter.notifyDataSetChanged();
                 mClvList.setSelection(mMessagesList.size());
             }
@@ -321,7 +327,7 @@ public class ChatActivity extends BaseMessageActivity implements
                         } else {
                             if (path != null) {
                                 mMessagesList.add(new Message(mIMEI, mNickName,
-                                        mApplication.getNowtime(), path,
+                                        DateUtils.getNowtime(), path,
                                         CONTENT_TYPE.IMAGE));
                                 mAdapter.notifyDataSetChanged();
                                 mClvList.setSelection(mMessagesList.size());
@@ -348,7 +354,7 @@ public class ChatActivity extends BaseMessageActivity implements
                 String path = data.getStringExtra("path");
                 if (path != null) {
                     mMessagesList.add(new Message(mIMEI, mNickName,
-                            mApplication.getNowtime(), path, CONTENT_TYPE.IMAGE));
+                            DateUtils.getNowtime(), path, CONTENT_TYPE.IMAGE));
                     mAdapter.notifyDataSetChanged();
                     mClvList.setSelection(mMessagesList.size());
                 }
@@ -360,7 +366,7 @@ public class ChatActivity extends BaseMessageActivity implements
                 String path = data.getStringExtra("path");
                 if (path != null) {
                     mMessagesList.add(new Message(mIMEI, mNickName,
-                            mApplication.getNowtime(), path, CONTENT_TYPE.IMAGE));
+                            DateUtils.getNowtime(), path, CONTENT_TYPE.IMAGE));
                     mAdapter.notifyDataSetChanged();
                     mClvList.setSelection(mMessagesList.size());
                 }

@@ -11,11 +11,11 @@ import java.util.Date;
  * <p>
  * SenderIMEI：指的是发送者的设备IMEI
  * <p>
- * 发送主机名：指的是发送者的主机名，在此用来区分是移动设备还是PC，移动设备默认为android.
+ * 发送主机设备：指的是发送者的设备品牌型号.
  * <p>
  * 命令：指的是飞鸽协议中定义的一系列命令，具体见下文；
  * <p>
- * 附加数据：额外发送的数据。当为上线应答报文时，附加信息内容是昵称、性别，中间用"\0"分隔
+ * 附加数据：额外发送的数据。当为上线应答报文时，附加信息内容是昵称、性别、星座，中间用"\0"分隔
  * 
  * @see IPMSGConst
  * 
@@ -24,7 +24,7 @@ public class IPMSGProtocol {
     private String version; // 版本号 目前都为1
     private String packetNo;// 数据包编号
     private String senderIMEI; // 发送者IMEI
-    private String senderDevice; // 发送主机名
+    private String senderDevice; // 设备品牌型号
     private int commandNo; // 命令
     private String additionalSection; // 附加数据
 
