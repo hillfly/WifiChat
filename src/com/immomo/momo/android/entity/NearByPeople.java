@@ -3,6 +3,7 @@ package com.immomo.momo.android.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.immomo.momo.android.R;
 
 /**
@@ -22,11 +23,10 @@ public class NearByPeople extends Entity implements Parcelable {
     public static final String CONSTELLATION = "Constellation";
     public static final String ONLINESTATEINT = "OnlineStateInt";
     public static final String ISCLIENT = "isClient";
-    public static final String LOCALIPADDRESS = "localIPaddress";
+    public static final String IPADDRESS = "Ipaddress";
     public static final String SERVERIPADDRESS = "serverIPaddress";
     public static final String LOGINTIME = "LoginTime";
     public static final String ENTITY_PEOPLE = "entity_people";
-    public static final String ENTITY_PROFILE = "entity_profile";
 
     private String mIMEI; // IMEI
     private int mAvatar; // 头像
@@ -37,7 +37,7 @@ public class NearByPeople extends Entity implements Parcelable {
     private int mGenderId; // 性别对应的图片资源ResId
     private int mGenderBgId; // 性别对应的背景资源ResId
     private int mAge; // 年龄
-    private String mIP; // IP地址
+    private String mIpaddress; // IP地址
     private String mLogintime;// 登陆时间
     private int msgCount; // 未接收消息数
 
@@ -45,7 +45,9 @@ public class NearByPeople extends Entity implements Parcelable {
         msgCount = 0; // 初始化为0
     }
 
-    public NearByPeople(String paramIMEI, int paramAvatar, String paramDevice, String paramNickname, String paramGender, int paramAge, String paramConstellation, String paramIP, String paramLogintime) {
+    public NearByPeople(String paramIMEI, int paramAvatar, String paramDevice,
+            String paramNickname, String paramGender, int paramAge, String paramConstellation,
+            String paramIP, String paramLogintime) {
         super();
         this.mIMEI = paramIMEI;
         this.mAvatar = paramAvatar;
@@ -54,10 +56,11 @@ public class NearByPeople extends Entity implements Parcelable {
         setGender(paramGender);
         this.mAge = paramAge;
         this.mConstellation = paramConstellation;
-        this.mIP = paramIP;
+        this.mIpaddress = paramIP;
         this.mLogintime = paramLogintime;
     }
 
+    @JSONField(name = NearByPeople.IMEI)
     public String getIMEI() {
         return mIMEI;
     }
@@ -66,6 +69,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mIMEI = paramIMEI;
     }
 
+    @JSONField(name = NearByPeople.AVATAR)
     public int getAvatar() {
         return mAvatar;
     }
@@ -74,6 +78,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mAvatar = paramAvatar;
     }
 
+    @JSONField(name = NearByPeople.DEVICE)
     public String getDevice() {
         return mDevice;
     }
@@ -82,6 +87,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mDevice = paramDevice;
     }
 
+    @JSONField(name = NearByPeople.NICKNAME)
     public String getNickname() {
         return mNickname;
     }
@@ -90,6 +96,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mNickname = paramNickname;
     }
 
+    @JSONField(name = NearByPeople.GENDER)
     public String getGender() {
         return mGender;
     }
@@ -99,12 +106,14 @@ public class NearByPeople extends Entity implements Parcelable {
         if ("女".equals(paramGender)) {
             setGenderId(R.drawable.ic_user_famale);
             setGenderBgId(R.drawable.bg_gender_famal);
-        } else {
+        }
+        else {
             setGenderId(R.drawable.ic_user_male);
             setGenderBgId(R.drawable.bg_gender_male);
         }
     }
 
+    @JSONField(serialize = false)
     public int getGenderId() {
         return mGenderId;
     }
@@ -113,6 +122,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mGenderId = paramGenderId;
     }
 
+    @JSONField(serialize = false)
     public int getGenderBgId() {
         return mGenderBgId;
     }
@@ -121,6 +131,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mGenderBgId = paramGenderBgId;
     }
 
+    @JSONField(name = NearByPeople.AGE)
     public int getAge() {
         return mAge;
     }
@@ -129,6 +140,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mAge = paramAge;
     }
 
+    @JSONField(name = NearByPeople.CONSTELLATION)
     public String getConstellation() {
         return this.mConstellation;
     }
@@ -137,14 +149,16 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mConstellation = paramConstellation;
     }
 
-    public String getIP() {
-        return mIP;
+    @JSONField(name = NearByPeople.IPADDRESS)
+    public String getIpaddress() {
+        return mIpaddress;
     }
 
-    public void setIP(String paramIP) {
-        this.mIP = paramIP;
+    public void setIpaddress(String paramIpaddress) {
+        this.mIpaddress = paramIpaddress;
     }
 
+    @JSONField(name = NearByPeople.LOGINTIME)
     public String getLogintime() {
         return mLogintime;
     }
@@ -153,6 +167,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mLogintime = paramLogintime;
     }
 
+    @JSONField(serialize = false)
     public int getMsgCount() {
         return msgCount;
     }
@@ -174,7 +189,7 @@ public class NearByPeople extends Entity implements Parcelable {
         dest.writeString(mGender);
         dest.writeInt(mAge);
         dest.writeString(mConstellation);
-        dest.writeString(mIP);
+        dest.writeString(mIpaddress);
         dest.writeString(mLogintime);
         dest.writeInt(msgCount);
     }
@@ -191,7 +206,7 @@ public class NearByPeople extends Entity implements Parcelable {
             people.setGender(source.readString());
             people.setAge(source.readInt());
             people.setConstellation(source.readString());
-            people.setIP(source.readString());
+            people.setIpaddress(source.readString());
             people.setLogintime(source.readString());
             people.setMsgCount(source.readInt());
             return people;

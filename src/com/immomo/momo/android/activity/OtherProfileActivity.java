@@ -124,7 +124,7 @@ public class OtherProfileActivity extends BaseActivity implements
         mHtvAge.setText(mPeople.getAge() + "");
         mHtvConstellation.setText(mPeople.getConstellation());
         mHtvTime.setText(mPeople.getLogintime());
-        mHtvIPaddress.setText(mPeople.getIP());
+        mHtvIPaddress.setText(mPeople.getIpaddress());
         mHtvDevice.setText(mPeople.getDevice());
         initJoinGroup();
     }

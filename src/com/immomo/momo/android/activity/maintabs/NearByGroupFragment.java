@@ -16,7 +16,7 @@ import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.BaseFragment;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.adapter.NearByGroupAdapter;
-import com.immomo.momo.android.util.JsonResolveUtils;
+import com.immomo.momo.android.util.JsonUtils;
 import com.immomo.momo.android.view.MoMoRefreshExpandableList;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnCancelListener;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnRefreshListener;
@@ -76,7 +76,7 @@ public class NearByGroupFragment extends BaseFragment implements
 
 				@Override
 				protected Boolean doInBackground(Void... params) {
-					return JsonResolveUtils.resolveNearbyGroup(mApplication);
+					return JsonUtils.resolveNearbyGroup(mApplication);
 				}
 
 				@Override

@@ -167,7 +167,7 @@ public class BaseApplication extends Application {
      * @return localIPaddress
      */
     public String getLocalIPaddress() {
-        return GlobalSession.get(NearByPeople.LOCALIPADDRESS);
+        return GlobalSession.get(NearByPeople.IPADDRESS);
     }
 
     /**
@@ -293,7 +293,7 @@ public class BaseApplication extends Application {
      *            本地IP地址值
      */
     public void setLocalIPaddress(String paramLocalIPaddress) {
-        GlobalSession.put(NearByPeople.LOCALIPADDRESS, paramLocalIPaddress);
+        GlobalSession.put(NearByPeople.IPADDRESS, paramLocalIPaddress);
     }
 
     /**

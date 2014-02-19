@@ -2,75 +2,72 @@ package com.immomo.momo.android.socket;
 
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.util.JsonUtils;
+
 /**
  * IPMSG协议抽象类
- * <p>
- * IPMSG协议格式：版本号(默认为1):数据包编号:发送人IMEI:发送主机名:命令:附加数据
  * <p>
  * 数据包编号：一般是取毫秒数。用来唯一地区别每个数据包；
  * <p>
  * SenderIMEI：指的是发送者的设备IMEI
  * <p>
- * 发送主机设备：指的是发送者的设备品牌型号.
- * <p>
  * 命令：指的是飞鸽协议中定义的一系列命令，具体见下文；
  * <p>
- * 附加数据：额外发送的数据。当为上线应答报文时，附加信息内容是昵称、性别、星座，中间用"\0"分隔
+ * 附加数据：额外发送的数据
  * 
  * @see IPMSGConst
  * 
  */
 public class IPMSGProtocol {
-    private String version; // 版本号 目前都为1
+    private static final String TAG = "SZU_IPMSGPProtocol";
+    private static final String PACKETNO = "packetNo";
+    private static final String COMMANDNO = "commandNo";
+    private static final String ADDITIONAL = "additional";
+
     private String packetNo;// 数据包编号
     private String senderIMEI; // 发送者IMEI
-    private String senderDevice; // 设备品牌型号
     private int commandNo; // 命令
-    private String additionalSection; // 附加数据
+    private String addJSON; // 附加信息JSON
+    private Object addObject; // 附加对象
 
     public IPMSGProtocol() {
-        this.packetNo = getSeconds();   
+        this.packetNo = getSeconds();
     }
 
     // 根据协议字符串初始化
-    public IPMSGProtocol(String paramProtocolString) {
-        String[] args = paramProtocolString.split(":"); // 以:分割协议串
-        version = args[0];
-        packetNo = args[1];
-        senderIMEI = args[2];
-        senderDevice = args[3];
-        commandNo = Integer.parseInt(args[4]);
-        if (args.length >= 6) { // 是否有附加数据
-            additionalSection = args[5];
-            int mLength = args.length;
-            for (int i = 6; i < mLength; i++) { // 处理附加数据中有:的情况
-                additionalSection += (":" + args[i]);
+    public IPMSGProtocol(String paramProtocolJSON) {
+        JSONObject protocolJSON;
+        try {
+            protocolJSON = new JSONObject(paramProtocolJSON);
+            packetNo = protocolJSON.getString(PACKETNO);
+            commandNo = protocolJSON.getInt(COMMANDNO);
+            senderIMEI = protocolJSON.getString(NearByPeople.IMEI);
+            if (protocolJSON.has(ADDITIONAL)) {
+                addJSON = protocolJSON.getString(ADDITIONAL);
+                addObject = JsonUtils.getObject(addJSON, NearByPeople.class);
             }
         }
-        else {
-            additionalSection = "";
+        catch (JSONException e) {
+            Log.e(TAG, "非标准JSON文本");
         }
     }
 
-    public IPMSGProtocol(String paramSenderIMEI, String paramSenderDevice, int paramCommandNo,
-            String paramAdditionalSection) {
+    public IPMSGProtocol(String paramSenderIMEI, int paramCommandNo, NearByPeople paramPeople) {
         super();
-        this.version = "1";
         this.packetNo = getSeconds();
         this.senderIMEI = paramSenderIMEI;
-        this.senderDevice = paramSenderDevice;
         this.commandNo = paramCommandNo;
-        this.additionalSection = paramAdditionalSection;
+        this.addObject = paramPeople;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String paramVersion) {
-        this.version = paramVersion;
-    }
-
+    @JSONField(name = PACKETNO)
     public String getPacketNo() {
         return packetNo;
     }
@@ -79,6 +76,7 @@ public class IPMSGProtocol {
         this.packetNo = paramPacketNo;
     }
 
+    @JSONField(name = NearByPeople.IMEI)
     public String getSenderIMEI() {
         return senderIMEI;
     }
@@ -87,14 +85,7 @@ public class IPMSGProtocol {
         this.senderIMEI = paramSenderIMEI;
     }
 
-    public String getSenderDevice() {
-        return senderDevice;
-    }
-
-    public void setSenderDevice(String paramsenderDevice) {
-        this.senderDevice = paramsenderDevice;
-    }
-
+    @JSONField(name = COMMANDNO)
     public int getCommandNo() {
         return commandNo;
     }
@@ -103,29 +94,32 @@ public class IPMSGProtocol {
         this.commandNo = paramCommandNo;
     }
 
-    public String getAdditionalSection() {
-        return additionalSection;
+    @JSONField(name = ADDITIONAL)
+    public Object getAddObject() {
+        return addObject;
     }
 
-    public void setAdditionalSection(String paramAdditionalSection) {
-        this.additionalSection = paramAdditionalSection;
+    public void setAddObject(NearByPeople paramObject) {
+        this.addObject = paramObject;
     }
 
-    // 得到协议串
-    public String getProtocolString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(version)
-          .append(":" + packetNo)
-          .append(":" + senderIMEI)
-          .append(":" + senderDevice)
-          .append(":" + commandNo + ":");
-        if (additionalSection != null)
-            sb.append(additionalSection);
+    @JSONField(serialize = false)
+    public String getAddJSON() {
+        return this.addJSON;
+    }
 
-        return sb.toString();
+    public void setAddJSON(String paramJSONstr) {
+        this.addJSON = paramJSONstr;
+    }
+
+    // 输出协议JSON串
+    @JSONField(serialize = false)
+    public String getProtocolJSON() {
+        return JsonUtils.createJsonString(this);
     }
 
     // 得到数据包编号，毫秒数
+    @JSONField(serialize = false)
     private String getSeconds() {
         Date nowDate = new Date();
         return Long.toString(nowDate.getTime());
