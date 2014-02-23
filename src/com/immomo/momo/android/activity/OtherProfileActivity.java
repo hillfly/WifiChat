@@ -141,5 +141,4 @@ public class OtherProfileActivity extends BaseActivity implements
         mEtvName.setText("℡一群二B的小青年");
         mHtvOwner.setVisibility(View.VISIBLE);
     }
-
 }

@@ -55,6 +55,10 @@ public class BaseObjectListAdapter extends BaseAdapter {
         return mDatas;
     }
 
+    public void setData(List<? extends Entity> datas){
+        this.mDatas = datas;
+    }
+    
     protected void showCustomToast(String text) {
         View toastRoot = LayoutInflater.from(mContext).inflate(
                 R.layout.common_toast, null);

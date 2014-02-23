@@ -82,7 +82,7 @@ public class ImageBrowserActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        defaultFinish();
+        finish();
         overridePendingTransition(0, R.anim.zoom_exit);
     }
 

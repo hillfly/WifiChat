@@ -21,6 +21,10 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
     public NearByPeopleAdapter(BaseApplication application, Context context, List<? extends Entity> datas) {
         super(application, context, datas);
     }
+    
+    public void setData(List<? extends Entity> datas){
+        super.setData(datas);
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -50,7 +54,7 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
         holder.mIvGender.setImageResource(people.getGenderId());
         holder.mHtvAge.setText(people.getAge() + "");
         holder.mHtvTime.setText(DateUtils.getBetweentime(people.getLogintime()));
-        holder.mHtvLastMsg.setText(mApplication.LastMsgCache.get(people.getIMEI()));
+        holder.mHtvLastMsg.setText(mApplication.getLastMsgCache(people.getIMEI()));
         holder.mIvDevice.setImageResource(R.drawable.ic_userinfo_android);         
         return convertView;
     }

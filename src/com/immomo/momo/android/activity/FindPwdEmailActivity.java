@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.immomo.momo.android.BaseActivity;
 import com.immomo.momo.android.BaseDialog;
 import com.immomo.momo.android.R;
+import com.immomo.momo.android.util.TextUtils;
 
 public class FindPwdEmailActivity extends BaseActivity implements
 		OnClickListener, android.content.DialogInterface.OnClickListener {
@@ -72,14 +73,6 @@ public class FindPwdEmailActivity extends BaseActivity implements
 
 	}
 
-	private boolean isNull(EditText editText) {
-		String text = editText.getText().toString().trim();
-		if (text != null && text.length() > 0) {
-			return false;
-		}
-		return true;
-	}
-
 	private boolean matchEmail(String text) {
 		if (Pattern.compile("\\w[\\w.-]*@[\\w.]+\\.\\w+").matcher(text)
 				.matches()) {
@@ -90,7 +83,7 @@ public class FindPwdEmailActivity extends BaseActivity implements
 
 	private boolean validateEmail() {
 		mEmail = null;
-		if (isNull(mEtEmail)) {
+		if (TextUtils.isNull(mEtEmail)) {
 			showCustomToast("请输入邮箱账号");
 			mEtEmail.requestFocus();
 			return false;

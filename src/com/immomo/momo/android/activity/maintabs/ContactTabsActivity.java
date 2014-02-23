@@ -25,5 +25,4 @@ public class ContactTabsActivity extends TabItemActivity{
 	protected void init() {
 		
 	}
-
 }

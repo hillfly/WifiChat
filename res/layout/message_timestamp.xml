@@ -23,7 +23,6 @@
             android:id="@+id/message_timestamp_htv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="09-06 10:19"
             android:textColor="@color/font_value"
             android:textSize="12.0sp" />
     </LinearLayout>

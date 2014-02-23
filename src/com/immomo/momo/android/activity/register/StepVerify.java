@@ -25,7 +25,7 @@ public class StepVerify extends RegisterStep implements OnClickListener,
 	private HandyTextView mHtvNoCode;
 
 	private static final String PROMPT = "验证码已经发送到* ";
-	private static final String DEFAULT_VALIDATE_CODE = "852369";
+	private static final String DEFAULT_VALIDATE_CODE = "123456";
 
 	private boolean mIsChange = true;
 	private String mVerifyCode;

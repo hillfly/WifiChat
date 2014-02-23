@@ -37,8 +37,6 @@ public class WifiapAdapter extends BaseAdapter {
     // 新加的一个函数，用来更新数据
     public void setData(List<ScanResult> list) {
         this.mList = list;
-        Log.i(TAG, "m_listWifi size = " + mList.size());
-        notifyDataSetChanged();
     }
 
     @Override
@@ -63,18 +61,16 @@ public class WifiapAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = mInflater
-                    .inflate(R.layout.activity_wifiap_item, null);
-            viewHolder.textVName = ((TextView) convertView
-                    .findViewById(R.id.name_text_wtitem));
-            viewHolder.textConnect = ((TextView) convertView
-                    .findViewById(R.id.connect_text_wtitem));
+            convertView = mInflater.inflate(R.layout.activity_wifiap_item, null);
+            viewHolder.textVName = ((TextView) convertView.findViewById(R.id.name_text_wtitem));
+            viewHolder.textConnect = ((TextView) convertView.findViewById(R.id.connect_text_wtitem));
             viewHolder.linearLConnectOk = ((LinearLayout) convertView
                     .findViewById(R.id.connect_ok_layout_wtitem));
             viewHolder.progressBConnecting = ((ProgressBar) convertView
                     .findViewById(R.id.connecting_progressBar_wtitem));
             convertView.setTag(viewHolder);
-        } else {
+        }
+        else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // 点击连接处理事件
@@ -82,16 +78,14 @@ public class WifiapAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                WifiConfiguration localWifiConfiguration = wifiAdmin
-                        .createWifiInfo(localScanResult.SSID,
-                                WifiApConst.WIFI_AP_PASSWORD, 3, "wt");
+                WifiConfiguration localWifiConfiguration = wifiAdmin.createWifiInfo(
+                        localScanResult.SSID, WifiApConst.WIFI_AP_PASSWORD, 3, "wt");
                 wifiAdmin.addNetwork(localWifiConfiguration);
                 viewHolder.textConnect.setVisibility(View.GONE);
                 viewHolder.progressBConnecting.setVisibility(View.VISIBLE);
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);
                 Handler localHandler = ((WifiapActivity) mContext).handler;
-                localHandler.sendEmptyMessageDelayed(
-                        WifiApConst.ApConnected, 3500L);
+                localHandler.sendEmptyMessageDelayed(WifiApConst.ApConnected, 3500L);
             }
         });
         // 点击断开处理事件
@@ -99,14 +93,12 @@ public class WifiapAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                wifiAdmin
-                        .disconnectWifi(wifiAdmin.getWifiInfo().getNetworkId());
+                wifiAdmin.disconnectWifi(wifiAdmin.getWifiInfo().getNetworkId());
                 viewHolder.textConnect.setVisibility(View.GONE);
                 viewHolder.progressBConnecting.setVisibility(View.VISIBLE);
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);
                 Handler localHandler = ((WifiapActivity) mContext).handler;
-                localHandler.sendEmptyMessageDelayed(
-                        WifiApConst.ApConnected, 3500L);
+                localHandler.sendEmptyMessageDelayed(WifiApConst.ApConnected, 3500L);
             }
         });
 
@@ -118,12 +110,12 @@ public class WifiapAdapter extends BaseAdapter {
         if (localWifiInfo != null) {
             try {
                 if ((localWifiInfo.getSSID() != null)
-                        && (localWifiInfo.getSSID()
-                                .equals(localScanResult.SSID))) {
+                        && (localWifiInfo.getSSID().equals(localScanResult.SSID))) {
                     viewHolder.linearLConnectOk.setVisibility(View.VISIBLE);
                     return convertView;
                 }
-            } catch (NullPointerException localNullPointerException) {
+            }
+            catch (NullPointerException localNullPointerException) {
                 localNullPointerException.printStackTrace();
                 return convertView;
             }

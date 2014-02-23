@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.immomo.momo.android.entity.Entity;
+import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.util.JsonUtils;
 
@@ -29,47 +31,98 @@ public class IPMSGProtocol {
     private static final String TAG = "SZU_IPMSGPProtocol";
     private static final String PACKETNO = "packetNo";
     private static final String COMMANDNO = "commandNo";
-    private static final String ADDITIONAL = "additional";
+    private static final String ADDOBJECT = "addObject";
+    private static final String ADDSTR = "addStr";
+    private static final String ADDTYPE = "addType";
 
     private String packetNo;// 数据包编号
     private String senderIMEI; // 发送者IMEI
     private int commandNo; // 命令
-    private String addJSON; // 附加信息JSON
-    private Object addObject; // 附加对象
+    private ADDITION_TYPE addType; // 附加数据类型
+    private Entity addObject; // 附加对象
+    private String addStr; // 附加信息
 
     public IPMSGProtocol() {
         this.packetNo = getSeconds();
     }
 
+    public enum ADDITION_TYPE {
+        USER, MSG, STRING
+    }
+
     // 根据协议字符串初始化
     public IPMSGProtocol(String paramProtocolJSON) {
-        JSONObject protocolJSON;
         try {
-            protocolJSON = new JSONObject(paramProtocolJSON);
+            JSONObject protocolJSON = new JSONObject(paramProtocolJSON);
             packetNo = protocolJSON.getString(PACKETNO);
             commandNo = protocolJSON.getInt(COMMANDNO);
             senderIMEI = protocolJSON.getString(NearByPeople.IMEI);
-            if (protocolJSON.has(ADDITIONAL)) {
-                addJSON = protocolJSON.getString(ADDITIONAL);
-                addObject = JsonUtils.getObject(addJSON, NearByPeople.class);
+            if (protocolJSON.has(ADDTYPE)) { // 若有附加信息
+                String addJSONStr = null;
+                if (protocolJSON.has(ADDOBJECT)) { // 若为Entity类型
+                    addJSONStr = protocolJSON.getString(ADDOBJECT);
+                }
+                else if (protocolJSON.has(ADDSTR)) { // 若为String类型
+                    addJSONStr = protocolJSON.getString(ADDSTR);
+                }
+                switch (ADDITION_TYPE.valueOf(protocolJSON.getString(ADDTYPE))) {
+                    case USER: // 为用户数据
+                        addObject = JsonUtils.getObject(addJSONStr, NearByPeople.class);
+                        break;
+
+                    case MSG: // 为消息数据
+                        addObject = JsonUtils.getObject(addJSONStr, Message.class);
+                        break;
+
+                    case STRING: // 为String数据
+                        addStr = addJSONStr;
+                        break;
+
+                    default:
+                        break;
+                }
+
             }
         }
         catch (JSONException e) {
+            e.printStackTrace();
             Log.e(TAG, "非标准JSON文本");
         }
     }
 
-    public IPMSGProtocol(String paramSenderIMEI, int paramCommandNo, NearByPeople paramPeople) {
+    public IPMSGProtocol(String paramSenderIMEI, int paramCommandNo, Entity paramObject) {
         super();
         this.packetNo = getSeconds();
         this.senderIMEI = paramSenderIMEI;
         this.commandNo = paramCommandNo;
-        this.addObject = paramPeople;
+        this.addObject = paramObject;
+        if (paramObject instanceof Message) { // 若为Message对象
+            this.addType = ADDITION_TYPE.MSG;
+        }
+        else if (paramObject instanceof NearByPeople) { // 若为NearByPeople对象
+            this.addType = ADDITION_TYPE.USER;
+        }
+    }
+
+    public IPMSGProtocol(String paramSenderIMEI, int paramCommandNo, String paramStr) {
+        super();
+        this.packetNo = getSeconds();
+        this.senderIMEI = paramSenderIMEI;
+        this.commandNo = paramCommandNo;
+        this.addStr = paramStr;
+        this.addType = ADDITION_TYPE.STRING;
+    }
+
+    public IPMSGProtocol(String paramSenderIMEI, int paramCommandNo) {
+        super();
+        this.packetNo = getSeconds();
+        this.senderIMEI = paramSenderIMEI;
+        this.commandNo = paramCommandNo;
     }
 
     @JSONField(name = PACKETNO)
     public String getPacketNo() {
-        return packetNo;
+        return this.packetNo;
     }
 
     public void setPacketNo(String paramPacketNo) {
@@ -78,38 +131,47 @@ public class IPMSGProtocol {
 
     @JSONField(name = NearByPeople.IMEI)
     public String getSenderIMEI() {
-        return senderIMEI;
+        return this.senderIMEI;
     }
 
     public void setSenderIMEI(String paramSenderIMEI) {
         this.senderIMEI = paramSenderIMEI;
     }
 
+    @JSONField(name = ADDTYPE)
+    public ADDITION_TYPE getAddType() {
+        return this.addType;
+    }
+
+    public void setAddType(ADDITION_TYPE paramType) {
+        this.addType = paramType;
+    }
+
     @JSONField(name = COMMANDNO)
     public int getCommandNo() {
-        return commandNo;
+        return this.commandNo;
     }
 
     public void setCommandNo(int paramCommandNo) {
         this.commandNo = paramCommandNo;
     }
 
-    @JSONField(name = ADDITIONAL)
-    public Object getAddObject() {
-        return addObject;
+    @JSONField(name = ADDOBJECT)
+    public Entity getAddObject() {
+        return this.addObject;
     }
 
-    public void setAddObject(NearByPeople paramObject) {
+    public void setAddObject(Entity paramObject) {
         this.addObject = paramObject;
     }
 
-    @JSONField(serialize = false)
-    public String getAddJSON() {
-        return this.addJSON;
+    @JSONField(name = ADDSTR)
+    public String getAddStr() {
+        return this.addStr;
     }
 
-    public void setAddJSON(String paramJSONstr) {
-        this.addJSON = paramJSONstr;
+    public void setAddStr(String paramStr) {
+        this.addStr = paramStr;
     }
 
     // 输出协议JSON串

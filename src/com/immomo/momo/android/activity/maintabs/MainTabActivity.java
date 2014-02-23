@@ -33,52 +33,28 @@ public class MainTabActivity extends TabActivity {
         // 附近
         // common_bottombar_tab_nearby存放该Tab布局，inflate可将xml实例化成View
         View nearbyView = inflater.inflate(R.layout.common_bottombar_tab_nearby, null);
-        
-        //创建TabHost.TabSpec的对象，并设置该对象的tag，最后关联该Tab的View
-        TabHost.TabSpec nearbyTabSpec = mTabHost.newTabSpec(
-                NearByActivity.class.getName()).setIndicator(nearbyView); 
+
+        // 创建TabHost.TabSpec的对象，并设置该对象的tag，最后关联该Tab的View
+        TabHost.TabSpec nearbyTabSpec = mTabHost.newTabSpec(NearByActivity.class.getName())
+                .setIndicator(nearbyView);
         nearbyTabSpec.setContent(new Intent(MainTabActivity.this, // 跳转activity
                 NearByActivity.class));
-        
-        mTabHost.addTab(nearbyTabSpec); // 添加该Tab, addTab(TabHost.TabSpec mTabSpec)
 
-        // 留言板
-        View nearbyFeedsView = inflater.inflate(
-                R.layout.common_bottombar_tab_site, null);
-        TabHost.TabSpec nearbyFeedsTabSpec = mTabHost.newTabSpec(
-                NearByFeedsActivity.class.getName()).setIndicator(
-                nearbyFeedsView);
-        nearbyFeedsTabSpec.setContent(new Intent(MainTabActivity.this,
-                NearByFeedsActivity.class));
-        mTabHost.addTab(nearbyFeedsTabSpec);
+        mTabHost.addTab(nearbyTabSpec); // 添加该Tab, addTab(TabHost.TabSpec
+                                        // mTabSpec)
 
         // 消息
-        View sessionListView = inflater.inflate(
-                R.layout.common_bottombar_tab_chat, null);
+        View sessionListView = inflater.inflate(R.layout.common_bottombar_tab_chat, null);
         TabHost.TabSpec sessionListTabSpec = mTabHost.newTabSpec(
-                SessionListActivity.class.getName()).setIndicator(
-                sessionListView);
-        sessionListTabSpec.setContent(new Intent(MainTabActivity.this,
-                SessionListActivity.class));
+                SessionListActivity.class.getName()).setIndicator(sessionListView);
+        sessionListTabSpec.setContent(new Intent(MainTabActivity.this, SessionListActivity.class));
         mTabHost.addTab(sessionListTabSpec);
 
-        // 联系人
-        View contactView = inflater.inflate(
-                R.layout.common_bottombar_tab_friend, null);
-        TabHost.TabSpec contactTabSpec = mTabHost.newTabSpec(
-                ContactTabsActivity.class.getName()).setIndicator(contactView);
-        contactTabSpec.setContent(new Intent(MainTabActivity.this,
-                ContactTabsActivity.class));
-        mTabHost.addTab(contactTabSpec);
-
         // 设置
-        View userSettingView = inflater.inflate(
-                R.layout.common_bottombar_tab_profile, null);
+        View userSettingView = inflater.inflate(R.layout.common_bottombar_tab_profile, null);
         TabHost.TabSpec userSettingTabSpec = mTabHost.newTabSpec(
-                UserSettingActivity.class.getName()).setIndicator(
-                userSettingView);
-        userSettingTabSpec.setContent(new Intent(MainTabActivity.this,
-                UserSettingActivity.class));
+                UserSettingActivity.class.getName()).setIndicator(userSettingView);
+        userSettingTabSpec.setContent(new Intent(MainTabActivity.this, UserSettingActivity.class));
         mTabHost.addTab(userSettingTabSpec);
 
     }

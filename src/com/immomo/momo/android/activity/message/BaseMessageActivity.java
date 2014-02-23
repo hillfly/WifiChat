@@ -34,6 +34,7 @@ import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.popupwindow.ChatPopupWindow;
 import com.immomo.momo.android.popupwindow.ChatPopupWindow.OnChatPopupItemClickListener;
+import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.util.PhotoUtils;
 import com.immomo.momo.android.view.ChatListView;
 import com.immomo.momo.android.view.EmoteInputView;
@@ -73,9 +74,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements
     protected LinearLayout mLayoutMessagePlusLocation;
     protected LinearLayout mLayoutMessagePlusGift;
 
-    protected List<Message> mMessagesList = new ArrayList<Message>();
+    protected List<Message> mMessagesList = new ArrayList<Message>(); //消息列表
     protected ChatAdapter mAdapter;
-
     protected NearByPeople mPeople; // 聊天的对象
 
     protected Bitmap mRoundsSelected;
@@ -101,6 +101,7 @@ public abstract class BaseMessageActivity extends BaseActivity implements
         setContentView(R.layout.activity_chat);
         initViews();
         initEvents();
+        mUDPSocketThread = UDPSocketThread.getInstance(mApplication); // 获取对象
     }
 
     protected class OnMiddleImageButtonClickListener implements

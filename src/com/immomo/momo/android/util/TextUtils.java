@@ -15,6 +15,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.view.HandyTextView;
@@ -23,9 +24,6 @@ import com.immomo.momo.android.view.HandyTextView;
  * @fileName TextUtils.java
  * @package com.immomo.momo.android.util
  * @description 文本工具类
- * @author 任东卫
- * @email 86930007@qq.com
- * @version 1.0
  */
 public class TextUtils {
     /**
@@ -40,11 +38,12 @@ public class TextUtils {
      * @param end
      *            添加下划线结束的位置
      */
-    public static void addUnderlineText(final Context context, final HandyTextView textView, final int start, final int end) {
+    public static void addUnderlineText(final Context context, final HandyTextView textView,
+            final int start, final int end) {
         textView.setFocusable(true);
         textView.setClickable(true);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(
-                textView.getText().toString().trim());
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(textView
+                .getText().toString().trim());
         spannableStringBuilder.setSpan(new UnderlineSpan(), start, end,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannableStringBuilder);
@@ -69,7 +68,8 @@ public class TextUtils {
         }
         if (defaultText != null) {
             return defaultText;
-        } else {
+        }
+        else {
             return text;
         }
     }
@@ -86,15 +86,15 @@ public class TextUtils {
      * @param listener
      *            超链接的单击监听事件
      */
-    public static void addHyperlinks(final HandyTextView textView, final int start, final int end, final OnClickListener listener) {
+    public static void addHyperlinks(final HandyTextView textView, final int start, final int end,
+            final OnClickListener listener) {
 
         String text = textView.getText().toString().trim();
         SpannableString sp = new SpannableString(text);
-        sp.setSpan(new IntentSpan(listener), start, end,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sp.setSpan(new ForegroundColorSpan(textView.getContext().getResources()
-                                                   .getColor(R.color.black)),
-                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sp.setSpan(new IntentSpan(listener), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sp.setSpan(
+                new ForegroundColorSpan(textView.getContext().getResources()
+                        .getColor(R.color.black)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(sp);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -110,8 +110,8 @@ public class TextUtils {
      * @return
      */
     public static String getConstellation(int month, int day) {
-        String[] constellationArr = { "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座",
-                "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "魔羯座" };
+        String[] constellationArr = { "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座",
+                "天秤座", "天蝎座", "射手座", "魔羯座" };
         int[] constellationEdgeDay = { 20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22 };
         if (day < constellationEdgeDay[month]) {
             month = month - 1;
@@ -141,21 +141,40 @@ public class TextUtils {
             if (calendar.get(Calendar.MONTH) == month) {
                 if (calendar.get(Calendar.DAY_OF_MONTH) >= day) {
                     age = calendar.get(Calendar.YEAR) - year + 1;
-                } else {
+                }
+                else {
                     age = calendar.get(Calendar.YEAR) - year;
                 }
-            } else if (calendar.get(Calendar.MONTH) > month) {
+            }
+            else if (calendar.get(Calendar.MONTH) > month) {
                 age = calendar.get(Calendar.YEAR) - year + 1;
-            } else {
+            }
+            else {
                 age = calendar.get(Calendar.YEAR) - year;
             }
-        } else {
+        }
+        else {
             age = calendar.get(Calendar.YEAR) - year;
         }
         if (age < 0) {
             return 0;
         }
         return age;
+    }
+
+    /**
+     * 判断文本框的内容是否为空
+     * 
+     * @param editText
+     *            需要判断是否为空的EditText对象
+     * @return boolean 返回是否为空,空(true),非空(false)
+     */
+    public static boolean isNull(EditText editText) {
+        String text = editText.getText().toString().trim();
+        if (text != null && text.length() > 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -174,15 +193,18 @@ public class TextUtils {
             try {
                 is = context.getAssets().open(path);
                 return readTextFile(is);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 return null;
-            } finally {
+            }
+            finally {
                 try {
                     if (is != null) {
                         is.close();
                         is = null;
                     }
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
 
                 }
             }
@@ -208,9 +230,11 @@ public class TextUtils {
             }
             br.close();
             inputStream.close();
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             return null;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return null;
         }
 

@@ -1,6 +1,7 @@
 package com.immomo.momo.android.activity.maintabs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +22,16 @@ import com.immomo.momo.android.BaseFragment;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.OtherProfileActivity;
 import com.immomo.momo.android.adapter.NearByPeopleAdapter;
+import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.view.MoMoRefreshListView;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnCancelListener;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnRefreshListener;
 
-public class NearByPeopleFragment extends BaseFragment implements
-        OnItemClickListener, OnRefreshListener, OnCancelListener {
+public class NearByPeopleFragment extends BaseFragment implements OnItemClickListener,
+        OnRefreshListener, OnCancelListener {
 
-    private static List<NearByPeople> mNearByPeoples;
+    private static List<NearByPeople> mNearByPeoples; // 在线用户列表
 
     private MoMoRefreshListView mMmrlvList;
     private NearByPeopleAdapter mAdapter;
@@ -42,9 +45,9 @@ public class NearByPeopleFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_nearbypeople, container,
-                false);
+    public View
+            onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.fragment_nearbypeople, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -74,6 +77,39 @@ public class NearByPeopleFragment extends BaseFragment implements
         startActivity(intent);
     }
 
+    @Override
+    public void onCancel() {
+        clearAsyncTask();
+        mMmrlvList.onRefreshComplete();
+    }
+    
+    /**
+     * 将用户表HashMap转成ArrayList 以便加载ListView Adapter
+     * 
+     * @param application
+     */
+    private void initMaptoList() {
+        HashMap<String, NearByPeople> mMap = mApplication.getOnlineUserMap();
+        Log.d("SZU_NearByPeopleFragment", "HashMap size:" + mMap.size());
+        mNearByPeoples = new ArrayList<NearByPeople>(mMap.size());
+        for (Map.Entry<String, NearByPeople> entry : mMap.entrySet()) {
+            mNearByPeoples.add(entry.getValue());
+        }      
+        Log.d("SZU_NearByPeopleFragment", "ArrayList size:" + mNearByPeoples.size());
+    }
+
+   /** 刷新用户在线列表UI **/
+    public void refreshAdapter(List<? extends Entity> datas) {
+        mAdapter.setData(datas); // Adapter加载List数据
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /** 设置显示起始位置 **/
+    public void setLvSelection(int position) {
+        mMmrlvList.setSelection(position);
+    }
+
+    /** 获取在线用户 */
     private void getPeoples() {
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
@@ -85,7 +121,7 @@ public class NearByPeopleFragment extends BaseFragment implements
 
             @Override
             protected Boolean doInBackground(Void... params) {
-                refreshUserList(mApplication);
+                initMaptoList();
                 return true;
             }
 
@@ -93,11 +129,12 @@ public class NearByPeopleFragment extends BaseFragment implements
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (!result) {
-                    showCustomToast("数据加载失败...");
-                } else {
+                if (result) {
                     mAdapter = new NearByPeopleAdapter(mApplication, mContext, mNearByPeoples);
                     mMmrlvList.setAdapter(mAdapter);
+                }
+                else {
+                    showCustomToast("数据加载失败...");
                 }
             }
 
@@ -106,42 +143,43 @@ public class NearByPeopleFragment extends BaseFragment implements
     }
 
     /**
-     * 将HashMap转成ArrayList 以便ListView刷新
+     * 下拉刷新数据处理
      * 
-     * @param application
+     * @see com.immomo.momo.android.view.MoMoRefreshListView.OnRefreshListener#onRefresh()
      */
-    private void refreshUserList(BaseApplication application) {
-        Map<String, NearByPeople> mMap = application.OnlineUsers;
-        mNearByPeoples = new ArrayList<NearByPeople>(mMap.size());
-        for (Map.Entry<String, NearByPeople> entry : mMap.entrySet()) {
-            mNearByPeoples.add(entry.getValue());
-        }
-    }
-
-    @Override
-    public void onCancel() {
-        clearAsyncTask();
-        mMmrlvList.onRefreshComplete();
-    }
-
     @Override
     public void onRefresh() {
+        Log.d("SZU", "onRefresh()");
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-
+                    Thread.sleep(1000); // 停顿1S
+                    if (mApplication.getOnlineUserMap().isEmpty()) { // 若在线用户非空，则刷新
+                        return false;
+                    }
+                    initMaptoList();
+                    Log.d("SZU", "initMaptoList()");
+                   
+                    Log.d("SZU", "setData()");
+                    return true;
                 }
-                return null;
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
 
             @Override
-            protected void onPostExecute(Boolean result) {
-                super.onPostExecute(result);
+            protected void onPostExecute(Boolean result) {                
                 mMmrlvList.onRefreshComplete();
+                Log.d("SZU", "onRefreshComplete()");        
+                refreshAdapter(mNearByPeoples);
+                Log.d("SZU", "refreshAdapter()");
+                setLvSelection(0);
+                Log.d("SZU", "setLvSelection(0)");
+                super.onPostExecute(result);
             }
         });
     }

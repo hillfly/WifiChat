@@ -37,9 +37,6 @@ import com.immomo.momo.android.activity.imagefactory.ImageFactoryFliter.FilterTy
  * @fileName PhotoUtils.java
  * @package com.immomo.momo.android.util
  * @description 图片工具类
- * @author 任东卫
- * @email 86930007@qq.com
- * @version 1.0
  */
 public class PhotoUtils {
 	// 图片在SD卡中的缓存路径

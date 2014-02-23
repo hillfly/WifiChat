@@ -25,6 +25,7 @@ import com.immomo.momo.android.dialog.SimpleListDialog;
 import com.immomo.momo.android.dialog.SimpleListDialog.onSimpleListItemClickListener;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.util.DateUtils;
+import com.immomo.momo.android.util.SessionUtils;
 import com.immomo.momo.android.util.TextUtils;
 import com.immomo.momo.android.view.HandyTextView;
 import com.immomo.momo.android.view.HeaderLayout;
@@ -180,7 +181,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mAvatar = 0;
             mConstellation = null;
             mOnlineStateInt = 0; // 默认登录状态编号
-            mApplication.clearSession(); // 清空Session数据
+            SessionUtils.clearSession(); // 清空Session数据
             mLlayoutMain.setVisibility(View.VISIBLE);
             mLlayoutExMain.setVisibility(View.GONE);
             break;
@@ -216,21 +217,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         } else {
             flushBirthday(mCalendar);
         }
-    }
-
-    /**
-     * 判断文本框的内容是否为空
-     * 
-     * @param editText
-     *            需要判断是否为空的EditText对象
-     * @return boolean 返回是否为空,空(true),非空(false)
-     */
-    private boolean isNull(EditText editText) {
-        String text = editText.getText().toString().trim();
-        if (text != null && text.length() > 0) {
-            return false;
-        }
-        return true;
     }
 
     private void flushBirthday(Calendar calendar) {
@@ -272,7 +258,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private boolean isValidated() {
         mNickname = "";
         mGender = null;
-        if (isNull(mEtNickname)) {
+        if (TextUtils.isNull(mEtNickname)) {
             showCustomToast("请输入您的聊天昵称");
             mEtNickname.requestFocus();
             return false;
@@ -314,13 +300,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 + "|" + mOnlineStateInt + " mAvatar:" + mAvatar + " IMEI:"
                 + mIMEI);
 
-        mApplication.setIMEI(mIMEI);
-        mApplication.setNickname(mNickname);
-        mApplication.setAge(mAge);
-        mApplication.setGender(mGender);
-        mApplication.setAvatar(mAvatar);
-        mApplication.setOnlineStateInt(mOnlineStateInt);
-        mApplication.setConstellation(mConstellation);
+        // 设置用户Session信息
+        SessionUtils.setIMEI(mIMEI);
+        SessionUtils.setNickname(mNickname);
+        SessionUtils.setAge(mAge);
+        SessionUtils.setGender(mGender);
+        SessionUtils.setAvatar(mAvatar);
+        SessionUtils.setOnlineStateInt(mOnlineStateInt);
+        SessionUtils.setConstellation(mConstellation);
 
         startActivity(WifiapActivity.class);
         finish();
