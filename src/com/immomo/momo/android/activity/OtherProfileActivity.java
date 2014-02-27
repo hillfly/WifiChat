@@ -3,6 +3,7 @@ package com.immomo.momo.android.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -140,5 +141,11 @@ public class OtherProfileActivity extends BaseActivity implements
         mIvAvatar.setImageBitmap(mApplication.getAvatar("nearby_group_1"));
         mEtvName.setText("℡一群二B的小青年");
         mHtvOwner.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
     }
 }

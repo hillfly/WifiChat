@@ -6,6 +6,7 @@ import java.util.Date;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +40,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener, OnDateChangedListener {
 
     private static final String TAG = "SZU_loginActivity";
+    // 登陆年龄限制
     private static final int MAX_AGE = 80;
     private static final int MIN_AGE = 12;
 
@@ -46,6 +48,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private LinearLayout mLlayoutMain; // 首次登陆主界面
     private HandyTextView mHtvSelectOnlineState;
     private EditText mEtNickname;
+    
     private HandyTextView mHtvConstellation;
     private HandyTextView mHtvAge;
     private DatePicker mDpBirthday;
@@ -311,6 +314,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
         startActivity(WifiapActivity.class);
         finish();
+    }
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

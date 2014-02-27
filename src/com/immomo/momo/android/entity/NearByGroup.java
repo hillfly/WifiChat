@@ -6,9 +6,6 @@ import java.util.List;
  * @fileName NearByGroup.java
  * @package com.immomo.momo.android.entity
  * @description 附近群组实体类
- * @author 任东卫
- * @email 86930007@qq.com
- * @version 1.0
  */
 public class NearByGroup extends Entity {
 

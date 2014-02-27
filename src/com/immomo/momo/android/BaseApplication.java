@@ -16,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByGroup;
 import com.immomo.momo.android.entity.NearByPeople;
 
@@ -30,17 +29,18 @@ public class BaseApplication extends Application {
 
     /** 缓存 **/
     private Map<String, SoftReference<Bitmap>> mAvatarCache = new HashMap<String, SoftReference<Bitmap>>();
-    private HashMap<String, String> mLastMsgCache; // 最后一条消息，以IMEI为KEY
+    private HashMap<String, String> mLastMsgCache; // 最后一条消息缓存，以IMEI为KEY
 
     public List<NearByGroup> mNearByGroups = new ArrayList<NearByGroup>(); // 群列表
-    private ArrayList<Message> mUnReadMessags; // 未读消息队列
+    private ArrayList<NearByPeople> mUnReadPeople; // 未读用户队列
     private HashMap<String, String> mLocalUserSession; // 本机用户Session信息
-    private HashMap<String, NearByPeople> mOnlineUsers; // 在线用户集合，以IMEI为KEY  
+    private HashMap<String, NearByPeople> mOnlineUsers; // 在线用户集合，以IMEI为KEY
 
+    /** 屏幕长宽 **/
     public double mLongitude;
     public double mLatitude;
-    private Bitmap mDefaultAvatar;
 
+    private Bitmap mDefaultAvatar; // 默认头像
     private static BaseApplication instance; // 唯一实例
 
     /**
@@ -61,7 +61,7 @@ public class BaseApplication extends Application {
         if (instance == null) {
             instance = this;
         }
-        mLocalUserSession = new HashMap<String, String>(13); // 存储用户登陆信息
+        mLocalUserSession = new HashMap<String, String>(14); // 存储用户登陆信息
         mDefaultAvatar = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_common_def_header);
         for (int i = 1; i < 64; i++) {
@@ -97,10 +97,11 @@ public class BaseApplication extends Application {
     public HashMap<String, String> getUserSession() {
         return mLocalUserSession;
     }
-    
-    public void initParam(){
+
+    /** 初始化相关基本参数 */
+    public void initParam() {
         initOnlineUserMap(); // 初始化用户列表
-        initUnReadMessags(); // 初始化未读消息
+        initUnReadMessages(); // 初始化未读消息
         initLastMsgCache(); // 初始化消息缓存
     }
 
@@ -139,40 +140,89 @@ public class BaseApplication extends Application {
     }
 
     // mLastMsgCache setter getter
+    /** 初始化消息缓存 */
     public void initLastMsgCache() {
         mLastMsgCache = new HashMap<String, String>();
     }
 
+    /**
+     * 新增用户缓存
+     * 
+     * @param paramIMEI
+     *            新增记录的对应用户IMEI
+     * @param paramMsg
+     *            需要缓存的消息对象
+     */
     public void addLastMsgCache(String paramIMEI, String paramMsg) {
         mLastMsgCache.put(paramIMEI, paramMsg);
     }
 
+    /**
+     * 获取消息缓存
+     * 
+     * @param paramIMEI
+     *            需要获取消息缓存记录的用户IMEI
+     * @return
+     */
     public String getLastMsgCache(String paramIMEI) {
         return mLastMsgCache.get(paramIMEI);
     }
 
+    /**
+     * 移除消息缓存
+     * 
+     * @param paramIMEI
+     *            需要清除缓存的用户IMEI
+     */
     public void removeLastMsgCache(String paramIMEI) {
         mLastMsgCache.remove(paramIMEI);
     }
 
     // mUnReadMessags setter getter
-    public void initUnReadMessags() {
-        mUnReadMessags = new ArrayList<Message>();
+    /** 初始化未读消息队列 */
+    public void initUnReadMessages() {
+        mUnReadPeople = new ArrayList<NearByPeople>();
     }
 
-    public void addUnReadMessags(Message msg) {
-        Log.i("BaseActivity", "进入到 addUnReadMessages()");
-        mUnReadMessags.add(msg);
+    /**
+     * 新增未读消息用户
+     * 
+     * @param people
+     */
+    public void addUnReadPeople(NearByPeople people) {
+        Log.i("BaseActivity", "进入到 UnReadMessages()");
+        if (!mUnReadPeople.contains(people))
+            mUnReadPeople.add(people);
     }
 
-    public ArrayList<Message> getUnReadMessagsList() {
-        return mUnReadMessags;
+    /**
+     * 获取未读消息用户队列
+     * 
+     * @return
+     */
+    public ArrayList<NearByPeople> getUnReadPeopleList() {
+        return mUnReadPeople;
     }
 
-    public void removeUnReadMessags(int position) {
-        mUnReadMessags.remove(position);
+    /**
+     * 获取未读用户数
+     * 
+     * @return
+     */
+    public int getUnReadPeopleSize() {
+        return mUnReadPeople.size();
     }
-   
+
+    /**
+     * 移除指定未读用户
+     * 
+     * @param people
+     */
+    public void removeUnReadPeople(NearByPeople people) {
+        if (mUnReadPeople.contains(people))
+            mUnReadPeople.remove(people);
+    }
+
     /**
      * 获取用户头像bitmap
      * <p>

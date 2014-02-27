@@ -1,6 +1,7 @@
 package com.immomo.momo.android.activity;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -8,14 +9,12 @@ import android.widget.ImageButton;
 
 import com.immomo.momo.android.BaseActivity;
 import com.immomo.momo.android.R;
-import com.immomo.momo.android.activity.register.RegisterActivity;
 
 public class WelcomeActivity extends BaseActivity implements OnClickListener {
 
-    private Button mBtnRegister;
     private Button mBtnLogin;
     private ImageButton mIbtnAbout;
-   
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,25 +25,19 @@ public class WelcomeActivity extends BaseActivity implements OnClickListener {
 
     @Override
     protected void initViews() {
-        mBtnRegister = (Button) findViewById(R.id.welcome_btn_register);
         mBtnLogin = (Button) findViewById(R.id.welcome_btn_login);
         mIbtnAbout = (ImageButton) findViewById(R.id.welcome_ibtn_about);
     }
 
     @Override
     protected void initEvents() {
-        mBtnRegister.setOnClickListener(this);
         mBtnLogin.setOnClickListener(this);
         mIbtnAbout.setOnClickListener(this);
     }
-    
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case R.id.welcome_btn_register:
-                startActivity(RegisterActivity.class);
-                break;
 
             case R.id.welcome_btn_login:
                 startActivity(LoginActivity.class);
@@ -54,5 +47,11 @@ public class WelcomeActivity extends BaseActivity implements OnClickListener {
                 startActivity(AboutTabsActivity.class);
                 break;
         }
+    }
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+
     }
 }

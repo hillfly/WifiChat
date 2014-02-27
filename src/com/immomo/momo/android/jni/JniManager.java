@@ -4,9 +4,6 @@ package com.immomo.momo.android.jni;
  * @fileName JniManager.java
  * @package com.immomo.momo.android.jni
  * @description JNI类
- * @author 任东卫
- * @email 86930007@qq.com
- * @version 1.0
  */
 public class JniManager {
 	static {

@@ -1,6 +1,7 @@
 package com.immomo.momo.android.activity.maintabs;
 
 import android.os.Bundle;
+import android.os.Message;
 
 import com.immomo.momo.android.R;
 
@@ -30,5 +31,11 @@ public class UserSettingActivity extends TabItemActivity {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

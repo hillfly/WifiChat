@@ -3,31 +3,44 @@ package com.immomo.momo.android.activity.maintabs;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 
+import com.immomo.momo.android.BaseActivity;
+import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.R;
+import com.immomo.momo.android.view.HandyTextView;
 
 @SuppressWarnings("deprecation")
-public class MainTabActivity extends TabActivity {
+public class MainTabActivity extends TabActivity implements OnTabChangeListener {
+    protected static boolean isTabActive;
     private TabHost mTabHost;
+
+    private static HandyTextView mHtvSessionNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maintabs);
-        initViews();
         initTabs();
+        initViews();
+        initEvents();
+        isTabActive = true;
     }
 
-    private void initViews() {
-        mTabHost = getTabHost(); // 从TabActivity上面获取放置Tab的TabHost
+    /** 重写返回功能 **/
+    @Override
+    public void finish() {
+        super.finish();
+        isTabActive = false;
     }
 
     private void initTabs() {
-
-        // from(MainTabActivity.this)从这个TabActivity获取LayoutInflater
+        mTabHost = getTabHost(); // 从TabActivity上面获取放置Tab的TabHost
         LayoutInflater inflater = LayoutInflater.from(MainTabActivity.this);
 
         // 附近
@@ -39,9 +52,7 @@ public class MainTabActivity extends TabActivity {
                 .setIndicator(nearbyView);
         nearbyTabSpec.setContent(new Intent(MainTabActivity.this, // 跳转activity
                 NearByActivity.class));
-
-        mTabHost.addTab(nearbyTabSpec); // 添加该Tab, addTab(TabHost.TabSpec
-                                        // mTabSpec)
+        mTabHost.addTab(nearbyTabSpec); // 添加该Tab
 
         // 消息
         View sessionListView = inflater.inflate(R.layout.common_bottombar_tab_chat, null);
@@ -56,6 +67,42 @@ public class MainTabActivity extends TabActivity {
                 UserSettingActivity.class.getName()).setIndicator(userSettingView);
         userSettingTabSpec.setContent(new Intent(MainTabActivity.this, UserSettingActivity.class));
         mTabHost.addTab(userSettingTabSpec);
+    }
+
+    private void initEvents() {
+    }
+
+    private void initViews() {
+        mHtvSessionNumber = (HandyTextView) findViewById(R.id.tab_chat_number);
+    }
+
+    public static void sendEmptyMessage(int what) {
+        if (isTabActive)
+            handler.sendEmptyMessage(what);
+    }
+
+    private static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    mHtvSessionNumber.setVisibility(View.VISIBLE);
+                    mHtvSessionNumber.setText(String.valueOf(BaseApplication.getInstance()
+                            .getUnReadPeopleSize()));
+                    break;
+                case 0:
+                    BaseActivity.sendEmptyMessage(1);
+                    mHtvSessionNumber.setVisibility(View.GONE);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onTabChanged(String tabId) {
 
     }
 }

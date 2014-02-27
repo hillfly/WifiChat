@@ -8,10 +8,11 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,8 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.immomo.momo.android.activity.maintabs.MainTabActivity;
 import com.immomo.momo.android.dialog.FlippingLoadingDialog;
-import com.immomo.momo.android.socket.IPMSGConst;
 import com.immomo.momo.android.socket.OnActiveChatActivityListenner;
 import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.util.NetWorkUtils;
@@ -33,9 +34,12 @@ public abstract class BaseActivity extends FragmentActivity {
     protected static OnActiveChatActivityListenner activeChatActivityListenner = null; // 激活的聊天窗口
 
     protected BaseApplication mApplication;
-    protected NetWorkUtils mNetWorkUtils;
+    // TODO 下次更新将NetWorkUtils与WifiUtils合并
+    protected NetWorkUtils mNetWorkUtils; 
     protected FlippingLoadingDialog mLoadingDialog;
     protected UDPSocketThread mUDPSocketThread;
+    private static SoundPool notificationplayer;
+    private static int notificationplayerID;
 
     protected List<AsyncTask<Void, Void, Boolean>> mAsyncTasks = new ArrayList<AsyncTask<Void, Void, Boolean>>();
 
@@ -62,6 +66,10 @@ public abstract class BaseActivity extends FragmentActivity {
         if (!queue.contains(this)) {
             queue.add(this);
         }
+        if (notificationplayer == null) {
+            notificationplayer = new SoundPool(3, AudioManager.STREAM_SYSTEM, 5);
+            notificationplayerID = notificationplayer.load(this, R.raw.crystalring, 1);
+        }
     }
 
     @Override
@@ -70,7 +78,7 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-//  /** 重写返回功能 **/
+    /** 重写返回功能 **/
     @Override
     public void finish() {
         super.finish();
@@ -124,7 +132,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * 
      * @return
      */
-    public static boolean isExistActiveChatActivity() {
+    public static boolean isExistActiveChatActivity() {        
         Log.i("SZU_BaseActivity", "进入isExistActiveChatActivity()");
         return (activeChatActivityListenner == null) ? false : true;
     }
@@ -267,40 +275,27 @@ public abstract class BaseActivity extends FragmentActivity {
      * @param msg
      *            接收到的消息对象
      */
-    public void processMessage(Message msg) {
-        // 播放消息提示音
+    public abstract void processMessage(android.os.Message msg);
+
+    public static void playNotification() {
+        notificationplayer.play(notificationplayerID, 1, 1, 0, 0, 1);
     }
 
     public static void sendEmptyMessage(int what) {
         handler.sendEmptyMessage(what);
     }
 
-    public static void sendMessage(Message msg) {
+    public static void sendMessage(android.os.Message msg) {
         handler.sendMessage(msg);
     }
 
     private static Handler handler = new Handler() {
-
         @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case IPMSGConst.IPMSG_FILEATTACHOPT: { // 收到发送文件请求
-                }
-                    break;
-
-                case IPMSGConst.FILERECEIVEINFO: { // 更新接收文件进度条
-                }
-                    break;
-
-                case IPMSGConst.FILERECEIVESUCCESS: { // 文件接收成功
-                }
-                    break;
-
-                default:
-                    if (queue.size() > 0)
-                        queue.getLast().processMessage(msg);
-                    break;
-            }
+        public void handleMessage(android.os.Message msg) {
+            MainTabActivity.sendEmptyMessage(1); // 更新Tab信息
+            if (queue.size() > 0)
+                queue.getLast().processMessage(msg);
+            playNotification(); // 新消息响铃提醒
         }
     };
 }

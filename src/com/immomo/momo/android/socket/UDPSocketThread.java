@@ -7,6 +7,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.immomo.momo.android.BaseActivity;
@@ -15,6 +16,9 @@ import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.util.SessionUtils;
+import com.immomo.momo.sql.chattingDAO;
+import com.immomo.momo.sql.chattingInfo;
+import com.immomo.momo.sql.userDAO;
 
 public class UDPSocketThread implements Runnable {
 
@@ -27,7 +31,8 @@ public class UDPSocketThread implements Runnable {
     private byte[] receiveBuffer = new byte[BUFFERLENGTH];
     private byte[] sendBuffer = new byte[BUFFERLENGTH];
 
-    private static BaseApplication mBaseApplication;
+    private static BaseApplication mApplication;
+    private static Context mContext;
     private boolean isThreadRunning;
     private Thread receiveUDPThread; // 接收UDP数据线程
 
@@ -37,9 +42,13 @@ public class UDPSocketThread implements Runnable {
 
     private String mIMEI;
     private NearByPeople mNearByPeople; // 本机用户类
+    private userDAO mUserDAO;
+    private chattingDAO mChattingDAO;
 
     private UDPSocketThread() {
-        mBaseApplication.initParam(); // 初始化相关参数
+        mApplication.initParam(); // 初始化相关参数
+        mUserDAO = new userDAO(mContext);
+        mChattingDAO = new chattingDAO(mContext);
     }
 
     /**
@@ -51,8 +60,9 @@ public class UDPSocketThread implements Runnable {
      * @param paramApplication
      * @return instance
      */
-    public static UDPSocketThread getInstance(BaseApplication paramApplication) {
-        mBaseApplication = paramApplication;
+    public static UDPSocketThread getInstance(BaseApplication application, Context context) {
+        mApplication = application;
+        mContext = context;
         if (instance == null) {
             instance = new UDPSocketThread();
         }
@@ -96,15 +106,16 @@ public class UDPSocketThread implements Runnable {
 
             IPMSGProtocol ipmsgRes = new IPMSGProtocol(UDPListenResStr);
             int commandNo = ipmsgRes.getCommandNo(); // 获取命令字
+            String senderIMEI = ipmsgRes.getSenderIMEI(); // 获取对方IMEI
 
-            if (!SessionUtils.isItself(ipmsgRes.getSenderIMEI())) { // 过滤自己发送的广播
+            if (!SessionUtils.isItself(senderIMEI)) { // 过滤自己发送的广播
                 switch (commandNo) {
 
                 // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
                     case IPMSGConst.IPMSG_BR_ENTRY: {
                         Log.i(TAG, "收到上线通知");
                         addUser(ipmsgRes); // 增加用户至在线列表
-                        // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
+                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
 
                         sendUDPdata(IPMSGConst.IPMSG_ANSENTRY, receiveDatagramPacket.getAddress(),
                                 mNearByPeople);
@@ -116,23 +127,22 @@ public class UDPSocketThread implements Runnable {
                     case IPMSGConst.IPMSG_ANSENTRY: {
                         Log.i(TAG, "收到上线应答");
                         addUser(ipmsgRes); // 增加用户至在线列表
-                        // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_ANSENTRY);
+                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_ANSENTRY);
                     }
                         break;
 
                     // 收到下线广播
                     case IPMSGConst.IPMSG_BR_EXIT: {
-                        String imei = ipmsgRes.getSenderIMEI();
-                        mBaseApplication.removeOnlineUser(imei, 1); // 移除用户
-                        // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
+                        mApplication.removeOnlineUser(senderIMEI, 1); // 移除用户
+                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
 
-                        Log.i(TAG, "根据下线报文成功删除imei为" + imei + "的用户");
+                        Log.i(TAG, "根据下线报文成功删除imei为" + senderIMEI + "的用户");
                     }
                         break;
 
                     // 拒绝接受文件
                     case IPMSGConst.IPMSG_RELEASEFILES: {
-                        // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
+                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
                     }
                         break;
 
@@ -141,16 +151,19 @@ public class UDPSocketThread implements Runnable {
                         Log.i(TAG, "收到MSG消息");
                         String senderIp = receiveDatagramPacket.getAddress().getHostAddress();
                         Message msg = (Message) ipmsgRes.getAddObject();
-                        sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo()); // 消息接受确认
-                        
+                        sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
+                        // 消息接受确认
+
                         Log.d(TAG, msg.getMsgContent());
-                        
+
                         // TODO 这里可以判断是否含有文件，有则通知handler刷新UI，出现是否接受提示框
 
                         if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
-                            mBaseApplication.addUnReadMessags(msg); // 添加到未读信息队列
-                            Log.d(TAG, "addUnReadMessags()");
+                            mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
+                            mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
                             BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
+                            mChattingDAO.add(new chattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
+                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent()));                            
                         }
 
                     }
@@ -253,7 +266,7 @@ public class UDPSocketThread implements Runnable {
 
     /** 刷新用户列表 **/
     public void refreshUsers() {
-        mBaseApplication.removeOnlineUser(null, 0); // 清空在线用户列表
+        mApplication.removeOnlineUser(null, 0); // 清空在线用户列表
         notifyOnline(); // 发送上线通知
         // MyFeiGeBaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
     }
@@ -268,7 +281,9 @@ public class UDPSocketThread implements Runnable {
         String receiveIMEI = paramIPMSGProtocol.getSenderIMEI();
         if (!SessionUtils.isItself(receiveIMEI)) {
             NearByPeople newUser = (NearByPeople) paramIPMSGProtocol.getAddObject();
-            mBaseApplication.addOnlineUser(receiveIMEI, newUser);
+            mApplication.addOnlineUser(receiveIMEI, newUser);         
+            // TODO 添加用户进数据库
+            mUserDAO.add(newUser);
             Log.i(TAG, "成功添加imei为" + receiveIMEI + "的用户");
         }
     }

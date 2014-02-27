@@ -77,27 +77,7 @@
             android:name=".activity.WifiapActivity"            
             android:screenOrientation="portrait" 
             android:alwaysRetainTaskState="true" >
-        </activity>         
-        <activity
-            android:name=".activity.FindPwdTabsActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.FindPwdPhoneActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.FindPwdEmailActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.ResetPwdPhoneActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.register.RegisterActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+        </activity>       
         <activity
             android:name=".activity.imagefactory.ImageFactoryActivity"
             android:screenOrientation="portrait" >
@@ -116,10 +96,6 @@
         </activity>
         <activity
             android:name=".activity.maintabs.SessionListActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.maintabs.ContactTabsActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

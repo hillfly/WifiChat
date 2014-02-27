@@ -14,6 +14,7 @@ import com.immomo.momo.android.R;
 public class NearByPeople extends Entity implements Parcelable {
 
     /** 用户信息常量 **/
+    public static final String ID = "ID";
     public static final String NICKNAME = "Nickname";
     public static final String GENDER = "Gender";
     public static final String IMEI = "IMEI";
@@ -39,6 +40,7 @@ public class NearByPeople extends Entity implements Parcelable {
     private int mAge; // 年龄
     private String mIpaddress; // IP地址
     private String mLogintime;// 登陆时间
+    private int onlineStateInt; // 在线状态
     private int msgCount; // 未接收消息数
 
     public NearByPeople() {
@@ -62,7 +64,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.IMEI)
     public String getIMEI() {
-        return mIMEI;
+        return this.mIMEI;
     }
 
     public void setIMEI(String paramIMEI) {
@@ -71,7 +73,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.AVATAR)
     public int getAvatar() {
-        return mAvatar;
+        return this.mAvatar;
     }
 
     public void setAvatar(int paramAvatar) {
@@ -80,7 +82,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.DEVICE)
     public String getDevice() {
-        return mDevice;
+        return this.mDevice;
     }
 
     public void setDevice(String paramDevice) {
@@ -89,7 +91,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.NICKNAME)
     public String getNickname() {
-        return mNickname;
+        return this.mNickname;
     }
 
     public void setNickname(String paramNickname) {
@@ -98,7 +100,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.GENDER)
     public String getGender() {
-        return mGender;
+        return this.mGender;
     }
 
     public void setGender(String paramGender) {
@@ -115,7 +117,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(serialize = false)
     public int getGenderId() {
-        return mGenderId;
+        return this.mGenderId;
     }
 
     public void setGenderId(int paramGenderId) {
@@ -124,7 +126,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(serialize = false)
     public int getGenderBgId() {
-        return mGenderBgId;
+        return this.mGenderBgId;
     }
 
     public void setGenderBgId(int paramGenderBgId) {
@@ -133,7 +135,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.AGE)
     public int getAge() {
-        return mAge;
+        return this.mAge;
     }
 
     public void setAge(int paramAge) {
@@ -151,7 +153,7 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.IPADDRESS)
     public String getIpaddress() {
-        return mIpaddress;
+        return this.mIpaddress;
     }
 
     public void setIpaddress(String paramIpaddress) {
@@ -160,16 +162,25 @@ public class NearByPeople extends Entity implements Parcelable {
 
     @JSONField(name = NearByPeople.LOGINTIME)
     public String getLogintime() {
-        return mLogintime;
+        return this.mLogintime;
     }
 
     public void setLogintime(String paramLogintime) {
         this.mLogintime = paramLogintime;
     }
 
+    @JSONField(name = NearByPeople.ONLINESTATEINT)
+    public int getOnlineStateInt() {
+        return this.onlineStateInt;
+    }
+
+    public void setOnlineStateInt(int paramOnlineState) {
+        this.onlineStateInt = paramOnlineState;
+    }
+
     @JSONField(serialize = false)
     public int getMsgCount() {
-        return msgCount;
+        return this.msgCount;
     }
 
     public void setMsgCount(int paramMsgCount) {

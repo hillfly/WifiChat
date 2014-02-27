@@ -2,12 +2,22 @@ package com.immomo.momo.android.util;
 
 import java.util.HashMap;
 
+import android.R.integer;
+
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.entity.NearByPeople;
 
 public class SessionUtils {
     private static HashMap<String, String> mlocalUserSession = BaseApplication.getInstance()
             .getUserSession();
+
+    /**
+     * 获取用户数据库id
+     * @return
+     */
+    public static int getLocalUserID(){
+        return Integer.parseInt(mlocalUserSession.get(NearByPeople.ID));
+    }
 
     /**
      * 获取本地IP
@@ -124,6 +134,14 @@ public class SessionUtils {
      */
     public static String getLoginTime() {
         return mlocalUserSession.get(NearByPeople.LOGINTIME);
+    }
+    
+    /**
+     * 设置用户数据库id
+     * @param paramID
+     */
+    public static void setLocalUserID(int paramID){
+        mlocalUserSession.put(NearByPeople.ID, String.valueOf(paramID));
     }
 
     /**

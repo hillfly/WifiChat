@@ -44,10 +44,11 @@ import com.immomo.momo.android.view.HeaderLayout.onMiddleImageButtonClickListene
 import com.immomo.momo.android.view.HeaderLayout.onRightImageButtonClickListener;
 import com.immomo.momo.android.view.ScrollLayout;
 import com.immomo.momo.android.view.ScrollLayout.OnScrollToScreenListener;
+import com.immomo.momo.sql.chattingDAO;
+import com.immomo.momo.sql.userDAO;
 
-public abstract class BaseMessageActivity extends BaseActivity implements
-        OnScrollToScreenListener, OnClickListener, OnTouchListener,
-        TextWatcher, OnChatPopupItemClickListener {
+public abstract class BaseMessageActivity extends BaseActivity implements OnScrollToScreenListener,
+        OnClickListener, OnTouchListener, TextWatcher, OnChatPopupItemClickListener {
 
     protected HeaderLayout mHeaderLayout;
     protected ChatListView mClvList;
@@ -74,9 +75,11 @@ public abstract class BaseMessageActivity extends BaseActivity implements
     protected LinearLayout mLayoutMessagePlusLocation;
     protected LinearLayout mLayoutMessagePlusGift;
 
-    protected List<Message> mMessagesList = new ArrayList<Message>(); //消息列表
+    protected List<Message> mMessagesList = new ArrayList<Message>(); // 消息列表
     protected ChatAdapter mAdapter;
     protected NearByPeople mPeople; // 聊天的对象
+    protected userDAO mUserDAO; // 数据库用户信息操作实例
+    protected chattingDAO mChattingDAO; // 数据库聊天信息操作实例
 
     protected Bitmap mRoundsSelected;
     protected Bitmap mRoundsNormal;
@@ -94,6 +97,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements
 
     protected String mNickName;
     protected String mIMEI;
+    protected int mID;
+    protected int mSenderID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,29 +106,28 @@ public abstract class BaseMessageActivity extends BaseActivity implements
         setContentView(R.layout.activity_chat);
         initViews();
         initEvents();
-        mUDPSocketThread = UDPSocketThread.getInstance(mApplication); // 获取对象
+        mUDPSocketThread = UDPSocketThread.getInstance(mApplication,this); // 获取对象
+        mUserDAO = new userDAO(this); // 实例化数据库用户操作类
+        mChattingDAO = new chattingDAO(this); // 实例化数据库聊天信息操作类
     }
 
-    protected class OnMiddleImageButtonClickListener implements
-            onMiddleImageButtonClickListener {
+    protected class OnMiddleImageButtonClickListener implements onMiddleImageButtonClickListener {
 
         @Override
         public void onClick() {
-            Intent intent = new Intent(BaseMessageActivity.this,
-                    OtherProfileActivity.class);
+            Intent intent = new Intent(BaseMessageActivity.this, OtherProfileActivity.class);
             intent.putExtra(NearByPeople.ENTITY_PEOPLE, mPeople);
             startActivity(intent);
             finish();
         }
     }
 
-    protected class OnRightImageButtonClickListener implements
-            onRightImageButtonClickListener {
+    protected class OnRightImageButtonClickListener implements onRightImageButtonClickListener {
 
         @Override
         public void onClick() {
-            mChatPopupWindow.showAtLocation(mHeaderLayout, Gravity.RIGHT
-                    | Gravity.TOP, -10, mHeaderHeight + 10);
+            mChatPopupWindow.showAtLocation(mHeaderLayout, Gravity.RIGHT | Gravity.TOP, -10,
+                    mHeaderHeight + 10);
         }
     }
 
@@ -149,8 +153,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements
         mLayoutMessagePlusCamera.setEnabled(true);
         mLayoutMessagePlusLocation.setEnabled(true);
         mLayoutMessagePlusGift.setEnabled(true);
-        Animation animation = AnimationUtils.loadAnimation(
-                BaseMessageActivity.this, R.anim.controller_enter);
+        Animation animation = AnimationUtils.loadAnimation(BaseMessageActivity.this,
+                R.anim.controller_enter);
         mLayoutMessagePlusBar.setAnimation(animation);
         mLayoutMessagePlusBar.setVisibility(View.VISIBLE);
         mLayoutFullScreenMask.setVisibility(View.VISIBLE);
@@ -164,25 +168,23 @@ public abstract class BaseMessageActivity extends BaseActivity implements
         mLayoutMessagePlusLocation.setEnabled(false);
         mLayoutMessagePlusGift.setEnabled(false);
         mLayoutFullScreenMask.setVisibility(View.GONE);
-        Animation animation = AnimationUtils.loadAnimation(
-                BaseMessageActivity.this, R.anim.controller_exit);
-        animation.setInterpolator(AnimationUtils.loadInterpolator(
-                BaseMessageActivity.this,
+        Animation animation = AnimationUtils.loadAnimation(BaseMessageActivity.this,
+                R.anim.controller_exit);
+        animation.setInterpolator(AnimationUtils.loadInterpolator(BaseMessageActivity.this,
                 android.R.anim.anticipate_interpolator));
         mLayoutMessagePlusBar.setAnimation(animation);
         mLayoutMessagePlusBar.setVisibility(View.GONE);
     }
 
     protected void initRounds() {
-        mRoundsSelected = PhotoUtils.getRoundBitmap(BaseMessageActivity.this,
-                getResources().getColor(R.color.msg_short_line_selected));
-        mRoundsNormal = PhotoUtils.getRoundBitmap(BaseMessageActivity.this,
-                getResources().getColor(R.color.msg_short_line_normal));
+        mRoundsSelected = PhotoUtils.getRoundBitmap(BaseMessageActivity.this, getResources()
+                .getColor(R.color.msg_short_line_selected));
+        mRoundsNormal = PhotoUtils.getRoundBitmap(BaseMessageActivity.this, getResources()
+                .getColor(R.color.msg_short_line_normal));
         int mChildCount = mLayoutScroll.getChildCount();
         for (int i = 0; i < mChildCount; i++) {
-            ImageView imageView = (ImageView) LayoutInflater.from(
-                    BaseMessageActivity.this).inflate(
-                    R.layout.include_message_shortline, null);
+            ImageView imageView = (ImageView) LayoutInflater.from(BaseMessageActivity.this)
+                    .inflate(R.layout.include_message_shortline, null);
             imageView.setImageBitmap(mRoundsNormal);
             mLayoutRounds.addView(imageView);
         }
@@ -190,20 +192,17 @@ public abstract class BaseMessageActivity extends BaseActivity implements
     }
 
     protected void initPopupWindow() {
-        mWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                130, getResources().getDisplayMetrics());
-        mHeaderHeight = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 48,
+        mWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 130, getResources()
+                .getDisplayMetrics());
+        mHeaderHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
                 getResources().getDisplayMetrics());
-        mChatPopupWindow = new ChatPopupWindow(this, mWidth,
-                LayoutParams.WRAP_CONTENT);
+        mChatPopupWindow = new ChatPopupWindow(this, mWidth, LayoutParams.WRAP_CONTENT);
         mChatPopupWindow.setOnChatPopupItemClickListener(this);
     }
 
     protected void initSynchronousDialog() {
-        mSynchronousDialog = BaseDialog.getDialog(BaseMessageActivity.this,
-                "提示", "成为陌陌会员即可同步好友聊天记录", "查看详情",
-                new DialogInterface.OnClickListener() {
+        mSynchronousDialog = BaseDialog.getDialog(BaseMessageActivity.this, "提示",
+                "成为陌陌会员即可同步好友聊天记录", "查看详情", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -220,8 +219,7 @@ public abstract class BaseMessageActivity extends BaseActivity implements
         mSynchronousDialog.setButton1Background(R.drawable.btn_default_popsubmit);
     }
 
-    protected class OnVoiceModeDialogItemClickListener implements
-            onSimpleListItemClickListener {
+    protected class OnVoiceModeDialogItemClickListener implements onSimpleListItemClickListener {
 
         @Override
         public void onItemClick(int position) {

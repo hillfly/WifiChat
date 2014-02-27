@@ -184,22 +184,8 @@ public class NearByActivity extends TabItemActivity {
     }
 
     @Override
-    public void processMessage(android.os.Message msg) {        
-        switch (msg.what) {
-            case IPMSGConst.IPMSG_SENDMSG:
-               // TODO 更新UI
-                super.processMessage(null); // 调用父类函数 响铃提醒
-                break;
-
-            case IPMSGConst.IPMSG_RELEASEFILES: { // 拒绝接受文件,停止发送文件线程
-            }
-                break;
-
-            case IPMSGConst.FILESENDSUCCESS: { // 文件发送成功
-            }
-                break;
-
-        } // end of switch
+    public void processMessage(android.os.Message msg) {
+         MainTabActivity.sendEmptyMessage(msg.what);
     }
     
     @Override

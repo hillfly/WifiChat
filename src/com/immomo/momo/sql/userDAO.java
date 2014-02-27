@@ -6,6 +6,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONStringer;
 
+import com.immomo.momo.android.entity.NearByPeople;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -63,6 +65,22 @@ public class userDAO {
         db.insert(helper.getTableName(), "id", values);
     }
 
+    /*获取在线信息尚未完善,默认在线状态(0)*/
+    public void add(NearByPeople people)
+    {
+    	 ContentValues values = new ContentValues();
+         values.put("name", people.getNickname());
+         values.put("sex", people.getGender());
+         values.put("age", people.getAge());
+         values.put("IMEI", people.getIMEI());
+         values.put("ip", people.getIpaddress());
+         values.put("status", people.getOnlineStateInt());
+         values.put("avater", people.getAvatar());
+         values.put("lastdate", people.getLogintime());
+         values.put("device", people.getDevice());
+         values.put("constellation",people.getConstellation());
+         db.insert(helper.getTableName(), "id", values);
+    }
     /*
      * 参数：userInfo类 作用：用来更用户信息
      */

@@ -21,14 +21,16 @@
         android:textSize="11sp" />
 
     <ImageView
+    	android:id="@+id/tab_profile_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/tab_profile_label"
+        android:layout_alignRight="@id/tab_profile_label"
         android:layout_marginRight="-14dip"
         android:layout_marginTop="5dip"
         android:gravity="center"
         android:minWidth="20dip"
-        android:src="@drawable/bg_msgtip_point" />
+        android:src="@drawable/bg_msgtip_point" 
+        android:visibility="gone" />
 
 </RelativeLayout>

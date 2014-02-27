@@ -2,6 +2,7 @@ package com.immomo.momo.android;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -68,4 +69,10 @@ public class BaseWebActivity extends BaseActivity {
 			}
 		});
 	}
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
+    }
 }

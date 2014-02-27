@@ -17,9 +17,6 @@ import com.immomo.momo.android.R;
  * @fileName NearByPopupWindow.java
  * @package com.immomo.momo.android.popupwindow
  * @description 附近PopupWindow类
- * @author 任东卫
- * @email 86930007@qq.com
- * @version 1.0
  */
 public class NearByPopupWindow extends BasePopupWindow {
 

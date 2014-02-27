@@ -36,6 +36,7 @@ import com.immomo.momo.android.view.EmoticonsEditText;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.ScrollLayout;
+import com.immomo.momo.sql.chattingInfo;
 
 public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
 
@@ -43,9 +44,10 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        changeActiveChatActivity(this); // 注册到ReceiveMsgListener容器
+        changeActiveChatActivity(this); // 注册到changeActiveChatActivity
     }
 
+    // 监听返回键
     @Override
     public void onBackPressed() {
         if (mLayoutMessagePlusBar.isShown()) {
@@ -78,6 +80,10 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     public void finish() {
         removeActiveChatActivity(); // 移除监听
+        if (mUserDAO != null) // 关闭数据库连接
+            mUserDAO.close();
+        if (mChattingDAO != null)
+            mChattingDAO.close();
         super.finish();
     }
 
@@ -134,9 +140,11 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     }
 
     private void init() {
+        mID = SessionUtils.getLocalUserID();
         mNickName = SessionUtils.getNickname();
         mIMEI = SessionUtils.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
+        mSenderID = mUserDAO.getID(mPeople.getIMEI());
         mHeaderLayout.setTitleChat(
                 mApplication.getIDfromDrawable(NearByPeople.AVATAR + mPeople.getAvatar()),
                 R.drawable.bg_chat_dis_active, mPeople.getNickname(), mPeople.getLogintime(),
@@ -428,9 +436,11 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     }
 
     public void sendMessage(String content, CONTENT_TYPE type) {
-        Message msg = new Message(mIMEI, DateUtils.getNowtime(), content, type);
+        String nowtime = DateUtils.getNowtime();
+        Message msg = new Message(mIMEI, nowtime, content, type);
         mMessagesList.add(msg);
         mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
+        mChattingDAO.add(new chattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库
         mApplication.addLastMsgCache(mPeople.getIMEI(), content); // 更新消息缓存
     }
 }

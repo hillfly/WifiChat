@@ -37,15 +37,6 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/welcome_btn_register"
-                android:layout_width="100dip"
-                android:layout_height="40dip"
-                android:layout_margin="5dip"
-                android:background="@drawable/btn_default_blue"
-                android:text="注册"
-                android:textColor="#FFFFFFFF" />
-
-            <Button
                 android:id="@+id/welcome_btn_login"
                 android:layout_width="100dip"
                 android:layout_height="40dip"

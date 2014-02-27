@@ -6,6 +6,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -95,4 +96,10 @@ public class AboutActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
+    }
 }

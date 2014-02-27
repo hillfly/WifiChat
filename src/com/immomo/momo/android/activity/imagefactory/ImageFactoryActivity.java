@@ -2,6 +2,7 @@ package com.immomo.momo.android.activity.imagefactory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -185,4 +186,10 @@ public class ImageFactoryActivity extends BaseActivity {
 			}
 		}
 	}
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
+    }
 }

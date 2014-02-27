@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +85,12 @@ public class ImageBrowserActivity extends BaseActivity implements
     public void onBackPressed() {
         finish();
         overridePendingTransition(0, R.anim.zoom_exit);
+    }
+
+    @Override
+    public void processMessage(Message msg) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

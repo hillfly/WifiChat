@@ -21,6 +21,7 @@
         android:textSize="11sp" />
 
     <com.immomo.momo.android.view.HandyTextView
+    	android:id="@+id/tab_chat_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -31,10 +32,10 @@
         android:gravity="center"
         android:marqueeRepeatLimit="1"
         android:minWidth="20dip"
-        android:singleLine="true"
-        android:text="6"
+        android:singleLine="true"       
         android:textColor="#ffffffff"
         android:textSize="11sp"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        android:visibility="gone" />
 
 </RelativeLayout>
