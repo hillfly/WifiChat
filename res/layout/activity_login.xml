@@ -224,7 +224,7 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="280dp"
+                android:layout_height="fill_parent"
                 android:gravity="center"
                 android:orientation="vertical" >
 
@@ -252,8 +252,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/login_layout_Lastlogintime"
-                    android:layout_toRightOf="@id/login_img_existImg"
                     android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/login_img_existImg"
                     android:gravity="center"
                     android:orientation="horizontal" >
 
@@ -288,47 +288,40 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp" />
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:id="@id/login_layout_Lastlogintime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/login_img_existImg"
-                    android:layout_toRightOf="@id/login_img_existImg"
                     android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/login_img_existImg"
                     android:orientation="horizontal" >
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"                    
+                        android:layout_height="wrap_content"
                         android:text="上次登录: "
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/login_tv_lastlogintime"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"                        
+                        android:layout_height="wrap_content"
                         android:textSize="12sp" />
                 </LinearLayout>
-                
+
+                <Button
+                    android:id="@+id/login_btn_changeUser"
+                    android:layout_width="225dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/login_img_existImg"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/btn_default"
+                    android:text="更  换  账  户"
+                    android:textColor="#636363"
+                    android:textSize="20sp" />
             </RelativeLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dip"
-                android:layout_marginTop="15dp"
-                android:background="@color/devideline" />
-
-            <Button
-                android:id="@+id/login_btn_changeUser"
-                android:layout_width="160dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/btn_default"
-                android:text="更  换  账  户"
-                android:textColor="#636363"
-                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
