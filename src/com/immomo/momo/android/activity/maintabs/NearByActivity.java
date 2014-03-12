@@ -11,7 +11,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import com.immomo.momo.android.BasePopupWindow.onSubmitClickListener;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.popupwindow.NearByPopupWindow;
-import com.immomo.momo.android.socket.IPMSGConst;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.HeaderLayout.SearchState;
@@ -39,7 +38,7 @@ public class NearByActivity extends TabItemActivity {
         initViews();
         initEvents();
         init();
-    }
+    }  
 
     @Override
     // 初始化顶栏
@@ -185,7 +184,6 @@ public class NearByActivity extends TabItemActivity {
 
     @Override
     public void processMessage(android.os.Message msg) {
-         MainTabActivity.sendEmptyMessage(msg.what);
     }
     
     @Override
@@ -196,7 +194,7 @@ public class NearByActivity extends TabItemActivity {
             mHeaderLayout.clearSearch();
             mHeaderLayout.changeSearchState(SearchState.INPUT);
         } else {
-            finish();
+            super.onBackPressed();
         }
     }
 

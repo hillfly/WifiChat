@@ -20,9 +20,8 @@ public class WifiapBroadcast extends BroadcastReceiver {
 
         // 搜索到wifi热点
         if (paramIntent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-            Log.d(TAG, WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-            int mLength = ehList.size();
-            for (int j = 0; j < mLength; j++)
+            Log.d(TAG, WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);           
+            for (int j = 0; j < ehList.size(); j++)
                 ((EventHandler) ehList.get(j)).scanResultsAvailable();
 
         // wifi打开或关闭

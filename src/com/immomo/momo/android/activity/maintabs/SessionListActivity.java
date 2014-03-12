@@ -20,6 +20,19 @@ public class SessionListActivity extends TabItemActivity {
         initViews();
         init();
     }
+    
+    @Override
+    protected void onPause(){
+        super.onPause();
+        MainTabActivity.sendEmptyMessage();
+    }    
+    
+    @Override
+    public void onResume(){
+        super.onResume();
+        MainTabActivity.sendEmptyMessage(); 
+        mPeopleFragment.refreshAdapter();
+    }
 
     @Override
     protected void initViews() {

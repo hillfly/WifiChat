@@ -103,8 +103,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.OtherProfileActivity"
-            android:launchMode="singleTask"
+            android:name=".activity.OtherProfileActivity"            
             android:screenOrientation="portrait" >
         </activity>
         <activity

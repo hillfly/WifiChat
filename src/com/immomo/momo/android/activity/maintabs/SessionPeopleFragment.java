@@ -62,7 +62,7 @@ public class SessionPeopleFragment extends BaseFragment implements OnItemClickLi
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         int position = (int) arg3;
         NearByPeople people = mSessionPeoples.get(position);
-        mApplication.removeUnReadPeople(people); // 移除未读列表
+        mApplication.removeUnReadPeople(people); // 移除未读用户
         Intent intent = new Intent(mContext, ChatActivity.class);
         intent.putExtra(NearByPeople.ENTITY_PEOPLE, people);
         startActivity(intent);

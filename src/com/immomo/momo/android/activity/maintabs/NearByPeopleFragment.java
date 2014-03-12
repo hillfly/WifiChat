@@ -149,7 +149,6 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
      */
     @Override
     public void onRefresh() {
-        Log.d("SZU", "onRefresh()");
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
             @Override
@@ -159,10 +158,7 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
                     if (mApplication.getOnlineUserMap().isEmpty()) { // 若在线用户非空，则刷新
                         return false;
                     }
-                    initMaptoList();
-                    Log.d("SZU", "initMaptoList()");
-                   
-                    Log.d("SZU", "setData()");
+                    initMaptoList();                   
                     return true;
                 }
                 catch (InterruptedException e) {
@@ -174,11 +170,8 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
             @Override
             protected void onPostExecute(Boolean result) {                
                 mMmrlvList.onRefreshComplete();
-                Log.d("SZU", "onRefreshComplete()");        
                 refreshAdapter(mNearByPeoples);
-                Log.d("SZU", "refreshAdapter()");
                 setLvSelection(0);
-                Log.d("SZU", "setLvSelection(0)");
                 super.onPostExecute(result);
             }
         });

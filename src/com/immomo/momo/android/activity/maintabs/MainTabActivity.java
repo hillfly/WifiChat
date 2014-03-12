@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
-import com.immomo.momo.android.BaseActivity;
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.view.HandyTextView;
@@ -29,13 +28,17 @@ public class MainTabActivity extends TabActivity implements OnTabChangeListener 
         initTabs();
         initViews();
         initEvents();
-        isTabActive = true;
     }
 
-    /** 重写返回功能 **/
     @Override
-    public void finish() {
-        super.finish();
+    public void onResume(){
+        super.onResume();
+        isTabActive = true;
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
         isTabActive = false;
     }
 
@@ -45,27 +48,34 @@ public class MainTabActivity extends TabActivity implements OnTabChangeListener 
 
         // 附近
         // common_bottombar_tab_nearby存放该Tab布局，inflate可将xml实例化成View
-        View nearbyView = inflater.inflate(R.layout.common_bottombar_tab_nearby, null);
+        View nearbyView = inflater.inflate(
+                R.layout.common_bottombar_tab_nearby, null);
 
         // 创建TabHost.TabSpec的对象，并设置该对象的tag，最后关联该Tab的View
-        TabHost.TabSpec nearbyTabSpec = mTabHost.newTabSpec(NearByActivity.class.getName())
-                .setIndicator(nearbyView);
+        TabHost.TabSpec nearbyTabSpec = mTabHost.newTabSpec(
+                NearByActivity.class.getName()).setIndicator(nearbyView);
         nearbyTabSpec.setContent(new Intent(MainTabActivity.this, // 跳转activity
                 NearByActivity.class));
         mTabHost.addTab(nearbyTabSpec); // 添加该Tab
 
         // 消息
-        View sessionListView = inflater.inflate(R.layout.common_bottombar_tab_chat, null);
+        View sessionListView = inflater.inflate(
+                R.layout.common_bottombar_tab_chat, null);
         TabHost.TabSpec sessionListTabSpec = mTabHost.newTabSpec(
-                SessionListActivity.class.getName()).setIndicator(sessionListView);
-        sessionListTabSpec.setContent(new Intent(MainTabActivity.this, SessionListActivity.class));
+                SessionListActivity.class.getName()).setIndicator(
+                sessionListView);
+        sessionListTabSpec.setContent(new Intent(MainTabActivity.this,
+                SessionListActivity.class));
         mTabHost.addTab(sessionListTabSpec);
 
         // 设置
-        View userSettingView = inflater.inflate(R.layout.common_bottombar_tab_profile, null);
+        View userSettingView = inflater.inflate(
+                R.layout.common_bottombar_tab_profile, null);
         TabHost.TabSpec userSettingTabSpec = mTabHost.newTabSpec(
-                UserSettingActivity.class.getName()).setIndicator(userSettingView);
-        userSettingTabSpec.setContent(new Intent(MainTabActivity.this, UserSettingActivity.class));
+                UserSettingActivity.class.getName()).setIndicator(
+                userSettingView);
+        userSettingTabSpec.setContent(new Intent(MainTabActivity.this,
+                UserSettingActivity.class));
         mTabHost.addTab(userSettingTabSpec);
     }
 
@@ -75,27 +85,29 @@ public class MainTabActivity extends TabActivity implements OnTabChangeListener 
     private void initViews() {
         mHtvSessionNumber = (HandyTextView) findViewById(R.id.tab_chat_number);
     }
+    
+    public static boolean getIsTabActive(){
+        return isTabActive;
+    }
 
-    public static void sendEmptyMessage(int what) {
+    public static void sendEmptyMessage() {
         if (isTabActive)
-            handler.sendEmptyMessage(what);
+            handler.sendEmptyMessage(0);
     }
 
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    mHtvSessionNumber.setVisibility(View.VISIBLE);
-                    mHtvSessionNumber.setText(String.valueOf(BaseApplication.getInstance()
-                            .getUnReadPeopleSize()));
-                    break;
-                case 0:
-                    BaseActivity.sendEmptyMessage(1);
+            int unReadPeopleSize = BaseApplication.getInstance()
+                    .getUnReadPeopleSize();
+            switch (unReadPeopleSize) { // 判断人数作不同处理
+                case 0: // 为0，隐藏数字提示
                     mHtvSessionNumber.setVisibility(View.GONE);
                     break;
 
-                default:
+                default: // 不为0，则显示未读数
+                    mHtvSessionNumber.setVisibility(View.VISIBLE);
+                    mHtvSessionNumber.setText(String.valueOf(unReadPeopleSize));
                     break;
             }
         }

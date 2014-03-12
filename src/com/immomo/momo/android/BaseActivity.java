@@ -35,7 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected BaseApplication mApplication;
     // TODO 下次更新将NetWorkUtils与WifiUtils合并
-    protected NetWorkUtils mNetWorkUtils; 
+    protected NetWorkUtils mNetWorkUtils;
     protected FlippingLoadingDialog mLoadingDialog;
     protected UDPSocketThread mUDPSocketThread;
     private static SoundPool notificationplayer;
@@ -68,7 +68,20 @@ public abstract class BaseActivity extends FragmentActivity {
         }
         if (notificationplayer == null) {
             notificationplayer = new SoundPool(3, AudioManager.STREAM_SYSTEM, 5);
-            notificationplayerID = notificationplayer.load(this, R.raw.crystalring, 1);
+            notificationplayerID = notificationplayer.load(this,
+                    R.raw.crystalring, 1);
+        }
+    }
+
+    @Override
+    public void onBackPressed() { // 返回桌面        
+        if (MainTabActivity.getIsTabActive()) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+        } else {
+            super.onBackPressed();            
         }
     }
 
@@ -78,7 +91,6 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    /** 重写返回功能 **/
     @Override
     public void finish() {
         super.finish();
@@ -97,7 +109,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 清理异步处理事件 */
     protected void clearAsyncTask() {
-        Iterator<AsyncTask<Void, Void, Boolean>> iterator = mAsyncTasks.iterator();
+        Iterator<AsyncTask<Void, Void, Boolean>> iterator = mAsyncTasks
+                .iterator();
         while (iterator.hasNext()) {
             AsyncTask<Void, Void, Boolean> asyncTask = iterator.next();
             if (asyncTask != null && !asyncTask.isCancelled()) {
@@ -108,7 +121,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     /** 添加listener到容器中 **/
-    protected void changeActiveChatActivity(OnActiveChatActivityListenner paramListener) {
+    protected void changeActiveChatActivity(
+            OnActiveChatActivityListenner paramListener) {
         activeChatActivityListenner = paramListener;
     }
 
@@ -132,7 +146,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * 
      * @return
      */
-    public static boolean isExistActiveChatActivity() {        
+    public static boolean isExistActiveChatActivity() {
         Log.i("SZU_BaseActivity", "进入isExistActiveChatActivity()");
         return (activeChatActivityListenner == null) ? false : true;
     }
@@ -172,9 +186,10 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 显示自定义Toast提示(来自res) **/
     protected void showCustomToast(int resId) {
-        View toastRoot = LayoutInflater.from(BaseActivity.this)
-                .inflate(R.layout.common_toast, null);
-        ((HandyTextView) toastRoot.findViewById(R.id.toast_text)).setText(getString(resId));
+        View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
+                R.layout.common_toast, null);
+        ((HandyTextView) toastRoot.findViewById(R.id.toast_text))
+                .setText(getString(resId));
         Toast toast = new Toast(BaseActivity.this);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
@@ -184,8 +199,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 显示自定义Toast提示(来自String) **/
     protected void showCustomToast(String text) {
-        View toastRoot = LayoutInflater.from(BaseActivity.this)
-                .inflate(R.layout.common_toast, null);
+        View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
+                R.layout.common_toast, null);
         ((HandyTextView) toastRoot.findViewById(R.id.toast_text)).setText(text);
         Toast toast = new Toast(BaseActivity.this);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -241,28 +256,36 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 含有标题和内容的对话框 **/
     protected AlertDialog showAlertDialog(String title, String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
-                .show();
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message).show();
         return alertDialog;
     }
 
     /** 含有标题、内容、两个按钮的对话框 **/
-    protected AlertDialog showAlertDialog(String title, String message, String positiveText,
-            DialogInterface.OnClickListener onPositiveClickListener, String negativeText,
+    protected AlertDialog showAlertDialog(String title, String message,
+            String positiveText,
+            DialogInterface.OnClickListener onPositiveClickListener,
+            String negativeText,
             DialogInterface.OnClickListener onNegativeClickListener) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
                 .setPositiveButton(positiveText, onPositiveClickListener)
-                .setNegativeButton(negativeText, onNegativeClickListener).show();
+                .setNegativeButton(negativeText, onNegativeClickListener)
+                .show();
         return alertDialog;
     }
 
     /** 含有标题、内容、图标、两个按钮的对话框 **/
-    protected AlertDialog showAlertDialog(String title, String message, int icon,
-            String positiveText, DialogInterface.OnClickListener onPositiveClickListener,
-            String negativeText, DialogInterface.OnClickListener onNegativeClickListener) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
-                .setIcon(icon).setPositiveButton(positiveText, onPositiveClickListener)
-                .setNegativeButton(negativeText, onNegativeClickListener).show();
+    protected AlertDialog showAlertDialog(String title, String message,
+            int icon, String positiveText,
+            DialogInterface.OnClickListener onPositiveClickListener,
+            String negativeText,
+            DialogInterface.OnClickListener onNegativeClickListener) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message).setIcon(icon)
+                .setPositiveButton(positiveText, onPositiveClickListener)
+                .setNegativeButton(negativeText, onNegativeClickListener)
+                .show();
         return alertDialog;
     }
 
@@ -292,7 +315,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
-            MainTabActivity.sendEmptyMessage(1); // 更新Tab信息
+            MainTabActivity.sendEmptyMessage(); // 更新Tab信息
             if (queue.size() > 0)
                 queue.getLast().processMessage(msg);
             playNotification(); // 新消息响铃提醒

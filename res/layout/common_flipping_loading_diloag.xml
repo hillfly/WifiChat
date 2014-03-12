@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
+    android:orientation="horizontal" 
     android:background="@drawable/bg_common_toast" >
 
     <com.immomo.momo.android.view.FlippingImageView
@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:gravity="left|center"
-        android:textColor="@color/black"
+        android:gravity="left|center" 
+        android:textColor="@color/black"       
         android:textSize="14sp" />
 
 </LinearLayout>
