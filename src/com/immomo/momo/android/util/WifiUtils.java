@@ -15,9 +15,7 @@ import android.net.wifi.WifiManager;
 /**
  * Wifi 工具类
  * 
- * <p>
  * 封装了Wifi的基础操作方法，方便获取Wifi连接信息以及操作Wifi
- * </p>
  */
 
 public class WifiUtils {
@@ -30,7 +28,8 @@ public class WifiUtils {
     public WifiManager mWifiManager;
 
     private WifiUtils(Context paramContext) {
-        mWifiManager = (WifiManager) paramContext.getSystemService(Context.WIFI_SERVICE);        
+        mWifiManager = (WifiManager) paramContext
+                .getSystemService(Context.WIFI_SERVICE);
         mDhcpInfo = mWifiManager.getDhcpInfo();
         mWifiInfo = mWifiManager.getConnectionInfo();
     }
@@ -39,17 +38,17 @@ public class WifiUtils {
         if (wiFiAdmin == null)
             wiFiAdmin = new WifiUtils(paramContext);
         return wiFiAdmin;
-    }   
+    }
 
     private WifiConfiguration isExsits(String paramString) {
-        Iterator<WifiConfiguration> localIterator = mWifiManager.getConfiguredNetworks().iterator();
+        Iterator<WifiConfiguration> localIterator = mWifiManager
+                .getConfiguredNetworks().iterator();
         WifiConfiguration localWifiConfiguration;
         do {
             if (!localIterator.hasNext())
                 return null;
             localWifiConfiguration = (WifiConfiguration) localIterator.next();
-        }
-        while (!localWifiConfiguration.SSID.equals("\"" + paramString + "\""));
+        } while (!localWifiConfiguration.SSID.equals("\"" + paramString + "\""));
         return localWifiConfiguration;
     }
 
@@ -83,30 +82,39 @@ public class WifiUtils {
     public void connectConfiguration(int paramInt) {
         if (paramInt > mWifiConfiguration.size())
             return;
-        mWifiManager.enableNetwork(
-                ((WifiConfiguration) mWifiConfiguration.get(paramInt)).networkId, true);
+        mWifiManager
+                .enableNetwork(
+                        ((WifiConfiguration) mWifiConfiguration.get(paramInt)).networkId,
+                        true);
     }
 
-    public void createWiFiAP(WifiConfiguration paramWifiConfiguration, boolean paramBoolean) {
+    public void removeNetwork(int netId) {
+        if (mWifiManager != null) {
+            mWifiManager.removeNetwork(netId);
+        }
+    }
+
+    public void createWiFiAP(WifiConfiguration paramWifiConfiguration,
+            boolean paramBoolean) {
         try {
             Class<? extends WifiManager> localClass = mWifiManager.getClass();
             Class[] arrayOfClass = new Class[2];
             arrayOfClass[0] = WifiConfiguration.class;
             arrayOfClass[1] = Boolean.TYPE;
-            Method localMethod = localClass.getMethod("setWifiApEnabled", arrayOfClass);
+            Method localMethod = localClass.getMethod("setWifiApEnabled",
+                    arrayOfClass);
             WifiManager localWifiManager = mWifiManager;
             Object[] arrayOfObject = new Object[2];
             arrayOfObject[0] = paramWifiConfiguration;
             arrayOfObject[1] = Boolean.valueOf(paramBoolean);
             localMethod.invoke(localWifiManager, arrayOfObject);
             return;
-        }
-        catch (Exception localException) {
+        } catch (Exception localException) {
         }
     }
 
-    public WifiConfiguration createWifiInfo(String ssid, String paramString2, int paramInt,
-            String paramString3) {
+    public WifiConfiguration createWifiInfo(String ssid, String paramString2,
+            int paramInt, String paramString3) {
         WifiConfiguration localWifiConfiguration1 = new WifiConfiguration();
         localWifiConfiguration1.allowedAuthAlgorithms.clear();
         localWifiConfiguration1.allowedGroupCiphers.clear();
@@ -117,17 +125,15 @@ public class WifiUtils {
             localWifiConfiguration1.SSID = ("\"" + ssid + "\"");
             WifiConfiguration localWifiConfiguration2 = isExsits(ssid);
             if (localWifiConfiguration2 != null)
-                mWifiManager.removeNetwork(localWifiConfiguration2.networkId);
+                removeNetwork(localWifiConfiguration2.networkId);
             if (paramInt == 1) {
                 localWifiConfiguration1.wepKeys[0] = "";
                 localWifiConfiguration1.allowedKeyManagement.set(0);
                 localWifiConfiguration1.wepTxKeyIndex = 0;
-            }
-            else if (paramInt == 2) {
+            } else if (paramInt == 2) {
                 localWifiConfiguration1.hiddenSSID = true;
                 localWifiConfiguration1.wepKeys[0] = ("\"" + paramString2 + "\"");
-            }
-            else {
+            } else {
                 localWifiConfiguration1.preSharedKey = ("\"" + paramString2 + "\"");
                 localWifiConfiguration1.hiddenSSID = true;
                 localWifiConfiguration1.allowedAuthAlgorithms.set(0);
@@ -137,26 +143,27 @@ public class WifiUtils {
                 localWifiConfiguration1.allowedGroupCiphers.set(3);
                 localWifiConfiguration1.allowedPairwiseCiphers.set(2);
             }
-        }
-        else {
+        } else {
             localWifiConfiguration1.SSID = ssid;
             localWifiConfiguration1.allowedAuthAlgorithms.set(1);
-            localWifiConfiguration1.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            localWifiConfiguration1.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            localWifiConfiguration1.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            localWifiConfiguration1.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            localWifiConfiguration1.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.CCMP);
+            localWifiConfiguration1.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.TKIP);
+            localWifiConfiguration1.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.WEP40);
+            localWifiConfiguration1.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.WEP104);
             localWifiConfiguration1.allowedKeyManagement.set(0);
             localWifiConfiguration1.wepTxKeyIndex = 0;
             if (paramInt == 1) {
                 localWifiConfiguration1.wepKeys[0] = "";
                 localWifiConfiguration1.allowedKeyManagement.set(0);
                 localWifiConfiguration1.wepTxKeyIndex = 0;
-            }
-            else if (paramInt == 2) {
+            } else if (paramInt == 2) {
                 localWifiConfiguration1.hiddenSSID = true;
                 localWifiConfiguration1.wepKeys[0] = paramString2;
-            }
-            else if (paramInt == 3) {
+            } else if (paramInt == 3) {
                 localWifiConfiguration1.preSharedKey = paramString2;
                 localWifiConfiguration1.allowedAuthAlgorithms.set(0);
                 localWifiConfiguration1.allowedProtocols.set(1);
@@ -179,13 +186,15 @@ public class WifiUtils {
                     "getWifiApConfiguration", new Class[0]);
             if (localMethod == null)
                 return null;
-            Object localObject1 = localMethod.invoke(mWifiManager, new Object[0]);
+            Object localObject1 = localMethod.invoke(mWifiManager,
+                    new Object[0]);
             if (localObject1 == null)
                 return null;
             WifiConfiguration localWifiConfiguration = (WifiConfiguration) localObject1;
             if (localWifiConfiguration.SSID != null)
                 return localWifiConfiguration.SSID;
-            Field localField1 = WifiConfiguration.class.getDeclaredField("mWifiApProfile");
+            Field localField1 = WifiConfiguration.class
+                    .getDeclaredField("mWifiApProfile");
             if (localField1 == null)
                 return null;
             localField1.setAccessible(true);
@@ -193,7 +202,8 @@ public class WifiUtils {
             localField1.setAccessible(false);
             if (localObject2 == null)
                 return null;
-            Field localField2 = localObject2.getClass().getDeclaredField("SSID");
+            Field localField2 = localObject2.getClass()
+                    .getDeclaredField("SSID");
             localField2.setAccessible(true);
             Object localObject3 = localField2.get(localObject2);
             if (localObject3 == null)
@@ -201,8 +211,7 @@ public class WifiUtils {
             localField2.setAccessible(false);
             String str = (String) localObject3;
             return str;
-        }
-        catch (Exception localException) {
+        } catch (Exception localException) {
         }
         return null;
     }
@@ -211,6 +220,12 @@ public class WifiUtils {
         if (mWifiInfo == null)
             return "NULL";
         return mWifiInfo.getBSSID();
+    }
+
+    public String getSSID() {
+        if (mWifiInfo == null)
+            return "NULL";
+        return mWifiInfo.getSSID();
     }
 
     public List<WifiConfiguration> getConfiguration() {
@@ -247,8 +262,7 @@ public class WifiUtils {
                     .getMethod("getWifiApState", new Class[0])
                     .invoke(mWifiManager, new Object[0])).intValue();
             return i;
-        }
-        catch (Exception localException) {
+        } catch (Exception localException) {
         }
         return 4;
     }
@@ -266,8 +280,10 @@ public class WifiUtils {
         for (int i = 0;; i++) {
             if (i >= 2)
                 return localStringBuilder;
-            localStringBuilder.append("Index_" + Integer.valueOf(i + 1).toString() + ":");
-            localStringBuilder.append(((ScanResult) mWifiList.get(i)).toString());
+            localStringBuilder.append("Index_"
+                    + Integer.valueOf(i + 1).toString() + ":");
+            localStringBuilder.append(((ScanResult) mWifiList.get(i))
+                    .toString());
             localStringBuilder.append("/n");
         }
     }
@@ -282,6 +298,7 @@ public class WifiUtils {
 
     public String intToIp(int paramIntip) {
         return (paramIntip & 0xFF) + "." + ((paramIntip >> 8) & 0xFF) + "."
-                + ((paramIntip >> 16) & 0xFF) + "." + ((paramIntip >> 24) & 0xFF);
+                + ((paramIntip >> 16) & 0xFF) + "."
+                + ((paramIntip >> 24) & 0xFF);
     }
 }

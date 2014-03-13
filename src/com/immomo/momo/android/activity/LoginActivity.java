@@ -5,6 +5,7 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.telephony.TelephonyManager;
@@ -48,7 +49,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private LinearLayout mLlayoutMain; // 首次登陆主界面
     private HandyTextView mHtvSelectOnlineState;
     private EditText mEtNickname;
-    
+
     private HandyTextView mHtvConstellation;
     private HandyTextView mHtvAge;
     private DatePicker mDpBirthday;
@@ -88,7 +89,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager = (TelephonyManager) this
+                .getSystemService(Context.TELEPHONY_SERVICE);
         initViews();
         initData();
         initEvents();
@@ -131,23 +133,29 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mLlayoutExMain.setVisibility(View.VISIBLE);
 
             mAvatar = mSharedPreferences.getInt(NearByPeople.AVATAR, 0);
-            mOnlineStateInt = mSharedPreferences.getInt(NearByPeople.ONLINESTATEINT, 0);
+            mOnlineStateInt = mSharedPreferences.getInt(
+                    NearByPeople.ONLINESTATEINT, 0);
             mGender = mSharedPreferences.getString(NearByPeople.GENDER, "获取失败");
             mAge = mSharedPreferences.getInt(NearByPeople.AGE, -1);
-            mConstellation = mSharedPreferences.getString(NearByPeople.CONSTELLATION, "获取失败");
-            mLastLogintime = mSharedPreferences.getString(NearByPeople.LOGINTIME, "获取失败");
+            mConstellation = mSharedPreferences.getString(
+                    NearByPeople.CONSTELLATION, "获取失败");
+            mLastLogintime = mSharedPreferences.getString(
+                    NearByPeople.LOGINTIME, "获取失败");
 
-            mImgExAvatar.setImageBitmap(mApplication.getAvatar(NearByPeople.AVATAR + mAvatar));
+            mImgExAvatar.setImageBitmap(mApplication
+                    .getAvatar(NearByPeople.AVATAR + mAvatar));
             mTvExNickmame.setText(mNickname);
             mTvExConstellation.setText(mConstellation);
             mHtvExAge.setText(mAge + "");
             mTvExLogintime.setText(DateUtils.getBetweentime(mLastLogintime));
             if ("女".equals(mAge)) {
                 mIvExGender.setBackgroundResource(R.drawable.ic_user_famale);
-                mLayoutExGender.setBackgroundResource(R.drawable.bg_gender_famal);
+                mLayoutExGender
+                        .setBackgroundResource(R.drawable.bg_gender_famal);
             } else {
                 mIvExGender.setBackgroundResource(R.drawable.ic_user_male);
-                mLayoutExGender.setBackgroundResource(R.drawable.bg_gender_male);
+                mLayoutExGender
+                        .setBackgroundResource(R.drawable.bg_gender_male);
             }
         }
     }
@@ -163,39 +171,41 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.login_htv_onlinestate:
-            mOnlineStateType = getResources().getStringArray(R.array.onlinestate_type);
-            mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
-            mSimpleListDialog.setTitle("选择在线状态");
-            mSimpleListDialog.setTitleLineVisibility(View.GONE);
-            mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(
-                    LoginActivity.this, mOnlineStateType));
-            mSimpleListDialog.setOnSimpleListItemClickListener(LoginActivity.this);
-            mSimpleListDialog.show();
-            break;
+            case R.id.login_htv_onlinestate:
+                mOnlineStateType = getResources().getStringArray(
+                        R.array.onlinestate_type);
+                mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
+                mSimpleListDialog.setTitle("选择在线状态");
+                mSimpleListDialog.setTitleLineVisibility(View.GONE);
+                mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(
+                        LoginActivity.this, mOnlineStateType));
+                mSimpleListDialog
+                        .setOnSimpleListItemClickListener(LoginActivity.this);
+                mSimpleListDialog.show();
+                break;
 
-        // 更换用户,清空数据
-        case R.id.login_btn_changeUser:
-            mNickname = "";
-            mAge = -1;
-            mGender = null;
-            mIMEI = null;
-            mOnlineStateStr = "在线"; // 默认登录状态
-            mAvatar = 0;
-            mConstellation = null;
-            mOnlineStateInt = 0; // 默认登录状态编号
-            SessionUtils.clearSession(); // 清空Session数据
-            mLlayoutMain.setVisibility(View.VISIBLE);
-            mLlayoutExMain.setVisibility(View.GONE);
-            break;
+            // 更换用户,清空数据
+            case R.id.login_btn_changeUser:
+                mNickname = "";
+                mAge = -1;
+                mGender = null;
+                mIMEI = null;
+                mOnlineStateStr = "在线"; // 默认登录状态
+                mAvatar = 0;
+                mConstellation = null;
+                mOnlineStateInt = 0; // 默认登录状态编号
+                SessionUtils.clearSession(); // 清空Session数据
+                mLlayoutMain.setVisibility(View.VISIBLE);
+                mLlayoutExMain.setVisibility(View.GONE);
+                break;
 
-        case R.id.login_btn_back:
-            finish();
-            break;
+            case R.id.login_btn_back:
+                finish();
+                break;
 
-        case R.id.login_btn_next:
-            doLoginNext();
-            break;
+            case R.id.login_btn_next:
+                doLoginNext();
+                break;
         }
     }
 
@@ -208,7 +218,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     }
 
     @Override
-    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateChanged(DatePicker view, int year, int monthOfYear,
+            int dayOfMonth) {
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, monthOfYear, dayOfMonth);
         if (mCalendar.getTime().after(mMinDate)
@@ -240,9 +251,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         Calendar mMinCalendar = Calendar.getInstance();
         Calendar mMaxCalendar = Calendar.getInstance();
 
-        mMinCalendar.set(Calendar.YEAR, mMinCalendar.get(Calendar.YEAR) - MIN_AGE);
+        mMinCalendar.set(Calendar.YEAR, mMinCalendar.get(Calendar.YEAR)
+                - MIN_AGE);
         mMinDate = mMinCalendar.getTime();
-        mMaxCalendar.set(Calendar.YEAR, mMaxCalendar.get(Calendar.YEAR) - MAX_AGE);
+        mMaxCalendar.set(Calendar.YEAR, mMaxCalendar.get(Calendar.YEAR)
+                - MAX_AGE);
         mMaxDate = mMaxCalendar.getTime();
 
         mCalendar = Calendar.getInstance();
@@ -268,15 +281,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         }
 
         switch (mRgGender.getCheckedRadioButtonId()) {
-        case R.id.login_baseinfo_rb_female:
-            mGender = "女";
-            break;
-        case R.id.login_baseinfo_rb_male:
-            mGender = "男";
-            break;
-        default:
-            showCustomToast("请选择性别");
-            return false;
+            case R.id.login_baseinfo_rb_female:
+                mGender = "女";
+                break;
+            case R.id.login_baseinfo_rb_male:
+                mGender = "男";
+                break;
+            default:
+                showCustomToast("请选择性别");
+                return false;
         }
 
         mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
@@ -297,29 +310,55 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 return;
             }
         }
-        mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-        showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge
-                + " mGender:" + mGender + " mOnlineState:" + mOnlineStateStr
-                + "|" + mOnlineStateInt + " mAvatar:" + mAvatar + " IMEI:"
-                + mIMEI);
+        putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showLoadingDialog("正在存储个人信息...");
+            }
 
-        // 设置用户Session信息
-        SessionUtils.setIMEI(mIMEI);
-        SessionUtils.setNickname(mNickname);
-        SessionUtils.setAge(mAge);
-        SessionUtils.setGender(mGender);
-        SessionUtils.setAvatar(mAvatar);
-        SessionUtils.setOnlineStateInt(mOnlineStateInt);
-        SessionUtils.setConstellation(mConstellation);
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                try {
+                    mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge
+                            + " mGender:" + mGender + " mOnlineState:"
+                            + mOnlineStateStr + "|" + mOnlineStateInt
+                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI);
 
-        startActivity(WifiapActivity.class);
-        finish();
+                    // 设置用户Session信息
+                    SessionUtils.setIMEI(mIMEI);
+                    SessionUtils.setNickname(mNickname);
+                    SessionUtils.setAge(mAge);
+                    SessionUtils.setGender(mGender);
+                    SessionUtils.setAvatar(mAvatar);
+                    SessionUtils.setOnlineStateInt(mOnlineStateInt);
+                    SessionUtils.setConstellation(mConstellation);
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                super.onPostExecute(result);
+                dismissLoadingDialog();
+                if (result) {
+                    startActivity(WifiapActivity.class);
+                    finish();
+                } else {
+                    showCustomToast("操作失败,请尝试重启程序。");
+                }
+            }
+        });
     }
 
     @Override
     public void processMessage(Message msg) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

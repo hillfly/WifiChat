@@ -7,7 +7,6 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,8 +25,6 @@ public class WifiapAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ScanResult> mList;
     private Context mContext;
-    private final String TAG = "SZU_WifiapAdapter";
-
     public WifiapAdapter(Context context, List<ScanResult> list) {
         this.mContext = context;
         this.mList = list;
@@ -93,7 +90,11 @@ public class WifiapAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                wifiAdmin.disconnectWifi(wifiAdmin.getWifiInfo().getNetworkId());
+                int netWorkID = wifiAdmin.getWifiInfo().getNetworkId();
+                wifiAdmin.disconnectWifi(netWorkID);
+                wifiAdmin.removeNetwork(netWorkID);
+                wifiAdmin.mWifiManager.saveConfiguration();
+                
                 viewHolder.textConnect.setVisibility(View.GONE);
                 viewHolder.progressBConnecting.setVisibility(View.VISIBLE);
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);

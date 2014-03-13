@@ -2,8 +2,6 @@ package com.immomo.momo.android.util;
 
 import java.util.HashMap;
 
-import android.R.integer;
-
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.entity.NearByPeople;
 

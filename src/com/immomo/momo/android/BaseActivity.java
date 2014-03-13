@@ -26,6 +26,7 @@ import com.immomo.momo.android.dialog.FlippingLoadingDialog;
 import com.immomo.momo.android.socket.OnActiveChatActivityListenner;
 import com.immomo.momo.android.socket.UDPSocketThread;
 import com.immomo.momo.android.util.NetWorkUtils;
+import com.immomo.momo.android.util.WifiUtils;
 import com.immomo.momo.android.view.HandyTextView;
 
 public abstract class BaseActivity extends FragmentActivity {
@@ -36,6 +37,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected BaseApplication mApplication;
     // TODO 下次更新将NetWorkUtils与WifiUtils合并
     protected NetWorkUtils mNetWorkUtils;
+    protected WifiUtils mWifiUtils;
     protected FlippingLoadingDialog mLoadingDialog;
     protected UDPSocketThread mUDPSocketThread;
     private static SoundPool notificationplayer;
@@ -74,14 +76,14 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
-    public void onBackPressed() { // 返回桌面        
+    public void onBackPressed() { // 返回桌面
         if (MainTabActivity.getIsTabActive()) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addCategory(Intent.CATEGORY_HOME);
             startActivity(intent);
         } else {
-            super.onBackPressed();            
+            super.onBackPressed();
         }
     }
 
