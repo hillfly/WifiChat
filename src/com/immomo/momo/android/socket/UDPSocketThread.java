@@ -1,5 +1,6 @@
 package com.immomo.momo.android.socket;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
@@ -15,6 +16,12 @@ import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.entity.Message.CONTENT_TYPE;
+import com.immomo.momo.android.file.explore.Constant;
+import com.immomo.momo.android.file.explore.FileState;
+import com.immomo.momo.android.file.explore.FileStyle;
+import com.immomo.momo.android.tcp.socket.TcpService;
+import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.SessionUtils;
 import com.immomo.momo.sql.chattingDAO;
 import com.immomo.momo.sql.chattingInfo;
@@ -151,11 +158,25 @@ public class UDPSocketThread implements Runnable {
                         Log.i(TAG, "收到MSG消息");
                         String senderIp = receiveDatagramPacket.getAddress().getHostAddress();
                         Message msg = (Message) ipmsgRes.getAddObject();
-                        sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
+                        Log.d(TAG, msg.getContentType().toString());
+                        if(msg.getContentType()==CONTENT_TYPE.IMAGE)
+                        {
+                        	Log.d(TAG, "收到图片发送请求");
+                        	TcpService tcpService=TcpService.getInstance(mContext);
+                        	String filePathString="/storage/sdcard0/";
+                        	tcpService.setSavePath(filePathString);
+                        	tcpService.startReceive();
+                        	sendUDPdata(IPMSGConst.IPMSG_RECIEVEIMAGEDATA, senderIp);
+                        	msg.setMsgContent(filePathString+msg.getMsgContent());
+                        	Log.d(TAG, "接收路径:"+msg.getMsgContent());
+                        }else
+                        {
+                        	sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
+                        }
                         // 消息接受确认
 
                         Log.d(TAG, msg.getMsgContent());
-
+                        
                         // TODO 这里可以判断是否含有文件，有则通知handler刷新UI，出现是否接受提示框
 
                         if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
@@ -168,7 +189,13 @@ public class UDPSocketThread implements Runnable {
 
                     }
                         break;
-
+                        
+                    case IPMSGConst.IPMSG_RECIEVEIMAGEDATA:{
+                    	Log.d(TAG, "收到图片发送请求确认");
+                    	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVEIMAGEDATA);
+                    	
+                    }
+                    	break;
                 } // End of switch
 
                 // 每次接收完UDP数据后，重置长度。否则可能会导致下次收到数据包被截断。

@@ -1,5 +1,7 @@
 package com.immomo.momo.android.socket;
 
+
+
 /**
  * 飞鸽协议常量
  */
@@ -34,9 +36,15 @@ public class IPMSGConst {
 	public static final int IPMSG_GETABSENCEINFO	 = 0x00000050;	//获得缺席信息
 	public static final int IPMSG_SENDABSENCEINFO	 = 0x00000051;	//发送缺席信息
 	
+
 	public static final int IPMSG_GETFILEDATA		 = 0x00000060;	//文件传输请求
 	public static final int IPMSG_RELEASEFILES		 = 0x00000061;	//丢弃附加文件
 	public static final int IPMSG_GETDIRFILES		 = 0x00000062;	//附着统计文件请求
+	
+	/*zhuangliebin新增*/
+	public static final int IPMSG_GETIMAGEDATA       = 0x00000063;  //图片发送请求
+	public static final int IPMSG_RECIEVEIMAGEDATA   = 0x00000064; //图片接收确认
+	/*zhuangliebin新增*/
 	
 	public static final int IPMSG_GETPUBKEY			 = 0x00000072;	//获得RSA公钥
 	public static final int IPMSG_ANSPUBKEY			 = 0x00000073;	//应答RSA公钥

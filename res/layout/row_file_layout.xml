@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:stretchColumns="1" >
+
+  	<TableRow android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:gravity="center_vertical">
+	  <ImageView android:id="@+id/file_icon"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"/>
+	  <TextView android:id="@+id/file_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:ems="8"/>
+	  <TextView android:layout_width="wrap_content"
+	  	android:layout_height="wrap_content"
+	  	android:id="@+id/file_size"/>
+	  <CheckBox android:layout_width="wrap_content"
+	  	android:layout_height="wrap_content"
+	  	android:onClick="onCheck"
+	  	android:id="@+id/file_selected"/>
+	 </TableRow>
+</TableLayout>

@@ -1,5 +1,7 @@
 package com.immomo.momo.android.activity.message;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -24,8 +26,12 @@ import com.immomo.momo.android.dialog.SimpleListDialog;
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.Message.CONTENT_TYPE;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.file.explore.FileState;
+import com.immomo.momo.android.file.explore.FileStyle;
 import com.immomo.momo.android.socket.IPMSGConst;
 import com.immomo.momo.android.socket.OnActiveChatActivityListenner;
+import com.immomo.momo.android.tcp.socket.TcpClient;
+import com.immomo.momo.android.tcp.socket.TcpService;
 import com.immomo.momo.android.util.DateUtils;
 import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.PhotoUtils;
@@ -40,6 +46,11 @@ import com.immomo.momo.sql.chattingInfo;
 
 public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
 
+	private TcpClient tcpClient=null;
+	private TcpService tcpService=null;
+	ArrayList<FileStyle>fileStyles=new ArrayList<FileStyle>();
+	ArrayList<FileState>fileStates=new ArrayList<FileState>();
+	private static String TAG="ChatActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +90,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
     @Override
     public void finish() {
+    	
         removeActiveChatActivity(); // 移除监听
         if (mUserDAO != null) // 关闭数据库连接
             mUserDAO.close();
@@ -349,6 +361,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                                 .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                             String path = cursor.getString(column_index);
+                            mCameraImagePath=path;
                             Bitmap bitmap = PhotoUtils.getBitmapFromFile(path);
                             if (PhotoUtils.bitmapIsLarge(bitmap)) {
                                 PhotoUtils.cropPhoto(this, this, path);
@@ -373,12 +386,13 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                         PhotoUtils.fliterPhoto(this, this, mCameraImagePath);
                     }
                 }
-                mCameraImagePath = null;
+//                mCameraImagePath = null;
                 break;
 
             case PhotoUtils.INTENT_REQUEST_CODE_CROP:
                 if (resultCode == RESULT_OK) {
                     String path = data.getStringExtra("path");
+                    mCameraImagePath=path;
                     if (path != null) {
                         sendMessage(path, CONTENT_TYPE.IMAGE);
                         refreshAdapter();
@@ -430,16 +444,34 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
             case IPMSGConst.FILESENDSUCCESS: { // 文件发送成功
             }
+            
                 break;
-
+            case IPMSGConst.IPMSG_RECIEVEIMAGEDATA:{//图片开始发送
+            	Log.d(TAG, "接收方确认文件请求,发送文件为"+mCameraImagePath);
+            	tcpClient=tcpClient.getInstance(ChatActivity.this);
+            	tcpClient.startSend();
+//            	tcpClient.sendFile(fileStyles, fileStates, mPeople.getIpaddress());
+            	tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress());
+//            	tcpClient.sendFile("/storage/sdcard0/update.zip", mPeople.getIpaddress());
+            }
+            	break;
         } // end of switch
     }
 
     public void sendMessage(String content, CONTENT_TYPE type) {
         String nowtime = DateUtils.getNowtime();
-        Message msg = new Message(mIMEI, nowtime, content, type);
+        Message msg= new Message(mIMEI, nowtime, content, type);
         mMessagesList.add(msg);
-        mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
+        if(type==CONTENT_TYPE.TEXT)
+        {
+        	mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
+        }else if(type==CONTENT_TYPE.IMAGE)
+        {
+//        	Message msg1=new Message(mIMEI, nowtime, content, type);
+        	Message msg1=msg.clone();
+        	msg1.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
+        	mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg1);
+        }
         mChattingDAO.add(new chattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库
         mApplication.addLastMsgCache(mPeople.getIMEI(), content); // 更新消息缓存
     }

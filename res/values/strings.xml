@@ -18,4 +18,16 @@
     <string name="create_connect_ok">热点创建成功！</string>
     <string name="ssid_connect_ok">\n热点名：</string>
     <string name="password_connect_ok">\n连接密码：wifichat123</string>
+    
+    	<string name="no_file">No files</string>
+	<string name="enable_sd_card">SD card is not available, please connect one</string>
+	<string name="current_path_label">当前路径: </string>
+	<string name="select_file_for_send">选择要发送的文件</string>
+    <string name="select_path_for_save">选择接收文件的文件夹</string>
+    <string name="folder_can_not_write">文件夹不可写，无法保存文件！</string>
+    <string name="start_to_send_file">正在发送文件</string>
+    <string name="accept">接收</string>
+    <string name="close">关闭</string>
+       <string name="refuse_receive_file">对方拒绝接收文件</string>
+       <string name="sending_file_to_you">正在给您发送文件!</string>
 </resources>

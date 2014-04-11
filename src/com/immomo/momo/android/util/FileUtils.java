@@ -137,4 +137,15 @@ public class FileUtils {
 		}
 		return fileSizeString;
 	}
+	
+	/**
+	 * 通过路径获得文件名字
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static String getNameByPath(String path)
+	{
+		return path.substring(path.lastIndexOf(File.separator)+1);
+	}
 }

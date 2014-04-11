@@ -104,4 +104,15 @@ public class Message extends Entity {
     public void setMsgContent(String paramMsgContent) {
         this.MsgContent = paramMsgContent;
     }
+    /**
+     * 克隆对象
+     * 
+     * @param 
+     */
+    
+    public Message clone()
+    {
+    	return new Message(senderIMEI,sendTime,MsgContent,contentType);
+    }
+    
 }
