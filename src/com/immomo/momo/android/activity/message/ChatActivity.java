@@ -92,10 +92,15 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     public void finish() {
     	
         removeActiveChatActivity(); // 移除监听
-        if (mUserDAO != null) // 关闭数据库连接
-            mUserDAO.close();
-        if (mChattingDAO != null)
-            mChattingDAO.close();
+//        if (mUserDAO != null) // 关闭数据库连接
+//            mUserDAO.close();
+//        if (mChattingDAO != null)
+//            mChattingDAO.close();
+        if(null!=mDBOperate)
+        {
+        	mDBOperate.close();
+        	mDBOperate=null;
+        }
         super.finish();
     }
 
@@ -156,7 +161,8 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         mNickName = SessionUtils.getNickname();
         mIMEI = SessionUtils.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
-        mSenderID = mUserDAO.getID(mPeople.getIMEI());
+//        mSenderID = mUserDAO.getID(mPeople.getIMEI());//获取聊天对象IMEI,旧
+        mSenderID = mDBOperate.getIDByIMEI(mPeople.getIMEI());//获取聊天对象IMEI
         mHeaderLayout.setTitleChat(
                 mApplication.getIDfromDrawable(NearByPeople.AVATAR + mPeople.getAvatar()),
                 R.drawable.bg_chat_dis_active, mPeople.getNickname(), mPeople.getLogintime(),
@@ -420,6 +426,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         // TODO 待完成
         if (mPeople.getIMEI().equals(msg.getSenderIMEI())) { // 若消息与本activity有关，则接收
             mMessagesList.add(msg); // 将此消息添加到显示聊天list中
+            mDBOperate.addChattingInfo(mSenderID, mID, msg.getSendTime(), msg.getMsgContent(), msg.getContentType());
             mApplication.addLastMsgCache(msg.getSenderIMEI(), msg.getMsgContent()); // 更新消息缓存
             sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
             return true;
@@ -450,13 +457,12 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             	Log.d(TAG, "接收方确认文件请求,发送文件为"+mCameraImagePath);
             	tcpClient=tcpClient.getInstance(ChatActivity.this);
             	tcpClient.startSend();
-//            	tcpClient.sendFile(fileStyles, fileStates, mPeople.getIpaddress());
             	tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress());
-//            	tcpClient.sendFile("/storage/sdcard0/update.zip", mPeople.getIpaddress());
             }
             	break;
             case IPMSGConst.IPMSG_GETIMAGESUCCESS: { // 图片发送成功
             	Log.d("SZU_ChatActivity", "接收成功");
+            	
             	refreshAdapter(); // 刷新ListView
             }
             	break;
@@ -477,7 +483,9 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         	msg1.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
         	mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg1);
         }
-        mChattingDAO.add(new ChattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库
+//        mChattingDAO.add(new ChattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库，旧
+//        mDBOperate.addChattingInfo(new ChattingInfo(mID, mSenderID, nowtime, content));// 新增加入数据库
+        mDBOperate.addChattingInfo(mID, mSenderID, nowtime, content, type);//新增方法
         mApplication.addLastMsgCache(mPeople.getIMEI(), content); // 更新消息缓存
     }
 }
