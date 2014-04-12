@@ -55,11 +55,18 @@ public class SqlDBOperate
         values.put("lastdate", user.getLastDate());
         values.put("device", user.getDevice());
         values.put("constellation",user.getConstellation());
-        userDataBase.insert(userSQLHelper.getTableName(), "id", values);
+        int id=getIDByIMEI(user.getIMEI());
+        if(id!=0)
+        {
+        	user.setId(id);
+        	updateUserInfo(user);
+        }
+        else
+        	userDataBase.insert(userSQLHelper.getTableName(), "id", values);
     }
     
     /*获取在线信息尚未完善,默认在线状态(0)*/
-    public void addNearByPeople(NearByPeople people)
+    public void addUserInfo(NearByPeople people)
     {
     	 ContentValues values = new ContentValues();
          values.put("name", people.getNickname());
@@ -72,7 +79,14 @@ public class SqlDBOperate
          values.put("lastdate", people.getLogintime());
          values.put("device", people.getDevice());
          values.put("constellation",people.getConstellation());
-         userDataBase.insert(userSQLHelper.getTableName(), "id", values);
+         int id=getIDByIMEI(people.getIMEI());
+         if(id!=0)
+         {
+        	 userDataBase.update(userSQLHelper.getTableName(), values, "id = ?",
+                     new String[] { String.valueOf(id) });
+         }
+         else
+         	userDataBase.insert(userSQLHelper.getTableName(), "id", values);
     }
     
     /*
@@ -95,11 +109,24 @@ public class SqlDBOperate
                 new String[] { String.valueOf(user.getId()) });
     }
     
-    
+    /*
+     * 参数：用户的IMEI序列码结果返回IMEI码对应用户的ID
+     */
+    public int getIDByIMEI(String imei) {
+        Cursor cursor = userDataBase.query(userSQLHelper.getTableName(), new String[] { "id" }, "IMEI=?",
+                new String[] { imei }, null, null, null);
+        if (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            cursor.close();
+            return id;
+        }
+        cursor.close();
+        return 0;
+    }
     /*
      * 参数：用户对应序号ID 作用:用来查找对应的用户 返回IMEI
      */
-    public String findIMEIByUserID(int id)
+    public String getIMEIByUserID(int id)
 	{
     	Cursor cursor = userDataBase.query(userSQLHelper.getTableName(), new String[] {"IMEI"}, "id=?",
     			new String[] { String.valueOf(id) },null, null, null);
@@ -114,7 +141,7 @@ public class SqlDBOperate
     /*
      * 参数：用户对应序号ID 作用:用来查找对应的用户 返回userInfo类
      */
-    public UserInfo findUserInfoByID(int id) {
+    public UserInfo getUserInfoByID(int id) {
         // db = helper.getWritableDatabase();
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
@@ -140,7 +167,7 @@ public class SqlDBOperate
     /*
      * 参数：用户对应的IMEI码 作用:用来查找对应的用户 返回userInfo类
      */
-    public UserInfo findUserInfoByIMEI(String imei) {
+    public UserInfo getUserInfoByIMEI(String imei) {
         // db = helper.getWritableDatabase();
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
@@ -320,18 +347,49 @@ public class SqlDBOperate
         values.put("style", info.getStyle());
         chatInfoDataBase.insert(chatInfoSQLHelper.getTableName(), "id", values);
     }
+
     /*
      * 参数：chattinginfo类 作用：用来添加聊天记录
      */
-    public void addChattingInfo(Message message) {
-    	
-    	ChattingInfo info=new ChattingInfo();
+    public void addChattingInfo(int senderID,int recieverID,String time,String content,CONTENT_TYPE type) {
+
         ContentValues values = new ContentValues();
-        values.put("sendID", info.getSendID());
-        values.put("receiverID", info.getReceiverID());
-        values.put("chatting", info.getInfo());
-        values.put("date", info.getDate());
-        values.put("style", info.getStyle());
+        values.put("sendID", senderID);
+        values.put("receiverID", recieverID);
+        values.put("chatting", content);
+        values.put("date", time);
+        values.put("style", getStyteByContentType(type));
+        chatInfoDataBase.insert(chatInfoSQLHelper.getTableName(), "id", values);
+    }
+    private int getStyteByContentType(CONTENT_TYPE type)
+    {
+    	if(type==CONTENT_TYPE.TEXT)
+    	{
+    		return 0;
+    	}else if(type==CONTENT_TYPE.IMAGE)
+    	{
+    		return 1;
+    	}else if (type==CONTENT_TYPE.FILE)
+		{
+			return 2;
+		}else if(type==CONTENT_TYPE.VOICE)
+		{
+			return 3;
+		}
+    	return -1;
+    }
+    /*
+     * 参数：chattinginfo类 作用：用来添加聊天记录
+     */
+    public void addChattingInfo(String senderIMEI,String recieverIMEI,String time,String content,CONTENT_TYPE type) {
+
+    	
+        ContentValues values = new ContentValues();
+        values.put("sendID", getIDByIMEI(senderIMEI));
+        values.put("receiverID", getIDByIMEI(recieverIMEI));
+        values.put("chatting", content);
+        values.put("date", time);
+        values.put("style", getStyteByContentType(type));
         chatInfoDataBase.insert(chatInfoSQLHelper.getTableName(), "id", values);
     }
     /*
@@ -352,7 +410,7 @@ public class SqlDBOperate
     /*
      * 参数：聊天记录序号ID 作用:用来查找对应的一条聊天记录 返回chattinginfo类
      */
-    public ChattingInfo findChattingInfoByID(int id) {
+    public ChattingInfo getChattingInfoByID(int id) {
         // db = helper.getWritableDatabase();
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
@@ -448,7 +506,7 @@ public class SqlDBOperate
     			message.setContentType(CONTENT_TYPE.VOICE);
     			break;
     	}
-    	message.setSenderIMEI(findIMEIByUserID(chattingInfo.getSendID()));//设置发送方ID
+    	message.setSenderIMEI(getIMEIByUserID(chattingInfo.getSendID()));//设置发送方ID
     	return message;
     }
     /*
