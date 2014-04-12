@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,6 +42,7 @@ import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.HeaderLayout.onRightImageButtonClickListener;
 import com.immomo.momo.android.view.WifiapSearchAnimationFrameLayout;
+import com.immomo.momo.sql.SqlDBOperate;
 import com.immomo.momo.sql.UserDAO;
 import com.immomo.momo.sql.UserInfo;
 
@@ -80,8 +80,9 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	private CreateAPProcess m_createAPProcess;
 	private WTSearchProcess m_wtSearchProcess;
 	private WifiapAdapter m_wTAdapter;
-	private UserDAO mUserDAO; // 数据库操作实例
+//	private UserDAO mUserDAO; // 数据库操作实例，旧
 	private UserInfo mUserInfo; // 用户信息类实例
+	private SqlDBOperate mSqlDBOperate;// 数据库操作实例,新
 	private Context mContext;
 	private WifiapBroadcast mWifiapBroadcast;
 
@@ -320,8 +321,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
-					mUserDAO = new UserDAO(mContext); // 实例化数据库操作类
-
+//					mUserDAO = new UserDAO(mContext); // 实例化数据库操作类，旧
+					mSqlDBOperate =new SqlDBOperate(mContext);// 实例化数据库操作类,新
 					String IMEI = SessionUtils.getIMEI();
 					String nickname = SessionUtils.getNickname();
 					String gender = SessionUtils.getGender();
@@ -329,12 +330,13 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 					int age = SessionUtils.getAge();
 					int avatar = SessionUtils.getAvatar();
 					int onlineStateInt = SessionUtils.getOnlineStateInt();
-					int usserID = mUserDAO.getID(IMEI); // 获取用户id
+
 					String logintime = DateUtils.getNowtime();
 
 					// 录入数据库
 					// 若数据库中有IMEI对应的用户记录，则更新此记录; 无则创建新用户
-					if ((mUserInfo = mUserDAO.findUserInfo(IMEI)) != null) {
+//					if ((mUserInfo = mUserDAO.findUserInfo(IMEI)) != null) {
+					if ((mUserInfo = mSqlDBOperate.getUserInfoByIMEI(IMEI)) != null) {
 						mUserInfo.setIPAddr(localIPaddress);
 						mUserInfo.setAvater(avatar);
 						mUserInfo.setIsOnline(onlineStateInt);
@@ -344,16 +346,24 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 						mUserInfo.setDevice(mDevice);
 						mUserInfo.setConstellation(constellation);
 						mUserInfo.setLastDate(logintime);
-						mUserDAO.update(mUserInfo);
+//						mUserDAO.update(mUserInfo);
+						mSqlDBOperate.updateUserInfo(mUserInfo);
 					} else {
 						mUserInfo = new UserInfo(nickname, age, gender, IMEI,
 								localIPaddress, onlineStateInt, avatar);
 						mUserInfo.setLastDate(logintime);
 						mUserInfo.setDevice(mDevice);
 						mUserInfo.setConstellation(constellation);
-						mUserDAO.add(mUserInfo);
+//						mUserDAO.add(mUserInfo);
+						mSqlDBOperate.addUserInfo(mUserInfo);
 					}
 
+					/*BUG:程序第一次使用的时候获取不到自己的ID，即ID为0，是因为程序第一次使用的时候没有自己的用户表，
+					 没有获取到ID，所以ID应当在这个位置获取，可以避免这个BUG
+					 */
+					
+//					int usserID = mUserDAO.getID(IMEI); // 获取用户id
+					int usserID = mSqlDBOperate.getIDByIMEI(IMEI); // 获取用户id
 					// 设置用户Session
 					SessionUtils.setLocalUserID(usserID);
 					SessionUtils.setDevice(mDevice);
@@ -380,8 +390,13 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-					if (mUserDAO != null)
-						mUserDAO.close(); // 关闭数据库连接
+//					if (mUserDAO != null)
+//						mUserDAO.close(); // 关闭数据库连接
+					if(null != mSqlDBOperate)
+					{
+						mSqlDBOperate.close();
+						mSqlDBOperate=null;
+					}
 				}
 				return false;
 			}
