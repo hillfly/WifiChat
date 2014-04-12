@@ -23,9 +23,9 @@ import com.immomo.momo.android.file.explore.FileStyle;
 import com.immomo.momo.android.tcp.socket.TcpService;
 import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.SessionUtils;
-import com.immomo.momo.sql.chattingDAO;
-import com.immomo.momo.sql.chattingInfo;
-import com.immomo.momo.sql.userDAO;
+import com.immomo.momo.sql.ChattingDAO;
+import com.immomo.momo.sql.ChattingInfo;
+import com.immomo.momo.sql.UserDAO;
 
 public class UDPSocketThread implements Runnable {
 
@@ -49,13 +49,13 @@ public class UDPSocketThread implements Runnable {
 
     private String mIMEI;
     private NearByPeople mNearByPeople; // 本机用户类
-    private userDAO mUserDAO;
-    private chattingDAO mChattingDAO;
+    private UserDAO mUserDAO;
+    private ChattingDAO mChattingDAO;
 
     private UDPSocketThread() {
         mApplication.initParam(); // 初始化相关参数
-        mUserDAO = new userDAO(mContext);
-        mChattingDAO = new chattingDAO(mContext);
+        mUserDAO = new UserDAO(mContext);
+        mChattingDAO = new ChattingDAO(mContext);
     }
 
     /**
@@ -169,9 +169,10 @@ public class UDPSocketThread implements Runnable {
                         	sendUDPdata(IPMSGConst.IPMSG_RECIEVEIMAGEDATA, senderIp);
                         	msg.setMsgContent(filePathString+msg.getMsgContent());
                         	Log.d(TAG, "接收路径:"+msg.getMsgContent());
-                        }else
+                        }else if(msg.getContentType()==CONTENT_TYPE.TEXT)
                         {
                         	sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
+                        	
                         }
                         // 消息接受确认
 
@@ -182,8 +183,9 @@ public class UDPSocketThread implements Runnable {
                         if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
                             mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
                             mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
-                            BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
-                            mChattingDAO.add(new chattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
+                            if(msg.getContentType()==CONTENT_TYPE.TEXT)
+                            	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
+                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
                                     .getID(mIMEI), msg.getSendTime(), msg.getMsgContent()));                            
                         }
 
@@ -193,7 +195,25 @@ public class UDPSocketThread implements Runnable {
                     case IPMSGConst.IPMSG_RECIEVEIMAGEDATA:{
                     	Log.d(TAG, "收到图片发送请求确认");
                     	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVEIMAGEDATA);
+                    }
+                    	break;
+                    case IPMSGConst.IPMSG_GETIMAGESUCCESS:
+                    {
+                    	  Log.i(TAG, "收到图片消息");
+                    	  String filePathString="/storage/sdcard0/";
+                          String senderIp = receiveDatagramPacket.getAddress().getHostAddress();
+                          Message msg = (Message) ipmsgRes.getAddObject();
+                          Log.d(TAG, msg.getContentType().toString());
+                          msg.setMsgContent(filePathString+msg.getMsgContent());
+                    	 // TODO 这里可以判断是否含有文件，有则通知handler刷新UI，出现是否接受提示框
                     	
+                        if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
+                            mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
+                            mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
+//                            BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_GETIMAGESUCCESS);
+                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
+                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent()));                            
+                        }
                     }
                     	break;
                 } // End of switch

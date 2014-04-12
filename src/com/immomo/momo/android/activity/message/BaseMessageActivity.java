@@ -44,8 +44,8 @@ import com.immomo.momo.android.view.HeaderLayout.onMiddleImageButtonClickListene
 import com.immomo.momo.android.view.HeaderLayout.onRightImageButtonClickListener;
 import com.immomo.momo.android.view.ScrollLayout;
 import com.immomo.momo.android.view.ScrollLayout.OnScrollToScreenListener;
-import com.immomo.momo.sql.chattingDAO;
-import com.immomo.momo.sql.userDAO;
+import com.immomo.momo.sql.ChattingDAO;
+import com.immomo.momo.sql.UserDAO;
 
 public abstract class BaseMessageActivity extends BaseActivity implements OnScrollToScreenListener,
         OnClickListener, OnTouchListener, TextWatcher, OnChatPopupItemClickListener {
@@ -78,8 +78,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
     protected List<Message> mMessagesList = new ArrayList<Message>(); // 消息列表
     protected ChatAdapter mAdapter;
     protected NearByPeople mPeople; // 聊天的对象
-    protected userDAO mUserDAO; // 数据库用户信息操作实例
-    protected chattingDAO mChattingDAO; // 数据库聊天信息操作实例
+    protected UserDAO mUserDAO; // 数据库用户信息操作实例
+    protected ChattingDAO mChattingDAO; // 数据库聊天信息操作实例
 
     protected Bitmap mRoundsSelected;
     protected Bitmap mRoundsNormal;
@@ -107,8 +107,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
         initViews();
         initEvents();
         mUDPSocketThread = UDPSocketThread.getInstance(mApplication,this); // 获取对象
-        mUserDAO = new userDAO(this); // 实例化数据库用户操作类
-        mChattingDAO = new chattingDAO(this); // 实例化数据库聊天信息操作类
+        mUserDAO = new UserDAO(this); // 实例化数据库用户操作类
+        mChattingDAO = new ChattingDAO(this); // 实例化数据库聊天信息操作类
     }
 
     protected class OnMiddleImageButtonClickListener implements onMiddleImageButtonClickListener {

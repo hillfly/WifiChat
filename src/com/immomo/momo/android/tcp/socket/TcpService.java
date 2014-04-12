@@ -14,8 +14,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.immomo.momo.android.BaseActivity;
 import com.immomo.momo.android.file.explore.Constant;
 import com.immomo.momo.android.file.explore.FileState;
+import com.immomo.momo.android.socket.IPMSGConst;
 
 public class TcpService implements Runnable
 {
@@ -256,7 +258,8 @@ public class TcpService implements Runnable
 						-startTime)/1000)) + "MB/S"+" 接收时间："+String.valueOf((System.currentTimeMillis()-startTime)/1000)+"s");
 				//将byte数组的数据写进指定路径
 				bufferOutput.flush();
-						
+				
+			    BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_GETIMAGESUCCESS);
 				input.close();
 				Log.d(TAG, "关闭input成功");
 				dataInput.close();

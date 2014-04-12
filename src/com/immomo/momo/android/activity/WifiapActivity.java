@@ -43,8 +43,8 @@ import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.HeaderLayout.onRightImageButtonClickListener;
 import com.immomo.momo.android.view.WifiapSearchAnimationFrameLayout;
-import com.immomo.momo.sql.userDAO;
-import com.immomo.momo.sql.userInfo;
+import com.immomo.momo.sql.UserDAO;
+import com.immomo.momo.sql.UserInfo;
 
 /**
  * @fileName WifiapActivity.java
@@ -80,8 +80,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	private CreateAPProcess m_createAPProcess;
 	private WTSearchProcess m_wtSearchProcess;
 	private WifiapAdapter m_wTAdapter;
-	private userDAO mUserDAO; // 数据库操作实例
-	private userInfo mUserInfo; // 用户信息类实例
+	private UserDAO mUserDAO; // 数据库操作实例
+	private UserInfo mUserInfo; // 用户信息类实例
 	private Context mContext;
 	private WifiapBroadcast mWifiapBroadcast;
 
@@ -320,7 +320,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
-					mUserDAO = new userDAO(mContext); // 实例化数据库操作类
+					mUserDAO = new UserDAO(mContext); // 实例化数据库操作类
 
 					String IMEI = SessionUtils.getIMEI();
 					String nickname = SessionUtils.getNickname();
@@ -346,7 +346,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 						mUserInfo.setLastDate(logintime);
 						mUserDAO.update(mUserInfo);
 					} else {
-						mUserInfo = new userInfo(nickname, age, gender, IMEI,
+						mUserInfo = new UserInfo(nickname, age, gender, IMEI,
 								localIPaddress, onlineStateInt, avatar);
 						mUserInfo.setLastDate(logintime);
 						mUserInfo.setDevice(mDevice);

@@ -1,5 +1,7 @@
 package com.immomo.momo.android.socket;
 
+import android.R.integer;
+
 
 
 /**
@@ -43,7 +45,8 @@ public class IPMSGConst {
 	
 	/*zhuangliebin新增*/
 	public static final int IPMSG_GETIMAGEDATA       = 0x00000063;  //图片发送请求
-	public static final int IPMSG_RECIEVEIMAGEDATA   = 0x00000064; //图片接收确认
+	public static final int IPMSG_RECIEVEIMAGEDATA   = 0x00000064;  //图片接收确认
+	public static final int IPMSG_GETIMAGESUCCESS    = 0x00000065;  //图片接收成功
 	/*zhuangliebin新增*/
 	
 	public static final int IPMSG_GETPUBKEY			 = 0x00000072;	//获得RSA公钥
