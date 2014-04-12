@@ -42,7 +42,7 @@ import com.immomo.momo.android.view.EmoticonsEditText;
 import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.ScrollLayout;
-import com.immomo.momo.sql.chattingInfo;
+import com.immomo.momo.sql.ChattingInfo;
 
 public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
 
@@ -455,6 +455,11 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 //            	tcpClient.sendFile("/storage/sdcard0/update.zip", mPeople.getIpaddress());
             }
             	break;
+            case IPMSGConst.IPMSG_GETIMAGESUCCESS: { // 图片发送成功
+            	Log.d("SZU_ChatActivity", "接收成功");
+            	refreshAdapter(); // 刷新ListView
+            }
+            	break;
         } // end of switch
     }
 
@@ -472,7 +477,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         	msg1.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
         	mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg1);
         }
-        mChattingDAO.add(new chattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库
+        mChattingDAO.add(new ChattingInfo(mID, mSenderID, nowtime, content)); // 加入数据库
         mApplication.addLastMsgCache(mPeople.getIMEI(), content); // 更新消息缓存
     }
 }
