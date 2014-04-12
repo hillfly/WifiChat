@@ -33,11 +33,13 @@ public class SQLHelper extends SQLiteOpenHelper
 	 * receiverID(int)
 	 * chatting(text)
 	 * date(text)
+	 * style(integer) TEXT, IMAGE, FILE, VOICE;
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		db.execSQL("create table " + T_NAME + " (id integer primary key,sendID integer,receiverID integer,chatting text,date text)");
+		db.execSQL("create table " + T_NAME + " (id integer primary key,sendID integer,receiverID integer," +
+				"chatting text,date text,style integer)");
 	}
 
 
