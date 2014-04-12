@@ -13,14 +13,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class userDAO {
+public class UserDAO {
     private DBHelper helper; // 数据库类(t_user)
     private SQLiteDatabase db;// 数据库(t_user)的操作类
 
     /*
      * 构造函数参数：context对象通过db的方法来操作数据库的增删改查
      */
-    public userDAO(Context context) {
+    public UserDAO(Context context) {
         helper = new DBHelper(context);
         db = helper.getWritableDatabase();
     }
@@ -49,7 +49,7 @@ public class userDAO {
     /*
      * 参数：userInfo类 作用：用来添加用户信息
      */
-    public void add(userInfo user) {
+    public void add(UserInfo user) {
 
         ContentValues values = new ContentValues();
         values.put("name", user.getName());
@@ -84,7 +84,7 @@ public class userDAO {
     /*
      * 参数：userInfo类 作用：用来更用户信息
      */
-    public void update(userInfo user) {
+    public void update(UserInfo user) {
         // db=helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", user.getName());
@@ -104,7 +104,7 @@ public class userDAO {
     /*
      * 参数：用户对应序号ID 作用:用来查找对应的用户 返回userInfo类
      */
-    public userInfo find(int id) {
+    public UserInfo find(int id) {
         // db = helper.getWritableDatabase();
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
@@ -112,7 +112,7 @@ public class userDAO {
                 "sex", "ip", "status", "avater","lastdate","device","constellation"}, "id=?", new String[] { String.valueOf(id) },
                 null, null, null);
         if (cursor.moveToNext()) {
-            userInfo userInfo = new userInfo(cursor.getInt(cursor.getColumnIndex("id")),
+            UserInfo userInfo = new UserInfo(cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("name")), cursor.getInt(cursor
                             .getColumnIndex("age")),
                     cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor
@@ -131,7 +131,7 @@ public class userDAO {
     /*
      * 参数：用户对应的IMEI码 作用:用来查找对应的用户 返回userInfo类
      */
-    public userInfo findUserInfo(String imei) {
+    public UserInfo findUserInfo(String imei) {
         // db = helper.getWritableDatabase();
         // db.query(table, columns, selection, selectionArgs, groupBy, having,
         // orderBy)
@@ -139,7 +139,7 @@ public class userDAO {
                 "sex", "ip", "status", "avater","lastdate","device","constellation"}, "IMEI=?", new String[] { imei }, null, null,
                 null);
         if (cursor.moveToNext()) {
-            userInfo userInfo = new userInfo(cursor.getInt(cursor.getColumnIndex("id")),
+            UserInfo userInfo = new UserInfo(cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("name")), cursor.getInt(cursor
                             .getColumnIndex("age")),
                     cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor
@@ -175,14 +175,14 @@ public class userDAO {
     /*
      * 用来获取近期的一系列用户信息 参数:start为步数，count为最大记录数，(倒序排列) 放回List<userInfo>
      */
-    public List<userInfo> getScrollData(int start, int count) {
-        List<userInfo> users = new ArrayList<userInfo>();
+    public List<UserInfo> getScrollData(int start, int count) {
+        List<UserInfo> users = new ArrayList<UserInfo>();
         // db = helper.getWritableDatabase();
         Cursor cursor = db.query(helper.getTableName(), new String[] { "id", "name", "age", "sex",
                 "IMEI", "ip", "status", "avater","lastdate","device","constellation"}, null, null, null, null, "id desc", start + ","
                 + count);
         while (cursor.moveToNext()) {
-            users.add(new userInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor
+            users.add(new UserInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor
                     .getString(cursor.getColumnIndex("name")), cursor.getInt(cursor
                     .getColumnIndex("age")), cursor.getString(cursor.getColumnIndex("sex")), cursor
                     .getString(cursor.getColumnIndex("IMEI")), cursor.getString(cursor
@@ -214,7 +214,7 @@ public class userDAO {
      * 该函数将所有数据库中用户表的信息用JSON形式的String来表示
      */
     public String sendToJSON() {
-        List<userInfo> users;
+        List<UserInfo> users;
         int count = (int) getCount();
         users = getScrollData(0, count);
         JSONStringer jsonText = new JSONStringer();
@@ -226,7 +226,7 @@ public class userDAO {
 
             // 键user的值是数组。array和endArray必须配对使用
             jsonText.array();
-            for (userInfo user : users) {
+            for (UserInfo user : users) {
                 jsonText.object();
 
                 jsonText.key("id");

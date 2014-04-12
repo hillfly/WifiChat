@@ -4,7 +4,7 @@ package com.immomo.momo.sql;
  * 所有用户信息的属性是私有的
  *能够通过该类的公用方法获取里面的私有信息
  */
-public class userInfo
+public class UserInfo
 {
 	private int id;               //用户ID
 	private String name;          //用户名字
@@ -20,36 +20,36 @@ public class userInfo
 	
 	//以下为用户的构造函数
 	
-	public userInfo()
+	public UserInfo()
 	{
 		super();
 	}
 
 	
-	public userInfo(String name,String imei){
+	public UserInfo(String name,String imei){
 		this.name=name;
 		this.imei=imei;
 	}
 	
-	public userInfo(String name,String sex,String imei,int isOnline,int avater)
+	public UserInfo(String name,String sex,String imei,int isOnline,int avater)
 	{
 		this(name,imei);
 		this.isOnline=isOnline;
 		this.sex=sex;
 		this.avater=avater;
 	}
-	public userInfo(String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater){
+	public UserInfo(String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater){
 		this(name,sex,imei,isOnline,avater);
 		this.age=age;
 		this.ipAddr=ipAddr;
 	}
 	
-	public userInfo(int id,String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater){
+	public UserInfo(int id,String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater){
 		this(name,age,sex,imei,ipAddr,isOnline,avater);
 		this.id=id;
 	}
 	
-	public userInfo(int id,String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater,String lastDate,String device,String constellation){
+	public UserInfo(int id,String name,int age,String sex,String imei,String ipAddr,int isOnline,int avater,String lastDate,String device,String constellation){
 		this(id,name,age,sex,imei,ipAddr,isOnline,avater);
 		this.lastDate=lastDate;
 		this.device=device;

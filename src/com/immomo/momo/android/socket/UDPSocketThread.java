@@ -25,6 +25,7 @@ import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.SessionUtils;
 import com.immomo.momo.sql.ChattingDAO;
 import com.immomo.momo.sql.ChattingInfo;
+import com.immomo.momo.sql.SqlDBOperate;
 import com.immomo.momo.sql.UserDAO;
 
 public class UDPSocketThread implements Runnable {
@@ -49,13 +50,15 @@ public class UDPSocketThread implements Runnable {
 
     private String mIMEI;
     private NearByPeople mNearByPeople; // 本机用户类
-    private UserDAO mUserDAO;
-    private ChattingDAO mChattingDAO;
+//    private UserDAO mUserDAO;
+//    private ChattingDAO mChattingDAO;
+    private SqlDBOperate mDBOperate;//新增数据库类可以操作用户数据库和聊天信息数据库
 
     private UDPSocketThread() {
         mApplication.initParam(); // 初始化相关参数
-        mUserDAO = new UserDAO(mContext);
-        mChattingDAO = new ChattingDAO(mContext);
+//        mUserDAO = new UserDAO(mContext);
+//        mChattingDAO = new ChattingDAO(mContext);
+        mDBOperate=new SqlDBOperate(mContext);
     }
 
     /**
@@ -169,6 +172,8 @@ public class UDPSocketThread implements Runnable {
                         	sendUDPdata(IPMSGConst.IPMSG_RECIEVEIMAGEDATA, senderIp);
                         	msg.setMsgContent(filePathString+msg.getMsgContent());
                         	Log.d(TAG, "接收路径:"+msg.getMsgContent());
+                        	mDBOperate.addChattingInfo(senderIMEI, mIMEI,  msg.getSendTime(), 
+                            		msg.getMsgContent(), msg.getContentType());//将聊天记录加入数据库
                         }else if(msg.getContentType()==CONTENT_TYPE.TEXT)
                         {
                         	sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
@@ -185,8 +190,11 @@ public class UDPSocketThread implements Runnable {
                             mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
                             if(msg.getContentType()==CONTENT_TYPE.TEXT)
                             	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
-                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
-                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent()));                            
+//                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
+//                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent())); //将聊天记录加入数据库，旧
+                            mDBOperate.addChattingInfo(senderIMEI, mIMEI,  msg.getSendTime(), 
+                            		msg.getMsgContent(), msg.getContentType());//将聊天记录加入数据库
+                            
                         }
 
                     }
@@ -199,21 +207,7 @@ public class UDPSocketThread implements Runnable {
                     	break;
                     case IPMSGConst.IPMSG_GETIMAGESUCCESS:
                     {
-                    	  Log.i(TAG, "收到图片消息");
-                    	  String filePathString="/storage/sdcard0/";
-                          String senderIp = receiveDatagramPacket.getAddress().getHostAddress();
-                          Message msg = (Message) ipmsgRes.getAddObject();
-                          Log.d(TAG, msg.getContentType().toString());
-                          msg.setMsgContent(filePathString+msg.getMsgContent());
-                    	 // TODO 这里可以判断是否含有文件，有则通知handler刷新UI，出现是否接受提示框
                     	
-                        if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
-                            mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
-                            mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
-//                            BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_GETIMAGESUCCESS);
-                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
-                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent()));                            
-                        }
                     }
                     	break;
                 } // End of switch
@@ -330,7 +324,8 @@ public class UDPSocketThread implements Runnable {
             NearByPeople newUser = (NearByPeople) paramIPMSGProtocol.getAddObject();
             mApplication.addOnlineUser(receiveIMEI, newUser);         
             // TODO 添加用户进数据库
-            mUserDAO.add(newUser);
+//            mUserDAO.add(newUser);//旧
+            mDBOperate.addUserInfo(newUser);//新
             Log.i(TAG, "成功添加imei为" + receiveIMEI + "的用户");
         }
     }

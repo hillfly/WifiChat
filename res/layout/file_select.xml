@@ -8,7 +8,7 @@
   
   <TextView android:layout_width="fill_parent"
   	android:layout_height="wrap_content"
-  	android:textColor="@android:color/white"
+  	android:textColor="@android:color/background_dark"
   	android:textSize="20dp"
   	android:gravity="center"
   	android:id="@+id/file_select_title"/>
@@ -18,7 +18,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:textSize="16dp"
-    android:textColor="@android:color/white"/>
+      style="?android:attr/textAppearanceMedium"
+    android:textColor="@android:color/background_dark"/>
   
   <!-- 上边按钮 -->
   <LinearLayout android:layout_width="fill_parent"
