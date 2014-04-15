@@ -2,13 +2,13 @@ package com.immomo.momo.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,6 +36,8 @@ import com.immomo.momo.android.activity.wifiap.WifiapBroadcast;
 import com.immomo.momo.android.adapter.WifiapAdapter;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.socket.UDPSocketThread;
+import com.immomo.momo.android.sql.SqlDBOperate;
+import com.immomo.momo.android.sql.UserInfo;
 import com.immomo.momo.android.util.DateUtils;
 import com.immomo.momo.android.util.SessionUtils;
 import com.immomo.momo.android.util.WifiUtils;
@@ -42,9 +45,6 @@ import com.immomo.momo.android.view.HeaderLayout;
 import com.immomo.momo.android.view.HeaderLayout.HeaderStyle;
 import com.immomo.momo.android.view.HeaderLayout.onRightImageButtonClickListener;
 import com.immomo.momo.android.view.WifiapSearchAnimationFrameLayout;
-import com.immomo.momo.sql.SqlDBOperate;
-import com.immomo.momo.sql.UserDAO;
-import com.immomo.momo.sql.UserInfo;
 
 /**
  * @fileName WifiapActivity.java
@@ -60,38 +60,37 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	private int wifiapOperateEnum = WifiApConst.NOTHING;
 	private String localIPaddress; // 本地WifiIP
 	private String serverIPaddres; // 热点IP
-	private String mDevice = getLocalHostName(); // 手机品牌型号
-	private boolean isClient; // 客户端标识
-	private ArrayList<ScanResult> m_listWifi; // 符合条件的热点列表
+	private String mDevice = getPhoneModel(); // 手机品牌型号
+	private boolean isClient = true; // 客户端标识,默认为true
+	private ArrayList<String> mWifiApList; // 符合条件的热点列表
 
 	private WifiapSearchAnimationFrameLayout m_FrameLWTSearchAnimation;
-	private HeaderLayout m_HeaderLayout;
-	private BaseDialog m_Dialog; // 提示窗口
-	private Button m_BtnBack;
-	private Button m_BtnLogin;
-	private Button m_btnCreateWT;
-	private ImageView m_imgRadar;
-	private LinearLayout m_linearLCreateAP;
-	private ListView m_listVWT;
-	private ProgressBar m_progBarCreatingAP;
-	private TextView m_textVPromptAP;
-	private TextView m_textVWTPrompt;
+	private HeaderLayout mHeaderLayout;
+	private BaseDialog mDialog; // 提示窗口
+	private Button mBtnBack;
+	private Button mBtnLogin;
+	private Button mBtnCreateAp;
+	private ImageView mIvWifiApIcon;
+	private LinearLayout mLlCreateAP;
+	private ListView mLvWifiList;
+	private ProgressBar mPBCreatingAP;
+	private TextView mTvWifiApInfo;
+	private TextView mTvWifiApTips;
 
-	private CreateAPProcess m_createAPProcess;
-	private WTSearchProcess m_wtSearchProcess;
-	private WifiapAdapter m_wTAdapter;
-//	private UserDAO mUserDAO; // 数据库操作实例，旧
+	private CreateAPProcess mCreateApProcess;
+	private WTSearchProcess mSearchApProcess;
+	private WifiapAdapter mWifiApAdapter;
+	// private UserDAO mUserDAO; // 数据库操作实例，旧
 	private UserInfo mUserInfo; // 用户信息类实例
 	private SqlDBOperate mSqlDBOperate;// 数据库操作实例,新
-	private Context mContext;
 	private WifiapBroadcast mWifiapBroadcast;
+	private Context mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wifiap);
 		initBroadcast(); // 注册广播
-		m_wtSearchProcess = new WTSearchProcess();
 		mWifiUtils = WifiUtils.getInstance(this);
 		initViews();
 		initEvents();
@@ -111,11 +110,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	protected void onDestroy() {
 		unregisterReceiver(mWifiapBroadcast); // 撤销广播
 		mWifiapBroadcast.removeehList(this);
-		if (m_wtSearchProcess != null)
-			m_wtSearchProcess.stop();
+		if (mSearchApProcess != null)
+			mSearchApProcess.stop();
 
-		if (m_createAPProcess != null)
-			m_createAPProcess.stop();
+		if (mCreateApProcess != null)
+			mCreateApProcess.stop();
 		super.onDestroy();
 	}
 
@@ -132,83 +131,83 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
 	/** 初始化视图 获取控件对象 **/
 	protected void initViews() {
-		m_HeaderLayout = (HeaderLayout) findViewById(R.id.wifiap_header);
-		m_BtnBack = (Button) findViewById(R.id.wifiap_btn_back);
-		m_BtnLogin = (Button) findViewById(R.id.wifiap_btn_login);
+		mHeaderLayout = (HeaderLayout) findViewById(R.id.wifiap_header);
+		mBtnBack = (Button) findViewById(R.id.wifiap_btn_back);
+		mBtnLogin = (Button) findViewById(R.id.wifiap_btn_login);
 
-		m_linearLCreateAP = ((LinearLayout) findViewById(R.id.create_ap_llayout_wt_main));// 创建热点的view
-		m_progBarCreatingAP = ((ProgressBar) findViewById(R.id.creating_progressBar_wt_main));// 创建热点的进度条
-		m_textVPromptAP = ((TextView) findViewById(R.id.prompt_ap_text_wt_main));
-		m_btnCreateWT = ((Button) findViewById(R.id.create_btn_wt_main)); // 创建热点的按钮
+		mLlCreateAP = ((LinearLayout) findViewById(R.id.create_ap_llayout_wt_main));// 创建热点的view
+		mPBCreatingAP = ((ProgressBar) findViewById(R.id.creating_progressBar_wt_main));// 创建热点的进度条
+		mTvWifiApInfo = ((TextView) findViewById(R.id.prompt_ap_text_wt_main));
+		mBtnCreateAp = ((Button) findViewById(R.id.create_btn_wt_main)); // 创建热点的按钮
 		m_FrameLWTSearchAnimation = ((WifiapSearchAnimationFrameLayout) findViewById(R.id.search_animation_wt_main));// 搜索时的动画
-		m_listVWT = ((ListView) findViewById(R.id.wt_list_wt_main));// 搜索到的热点
-		m_textVWTPrompt = (TextView) findViewById(R.id.wt_prompt_wt_main);
-		m_imgRadar = (ImageView) findViewById(R.id.radar_gif_wt_main);
+		mLvWifiList = ((ListView) findViewById(R.id.wt_list_wt_main));// 搜索到的热点
+		mTvWifiApTips = (TextView) findViewById(R.id.wt_prompt_wt_main);
+		mIvWifiApIcon = (ImageView) findViewById(R.id.radar_gif_wt_main);
 	}
 
 	/** 初始化全局设置 **/
 	@Override
 	protected void initEvents() {
-		m_HeaderLayout.init(HeaderStyle.TITLE_RIGHT_IMAGEBUTTON);
-		m_HeaderLayout.setTitleRightImageButton("创建连接", null,
+		mHeaderLayout.init(HeaderStyle.TITLE_RIGHT_IMAGEBUTTON);
+		mHeaderLayout.setTitleRightImageButton("创建连接", null,
 				R.drawable.search_wt, this);
 
-		m_listWifi = new ArrayList<ScanResult>();
-		m_wTAdapter = new WifiapAdapter(this, m_listWifi);
-		m_listVWT.setAdapter(m_wTAdapter);
+		mWifiApList = new ArrayList<String>();
+		mWifiApAdapter = new WifiapAdapter(this, mWifiApList);
+		mLvWifiList.setAdapter(mWifiApAdapter);
 
 		mWifiapBroadcast.addehList(this); // 监听广播
 
-		m_Dialog = BaseDialog.getDialog(WifiapActivity.this, "提示", "", "确 定",
+		mDialog = BaseDialog.getDialog(WifiapActivity.this, "提示", "", "确 定",
 				this, "取 消", this);
-		m_Dialog.setButton1Background(R.drawable.btn_default_popsubmit);
+		mDialog.setButton1Background(R.drawable.btn_default_popsubmit);
 
-		m_btnCreateWT.setOnClickListener(this);
-		m_BtnBack.setOnClickListener(this);
-		m_BtnLogin.setOnClickListener(this);
+		mSearchApProcess = new WTSearchProcess();
+
+		mBtnCreateAp.setOnClickListener(this);
+		mBtnBack.setOnClickListener(this);
+		mBtnLogin.setOnClickListener(this);
 	}
 
 	/** 初始化控件设置 **/
 	protected void initAction() {
-		if ((m_wtSearchProcess.running))
+		if ((mSearchApProcess.running))
 			return;
 
 		if (!isWifiConnect() && !getWifiApState()) {
 			mWifiUtils.OpenWifi();
+			mSearchApProcess.start();
 			mWifiUtils.startScan();
-			m_wtSearchProcess.start();
 			m_FrameLWTSearchAnimation.startAnimation();
-			m_linearLCreateAP.setVisibility(View.GONE);
-			m_textVWTPrompt.setText(R.string.wt_searching);
-			m_textVWTPrompt.setVisibility(View.VISIBLE);
-			m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
+			mLlCreateAP.setVisibility(View.GONE);
+			mTvWifiApTips.setText(R.string.wt_searching);
+			mTvWifiApTips.setVisibility(View.VISIBLE);
+			mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
 		}
 		if (isWifiConnect()) {
 			this.mWifiUtils.startScan();
-			this.m_wtSearchProcess.start();
+			this.mSearchApProcess.start();
 			this.m_FrameLWTSearchAnimation.startAnimation();
-			this.m_linearLCreateAP.setVisibility(View.GONE);
-			this.m_textVWTPrompt.setText(R.string.wt_searching);
-			this.m_textVWTPrompt.setVisibility(View.VISIBLE);
-			this.m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
-			this.m_imgRadar.setVisibility(View.GONE);
+			this.mLlCreateAP.setVisibility(View.GONE);
+			this.mTvWifiApTips.setText(R.string.wt_searching);
+			this.mTvWifiApTips.setVisibility(View.VISIBLE);
+			this.mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
+			this.mIvWifiApIcon.setVisibility(View.GONE);
 		}
 
 		if (getWifiApState()) {
 			m_FrameLWTSearchAnimation.stopAnimation();
 			if (mWifiUtils.getApSSID().startsWith(WifiApConst.WIFI_AP_HEADER)) {
-				m_textVWTPrompt.setVisibility(View.GONE);
-				m_linearLCreateAP.setVisibility(View.VISIBLE);
-				m_progBarCreatingAP.setVisibility(View.GONE);
-				m_btnCreateWT.setVisibility(View.VISIBLE);
-				m_imgRadar.setVisibility(View.VISIBLE);
-				m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_close);
-				m_textVPromptAP.setText(getString(R.string.create_connect_ok)
+				mTvWifiApTips.setVisibility(View.GONE);
+				mLlCreateAP.setVisibility(View.VISIBLE);
+				mPBCreatingAP.setVisibility(View.GONE);
+				mBtnCreateAp.setVisibility(View.VISIBLE);
+				mIvWifiApIcon.setVisibility(View.VISIBLE);
+				mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_close);
+				mTvWifiApInfo.setText(getString(R.string.create_connect_ok)
 						+ getString(R.string.ssid_connect_ok)
-						+ mWifiUtils.getApSSID()
-						+ getString(R.string.password_connect_ok));
+						+ mWifiUtils.getApSSID());
 				isClient = false;
-				setIPaddress(isClient);
 			}
 		}
 	}
@@ -224,10 +223,33 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	 */
 	public String getLocalHostName() {
 		String str1 = Build.BRAND;
+		String str2 = getRandomNumStr(5);
+		return str1 + "_" + str2;
+	}
+
+	public String getPhoneModel() {
+		String str1 = Build.BRAND;
 		String str2 = Build.MODEL;
 		if (-1 == str2.toUpperCase().indexOf(str1.toUpperCase()))
 			str2 = str1 + "_" + str2;
 		return str2;
+	}
+
+	/**
+	 * 返回指定长度的一串数字
+	 * 
+	 * @param NumLen
+	 * @return
+	 */
+	public String getRandomNumStr(int NumLen) {
+		Random random = new Random(System.currentTimeMillis());
+		StringBuffer str = new StringBuffer();
+		int i, num;
+		for (i = 0; i < NumLen; i++) {
+			num = random.nextInt();
+			str.append(num);
+		}
+		return str.toString();
 	}
 
 	/**
@@ -284,9 +306,10 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	 * 
 	 * @param list
 	 */
-	public void refreshAdapter(List<ScanResult> list) {
-		m_wTAdapter.setData(list);
-		m_wTAdapter.notifyDataSetChanged();
+	public void refreshAdapter(List<String> list) {
+		Log.i(TAG, "refreshAdapter()");
+		mWifiApAdapter.setData(list);
+		mWifiApAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -295,6 +318,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	 * @return boolean 返回是否为正确， 正确(true),不正确(false)
 	 */
 	private boolean isValidated() {
+		setIPaddress(isClient); // 获取IP
 		String NullIP = "192.168.43";
 		if (localIPaddress == null || serverIPaddres == null
 				|| !localIPaddress.startsWith(NullIP)
@@ -308,7 +332,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	/** 执行登陆 **/
 	private void doLogin() {
 		// TODO 为了方便测试，可以将次部分注释掉
-		if ((!isValidated())) {
+		if (!isValidated()) {
 			return;
 		}
 		putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
@@ -321,8 +345,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
-//					mUserDAO = new UserDAO(mContext); // 实例化数据库操作类，旧
-					mSqlDBOperate =new SqlDBOperate(mContext);// 实例化数据库操作类,新
+					// mUserDAO = new UserDAO(mContext); // 实例化数据库操作类，旧
+					mSqlDBOperate = new SqlDBOperate(mContext);// 实例化数据库操作类,新
 					String IMEI = SessionUtils.getIMEI();
 					String nickname = SessionUtils.getNickname();
 					String gender = SessionUtils.getGender();
@@ -335,7 +359,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
 					// 录入数据库
 					// 若数据库中有IMEI对应的用户记录，则更新此记录; 无则创建新用户
-//					if ((mUserInfo = mUserDAO.findUserInfo(IMEI)) != null) {
+					// if ((mUserInfo = mUserDAO.findUserInfo(IMEI)) != null) {
 					if ((mUserInfo = mSqlDBOperate.getUserInfoByIMEI(IMEI)) != null) {
 						mUserInfo.setIPAddr(localIPaddress);
 						mUserInfo.setAvater(avatar);
@@ -346,7 +370,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 						mUserInfo.setDevice(mDevice);
 						mUserInfo.setConstellation(constellation);
 						mUserInfo.setLastDate(logintime);
-//						mUserDAO.update(mUserInfo);
+						// mUserDAO.update(mUserInfo);
 						mSqlDBOperate.updateUserInfo(mUserInfo);
 					} else {
 						mUserInfo = new UserInfo(nickname, age, gender, IMEI,
@@ -354,15 +378,16 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 						mUserInfo.setLastDate(logintime);
 						mUserInfo.setDevice(mDevice);
 						mUserInfo.setConstellation(constellation);
-//						mUserDAO.add(mUserInfo);
+						// mUserDAO.add(mUserInfo);
 						mSqlDBOperate.addUserInfo(mUserInfo);
 					}
 
-					/*BUG:程序第一次使用的时候获取不到自己的ID，即ID为0，是因为程序第一次使用的时候没有自己的用户表，
-					 没有获取到ID，所以ID应当在这个位置获取，可以避免这个BUG
+					/*
+					 * BUG:程序第一次使用的时候获取不到自己的ID，即ID为0，是因为程序第一次使用的时候没有自己的用户表，
+					 * 没有获取到ID，所以ID应当在这个位置获取，可以避免这个BUG
 					 */
-					
-//					int usserID = mUserDAO.getID(IMEI); // 获取用户id
+
+					// int usserID = mUserDAO.getID(IMEI); // 获取用户id
 					int usserID = mSqlDBOperate.getIDByIMEI(IMEI); // 获取用户id
 					// 设置用户Session
 					SessionUtils.setLocalUserID(usserID);
@@ -390,12 +415,11 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-//					if (mUserDAO != null)
-//						mUserDAO.close(); // 关闭数据库连接
-					if(null != mSqlDBOperate)
-					{
+					// if (mUserDAO != null)
+					// mUserDAO.close(); // 关闭数据库连接
+					if (null != mSqlDBOperate) {
 						mSqlDBOperate.close();
-						mSqlDBOperate=null;
+						mSqlDBOperate = null;
 					}
 				}
 				return false;
@@ -407,7 +431,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				dismissLoadingDialog();
 				if (result) { // 初始化Thread
 					mUDPSocketThread = UDPSocketThread.getInstance(
-							mApplication, mContext);
+							mApplication, getApplicationContext());
 					mUDPSocketThread.connectUDPSocket(); // 新建Socket线程
 					mUDPSocketThread.notifyOnline(); // 发送上线广播
 					startActivity(MainTabActivity.class);
@@ -523,54 +547,37 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
-	@Override
-	public void handleConnectChange() {
-		Message msg = handler.obtainMessage(WifiApConst.ApConnectResult);
-		handler.sendMessage(msg);
-	}
-
-	@Override
-	public void scanResultsAvailable() {
-		Message msg = handler.obtainMessage(WifiApConst.ApScanResult);
-		handler.sendMessage(msg);
-	}
-
-	@Override
-	public void wifiStatusNotification() {
-		mWifiUtils.mWifiManager.getWifiState();
-	}
-
 	/** 监听 热点搜索按钮 **/
 	@Override
 	public void onClick() {
-		if (!m_wtSearchProcess.running) {// 如果搜索线程没有启动
+		if (!mSearchApProcess.running) {// 如果搜索线程没有启动
 			if (mWifiUtils.getWifiApState() == 13
 					|| mWifiUtils.getWifiApState() == 3) {
 				wifiapOperateEnum = WifiApConst.SEARCH;
-				m_Dialog.setMessage(getString(R.string.opened_ap_prompt));
-				m_Dialog.show();
+				mDialog.setMessage(getString(R.string.opened_ap_prompt));
+				mDialog.show();
 				return;
 			}
 			if (!mWifiUtils.mWifiManager.isWifiEnabled()) {// 如果wifi关闭着
 				mWifiUtils.OpenWifi();
 			}
-			m_listWifi.clear();
-			refreshAdapter(m_listWifi);
-			m_textVWTPrompt.setVisibility(View.VISIBLE);
-			m_textVWTPrompt.setText(R.string.wt_searching);
-			m_linearLCreateAP.setVisibility(View.GONE);
-			m_imgRadar.setVisibility(View.GONE);
-			m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
+			mWifiApList.clear();
+			refreshAdapter(mWifiApList);
+			mTvWifiApTips.setVisibility(View.VISIBLE);
+			mTvWifiApTips.setText(R.string.wt_searching);
+			mLlCreateAP.setVisibility(View.GONE);
+			mIvWifiApIcon.setVisibility(View.GONE);
+			mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
 			mWifiUtils.startScan();
-			m_wtSearchProcess.start();
+			mSearchApProcess.start();
 			m_FrameLWTSearchAnimation.startAnimation();
 		} else {
 			// 重新启动一下
-			m_wtSearchProcess.stop();
-			m_listWifi.clear();
-			refreshAdapter(m_listWifi);
+			mSearchApProcess.stop();
+			mWifiApList.clear();
+			refreshAdapter(mWifiApList);
 			mWifiUtils.startScan();
-			m_wtSearchProcess.start();
+			mSearchApProcess.start();
 		}
 	}
 
@@ -592,8 +599,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 			// 如果wifi正打开着的，就提醒用户
 			if (mWifiUtils.mWifiManager.isWifiEnabled()) {
 				wifiapOperateEnum = WifiApConst.CREATE;
-				m_Dialog.setMessage(getString(R.string.close_wifi_prompt));
-				m_Dialog.show();
+				mDialog.setMessage(getString(R.string.close_wifi_prompt));
+				mDialog.show();
 				return;
 			}
 
@@ -603,8 +610,8 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 					&& (!mWifiUtils.getApSSID().startsWith(
 							WifiApConst.WIFI_AP_HEADER))) {
 				wifiapOperateEnum = WifiApConst.CREATE;
-				m_Dialog.setMessage(getString(R.string.ap_used));
-				m_Dialog.show();
+				mDialog.setMessage(getString(R.string.ap_used));
+				mDialog.show();
 				return;
 			}
 
@@ -614,21 +621,21 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 					&& (mWifiUtils.getApSSID()
 							.startsWith(WifiApConst.WIFI_AP_HEADER))) {
 				wifiapOperateEnum = WifiApConst.CLOSE;
-				m_Dialog.setMessage(getString(R.string.close_ap_prompt));
-				m_Dialog.show();
+				mDialog.setMessage(getString(R.string.close_ap_prompt));
+				mDialog.show();
 				return;
 			}
 
 			// 如果正在搜索状态
 
-			if (m_wtSearchProcess.running) {
-				m_wtSearchProcess.stop();
+			if (mSearchApProcess.running) {
+				mSearchApProcess.stop();
 				m_FrameLWTSearchAnimation.stopAnimation();
 			}
 			mWifiUtils.closeWifi();
 			wifiapOperateEnum = WifiApConst.CREATE;
-			m_Dialog.setMessage(getString(R.string.close_wifi_prompt));
-			m_Dialog.show();
+			mDialog.setMessage(getString(R.string.close_wifi_prompt));
+			mDialog.show();
 			return;
 
 			// 返回按钮
@@ -638,10 +645,9 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
 		// 下一步按钮
 		case R.id.wifiap_btn_login:
-			m_Dialog.dismiss();
-			// if (localIPaddress == null || serverIPaddres == null) {
-			// setIPaddress(isClient); // 再次获取
-			// }
+			if (mDialog.isShowing()) {
+				mDialog.dismiss();
+			}
 			doLogin();
 			break;
 
@@ -663,65 +669,65 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				mWifiUtils.createWiFiAP(mWifiUtils.createWifiInfo(
 						mWifiUtils.getApSSID(), WifiApConst.WIFI_AP_PASSWORD,
 						3, "ap"), false);
-				m_textVWTPrompt.setVisibility(View.VISIBLE);
-				m_textVWTPrompt.setText("");
-				m_linearLCreateAP.setVisibility(View.GONE);
-				m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
-				m_imgRadar.setVisibility(View.GONE);
+				mTvWifiApTips.setVisibility(View.VISIBLE);
+				mTvWifiApTips.setText("");
+				mLlCreateAP.setVisibility(View.GONE);
+				mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
+				mIvWifiApIcon.setVisibility(View.GONE);
 
 				localIPaddress = null;
 				serverIPaddres = null;
 				isClient = false;
 
 				mWifiUtils.OpenWifi();
-				m_wtSearchProcess.start();
+				mSearchApProcess.start();
 				mWifiUtils.startScan();
 				m_FrameLWTSearchAnimation.startAnimation();
 
-				m_textVWTPrompt.setVisibility(View.VISIBLE);
-				m_textVWTPrompt.setText(R.string.wt_searching);
-				m_linearLCreateAP.setVisibility(View.GONE);
-				m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
+				mTvWifiApTips.setVisibility(View.VISIBLE);
+				mTvWifiApTips.setText(R.string.wt_searching);
+				mLlCreateAP.setVisibility(View.GONE);
+				mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
 				break;
 
 			// 执行创建热点事件
 			case WifiApConst.CREATE:
-				if (m_wtSearchProcess.running) {
-					m_wtSearchProcess.stop();
+				if (mSearchApProcess.running) {
+					mSearchApProcess.stop();
 					m_FrameLWTSearchAnimation.stopAnimation();
 				}
 				mWifiUtils.closeWifi();
 				mWifiUtils.createWiFiAP(mWifiUtils.createWifiInfo(
 						WifiApConst.WIFI_AP_HEADER + mDevice,
 						WifiApConst.WIFI_AP_PASSWORD, 3, "ap"), true);
-				if (m_createAPProcess == null) {
-					m_createAPProcess = new CreateAPProcess();
+				if (mCreateApProcess == null) {
+					mCreateApProcess = new CreateAPProcess();
 				}
-				m_createAPProcess.start();
-				m_listWifi.clear();
-				refreshAdapter(m_listWifi);
-				m_linearLCreateAP.setVisibility(View.VISIBLE);
-				m_progBarCreatingAP.setVisibility(View.VISIBLE);
-				m_btnCreateWT.setVisibility(View.GONE);
-				m_textVWTPrompt.setVisibility(View.GONE);
-				m_textVPromptAP.setText(getString(R.string.creating_ap));
+				mCreateApProcess.start();
+				mWifiApList.clear();
+				refreshAdapter(mWifiApList);
+				mLlCreateAP.setVisibility(View.VISIBLE);
+				mPBCreatingAP.setVisibility(View.VISIBLE);
+				mBtnCreateAp.setVisibility(View.GONE);
+				mTvWifiApTips.setVisibility(View.GONE);
+				mTvWifiApInfo.setText(getString(R.string.creating_ap));
 				break;
 
 			// 执行搜索wifi事件
 			case WifiApConst.SEARCH:
-				m_textVWTPrompt.setVisibility(View.VISIBLE);
-				m_textVWTPrompt.setText(R.string.wt_searching);
-				m_linearLCreateAP.setVisibility(View.GONE);
-				m_btnCreateWT.setVisibility(View.VISIBLE);
-				m_btnCreateWT.setBackgroundResource(R.drawable.wifiap_create);
-				m_imgRadar.setVisibility(View.GONE);
-				if (m_createAPProcess.running)
-					m_createAPProcess.stop();
+				mTvWifiApTips.setVisibility(View.VISIBLE);
+				mTvWifiApTips.setText(R.string.wt_searching);
+				mLlCreateAP.setVisibility(View.GONE);
+				mBtnCreateAp.setVisibility(View.VISIBLE);
+				mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
+				mIvWifiApIcon.setVisibility(View.GONE);
+				if (mCreateApProcess.running)
+					mCreateApProcess.stop();
 				mWifiUtils.createWiFiAP(mWifiUtils.createWifiInfo(
 						mWifiUtils.getApSSID(), WifiApConst.WIFI_AP_PASSWORD,
 						3, "ap"), false);
 				mWifiUtils.OpenWifi();
-				m_wtSearchProcess.start();
+				mSearchApProcess.start();
 				m_FrameLWTSearchAnimation.startAnimation();
 				break;
 			}
@@ -740,13 +746,13 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 			switch (msg.what) {
 			// 搜索超时
 			case WifiApConst.ApSearchTimeOut:
-				m_wtSearchProcess.stop();
+				mSearchApProcess.stop();
 				m_FrameLWTSearchAnimation.stopAnimation();
-				if (m_listWifi.isEmpty()) {
-					m_textVWTPrompt.setVisibility(View.VISIBLE);
-					m_textVWTPrompt.setText(R.string.wt_list_empty);
+				if (mWifiApList.isEmpty()) {
+					mTvWifiApTips.setVisibility(View.VISIBLE);
+					mTvWifiApTips.setText(R.string.wt_list_empty);
 				} else {
-					m_textVWTPrompt.setVisibility(View.GONE);
+					mTvWifiApTips.setVisibility(View.GONE);
 				}
 				break;
 			// 搜索结果
@@ -754,13 +760,12 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				int size = mWifiUtils.mWifiManager.getScanResults().size();
 				if (size > 0) {
 					for (int i = 0; i < size; ++i) {
-						ScanResult scanResult = mWifiUtils.mWifiManager
-								.getScanResults().get(i);
-						if (scanResult.SSID
-								.startsWith(WifiApConst.WIFI_AP_HEADER)
-								&& !m_listWifi.contains(scanResult)) {
-							m_listWifi.add(scanResult);
-							refreshAdapter(m_listWifi);
+						String apSSID = mWifiUtils.mWifiManager
+								.getScanResults().get(i).SSID;
+						if (apSSID.startsWith(WifiApConst.WIFI_AP_HEADER)
+								&& !mWifiApList.contains(apSSID)) {
+							mWifiApList.add(apSSID);
+							refreshAdapter(mWifiApList);
 						}
 					}
 					// if (m_listWifi.size() > 0) {
@@ -774,50 +779,51 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 				break;
 			// 连接成功
 			case WifiApConst.ApConnectResult:
-				if (mWifiUtils.getSSID()
-						.startsWith(WifiApConst.WIFI_AP_HEADER)) {
-					m_wtSearchProcess.stop();
+				mWifiUtils.setNewWifiInfo(); // 更新wifiInfo
+				if (mWifiUtils.getSSID().startsWith(WifiApConst.WIFI_AP_HEADER)) {
+					mSearchApProcess.stop();
 					m_FrameLWTSearchAnimation.stopAnimation();
-					m_textVWTPrompt.setVisibility(View.GONE);
-					refreshAdapter(m_listWifi);
+					mTvWifiApTips.setVisibility(View.GONE);
+					refreshAdapter(mWifiApList);
 					isClient = true; // 标识客户端
-					setIPaddress(isClient);
 				}
+
 				break;
 
 			// 热点创建结果
 			case WifiApConst.ApCreateAPResult:
-				m_createAPProcess.stop();
-				m_progBarCreatingAP.setVisibility(View.GONE);
+				mCreateApProcess.stop();
+				mPBCreatingAP.setVisibility(View.GONE);
 				if (((mWifiUtils.getWifiApState() == 3) || (mWifiUtils
 						.getWifiApState() == 13))
 						&& (mWifiUtils.getApSSID()
 								.startsWith(WifiApConst.WIFI_AP_HEADER))) {
-					m_textVWTPrompt.setVisibility(View.GONE);
-					m_linearLCreateAP.setVisibility(View.VISIBLE);
-					m_btnCreateWT.setVisibility(View.VISIBLE);
-					m_imgRadar.setVisibility(View.VISIBLE);
-					m_btnCreateWT
-							.setBackgroundResource(R.drawable.wifiap_close);
-					m_textVPromptAP
-							.setText(getString(R.string.create_connect_ok)
-									+ getString(R.string.ssid_connect_ok)
-									+ mWifiUtils.getApSSID()
-									+ getString(R.string.password_connect_ok));
+					mTvWifiApTips.setVisibility(View.GONE);
+					mLlCreateAP.setVisibility(View.VISIBLE);
+					mBtnCreateAp.setVisibility(View.VISIBLE);
+					mIvWifiApIcon.setVisibility(View.VISIBLE);
+					mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_close);
+					// 去除 "+ getString(R.string.password_connect_ok)" 4/14
+					mTvWifiApInfo.setText(getString(R.string.create_connect_ok)
+							+ getString(R.string.ssid_connect_ok)
+							+ mWifiUtils.getApSSID());
 					isClient = false; // 非客户端
-					setIPaddress(isClient);
+
 				} else {
-					m_btnCreateWT.setVisibility(View.VISIBLE);
-					m_btnCreateWT
+					mBtnCreateAp.setVisibility(View.VISIBLE);
+					mBtnCreateAp
 							.setBackgroundResource(R.drawable.wifiap_create);
-					m_textVPromptAP.setText(R.string.create_ap_fail);
+					mTvWifiApInfo.setText(R.string.create_ap_fail);
 				}
 				break;
-			case WifiApConst.ApUserResult:
-				// 更新用户上线人数，待定
+			case WifiApConst.ApConnectting:
+				mSearchApProcess.stop();
+				m_FrameLWTSearchAnimation.stopAnimation();
+				mTvWifiApTips.setVisibility(View.GONE);
 				break;
 			case WifiApConst.ApConnected:
-				refreshAdapter(m_listWifi);
+				Log.i(TAG, "Apconnected");
+				refreshAdapter(mWifiApList);
 				break;
 			default:
 				break;
@@ -826,9 +832,25 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 	};
 
 	@Override
+	public void handleConnectChange() {
+		Message msg = handler.obtainMessage(WifiApConst.ApConnectResult);
+		handler.sendMessage(msg);
+	}
+
+	@Override
+	public void scanResultsAvailable() {
+
+		Message msg = handler.obtainMessage(WifiApConst.ApScanResult);
+		handler.sendMessage(msg);
+	}
+
+	@Override
+	public void wifiStatusNotification() {
+	}
+
+	@Override
 	public void processMessage(Message msg) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

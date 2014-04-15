@@ -1,5 +1,6 @@
 ﻿package com.immomo.momo.android.view;
 
+import java.io.InputStream;
 import java.lang.ref.SoftReference;
 
 import android.content.Context;
@@ -20,124 +21,127 @@ import android.widget.ImageView;
 import com.immomo.momo.android.R;
 
 public class WifiapSearchAnimationFrameLayout extends FrameLayout {
-	private SoftReference<Bitmap> m_bitmapRipple;//软引用
-	private ImageView[] m_imageVRadars;
+    private SoftReference<Bitmap> m_bitmapRipple;// 软引用
+    private ImageView[] m_imageVRadars;
+    private Context mContext;
 
-	public WifiapSearchAnimationFrameLayout(Context paramContext) {
-		super(paramContext);
-		init();
-	}
+    public WifiapSearchAnimationFrameLayout(Context paramContext) {
+        super(paramContext);
+        init(paramContext);
+    }
 
-	public WifiapSearchAnimationFrameLayout(Context paramContext,
-			AttributeSet paramAttributeSet) {
-		super(paramContext, paramAttributeSet);
-		init();
-	}
+    public WifiapSearchAnimationFrameLayout(Context paramContext, AttributeSet paramAttributeSet) {
+        super(paramContext, paramAttributeSet);
+        init(paramContext);
+    }
 
-	public WifiapSearchAnimationFrameLayout(Context paramContext,
-			AttributeSet paramAttributeSet, int paramInt) {
-		super(paramContext, paramAttributeSet, paramInt);
-		init();
-	}
+    public WifiapSearchAnimationFrameLayout(Context paramContext, AttributeSet paramAttributeSet, int paramInt) {
+        super(paramContext, paramAttributeSet, paramInt);
+        init(paramContext);
+    }
 
-	private void init() {
-		loadRadarBitmap();
-		m_imageVRadars = new ImageView[3];
-		LayoutInflater.from(getContext()).inflate(
-				R.layout.common_wifiap_search_device_anima, this);
-		m_imageVRadars[0] = ((ImageView) findViewById(R.id.radar_ray_1));
-		m_imageVRadars[1] = ((ImageView) findViewById(R.id.radar_ray_2));
-		m_imageVRadars[2] = ((ImageView) findViewById(R.id.radar_ray_3));
-	}
+    private void init(Context paramContext) {
+        mContext = paramContext;
+        loadRadarBitmap();
+        m_imageVRadars = new ImageView[3];
+        LayoutInflater.from(mContext).inflate(
+                R.layout.common_wifiap_search_device_anima, this);
+        m_imageVRadars[0] = ((ImageView) findViewById(R.id.radar_ray_1));
+        m_imageVRadars[1] = ((ImageView) findViewById(R.id.radar_ray_2));
+        m_imageVRadars[2] = ((ImageView) findViewById(R.id.radar_ray_3));
+    }
 
-	private void loadRadarBitmap() {
-		try {
-			m_bitmapRipple = new SoftReference<Bitmap>(
-					BitmapFactory.decodeStream(getContext().getResources()
-							.openRawResource(R.drawable.wifi_body_ripple)));
-		} catch (Exception localException) {
-			Log.e("WTSearchAnimationFrameLayout",
-					Log.getStackTraceString(localException));
-		} catch (OutOfMemoryError localOutOfMemoryError) {
-			Log.e("WTSearchAnimationFrameLayout",
-					Log.getStackTraceString(localOutOfMemoryError));
-			System.gc();
-		}
-	}
+    private void loadRadarBitmap() {
+        try {
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inPreferredConfig = Bitmap.Config.RGB_565;
+            opt.inPurgeable = true;
+            opt.inInputShareable = true;
+            // 获取资源图片
+            InputStream is = mContext.getResources().openRawResource(
+                    R.drawable.wifi_body_ripple);
+            m_bitmapRipple = new SoftReference<Bitmap>(
+                    BitmapFactory.decodeStream(is, null, opt));
 
-	// 重置，停止动画
-	public final void stopAnimation() {
-	    int mLength = m_imageVRadars.length;
-		for (int i = 0; i < mLength; ++i) {
-			if (m_bitmapRipple != null) {
-				Bitmap localBitmap = (Bitmap) m_bitmapRipple.get();
-				if ((localBitmap != null) && (!localBitmap.isRecycled()))
-					localBitmap.recycle();
-			}
-			m_bitmapRipple = null;
-			ImageView localImageView = m_imageVRadars[i];
-			localImageView.setImageBitmap(null);
-			localImageView.setVisibility(View.GONE);
-			localImageView.clearAnimation();
-		}
-	}
+            // m_bitmapRipple = new SoftReference<Bitmap>(
+            // BitmapFactory.decodeStream(mContext.getResources()
+            // .openRawResource(
+            // R.drawable.wifi_body_ripple)));
+        } catch (OutOfMemoryError localOutOfMemoryError) {
+            Log.e("SZU WifiApSearchAnim",
+                    Log.getStackTraceString(localOutOfMemoryError));
+        }
+    }
 
-	// 开始动画
-	public final void startAnimation() {
-		if (m_bitmapRipple == null)
-			loadRadarBitmap();
-		int mLength = m_imageVRadars.length;
-		for (int i = 0; i < mLength; ++i) {
-			ImageView localImageView;
-			long l;
-			while (true) {
-				localImageView = m_imageVRadars[i];
-				localImageView.setImageBitmap((Bitmap) m_bitmapRipple
-						.get());
-				localImageView.setVisibility(View.VISIBLE);
-				l = 333L * i;
-				if (localImageView.getAnimation() == null)
-					break;
-				localImageView.getAnimation().start();
-			}
-			ScaleAnimation localScaleAnimation = new ScaleAnimation(1.0F,
-					14.0F, 1.0F, 14.0F, 1, 0.5F, 1, 0.5F);
-			localScaleAnimation.setRepeatCount(-1);
-			AlphaAnimation localAlphaAnimation = new AlphaAnimation(1.0F, 0.2F);
-			AnimationSet localAnimationSet = new AnimationSet(true);
-			localAnimationSet.addAnimation(localScaleAnimation);
-			localAnimationSet.addAnimation(localAlphaAnimation);
-			localAnimationSet.setDuration(1000L);
-			localAnimationSet.setFillEnabled(true);
-			localAnimationSet.setFillBefore(true);
-			localAnimationSet.setStartOffset(l);
-			localAnimationSet
-					.setInterpolator(new AccelerateDecelerateInterpolator());
-			localAnimationSet
-					.setAnimationListener(new WTSearchAnimationHandler(this,
-							localImageView));
-			localImageView.setAnimation(localAnimationSet);
-			localImageView.startAnimation(localAnimationSet);
-		}
-	}
+    // 重置，停止动画
+    public final void stopAnimation() {
+        int mLength = m_imageVRadars.length;
+        for (int i = 0; i < mLength; ++i) {
+            if (m_bitmapRipple != null) {
+                Bitmap localBitmap = (Bitmap) m_bitmapRipple.get();
+                if ((localBitmap != null) && (!localBitmap.isRecycled()))
+                    localBitmap.recycle();
+            }
+            m_bitmapRipple = null;
+            ImageView localImageView = m_imageVRadars[i];
+            localImageView.setImageBitmap(null);
+            localImageView.setVisibility(View.GONE);
+            localImageView.clearAnimation();
+        }
+    }
 
-	final class WTSearchAnimationHandler implements Animation.AnimationListener {
-		private ImageView m_imageVRadar;
+    // 开始动画
+    public final void startAnimation() {
+        if (m_bitmapRipple == null)
+            loadRadarBitmap();
+        int mLength = m_imageVRadars.length;
+        for (int i = 0; i < mLength; ++i) {
+            ImageView localImageView;
+            long l;
+            while (true) {
+                localImageView = m_imageVRadars[i];
+                localImageView.setImageBitmap((Bitmap) m_bitmapRipple.get());
+                localImageView.setVisibility(View.VISIBLE);
+                l = 333L * i;
+                if (localImageView.getAnimation() == null)
+                    break;
+                localImageView.getAnimation().start();
+            }
+            ScaleAnimation localScaleAnimation = new ScaleAnimation(1.0F,
+                    14.0F, 1.0F, 14.0F, 1, 0.5F, 1, 0.5F);
+            localScaleAnimation.setRepeatCount(-1);
+            AlphaAnimation localAlphaAnimation = new AlphaAnimation(1.0F, 0.2F);
+            AnimationSet localAnimationSet = new AnimationSet(true);
+            localAnimationSet.addAnimation(localScaleAnimation);
+            localAnimationSet.addAnimation(localAlphaAnimation);
+            localAnimationSet.setDuration(1000L);
+            localAnimationSet.setFillEnabled(true);
+            localAnimationSet.setFillBefore(true);
+            localAnimationSet.setStartOffset(l);
+            localAnimationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            localAnimationSet.setAnimationListener(new WTSearchAnimationHandler(
+                    this, localImageView));
+            localImageView.setAnimation(localAnimationSet);
+            localImageView.startAnimation(localAnimationSet);
+        }
+    }
 
-		public WTSearchAnimationHandler(
-				WifiapSearchAnimationFrameLayout paramImageView, ImageView imageView) {
-			m_imageVRadar = imageView;
-		}
+    final class WTSearchAnimationHandler implements Animation.AnimationListener {
+        private ImageView m_imageVRadar;
 
-		public final void onAnimationEnd(Animation paramAnimation) {
-			this.m_imageVRadar.setVisibility(View.GONE);
-		}
+        public WTSearchAnimationHandler(WifiapSearchAnimationFrameLayout paramImageView, ImageView imageView) {
+            m_imageVRadar = imageView;
+        }
 
-		public final void onAnimationRepeat(Animation paramAnimation) {
-			paramAnimation.setStartOffset(0L);
-		}
+        public final void onAnimationEnd(Animation paramAnimation) {
+            this.m_imageVRadar.setVisibility(View.GONE);
+        }
 
-		public final void onAnimationStart(Animation paramAnimation) {
-		}
-	}
+        public final void onAnimationRepeat(Animation paramAnimation) {
+            paramAnimation.setStartOffset(0L);
+        }
+
+        public final void onAnimationStart(Animation paramAnimation) {
+        }
+    }
 }

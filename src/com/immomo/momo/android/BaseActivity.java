@@ -37,7 +37,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected BaseApplication mApplication;
 	// TODO 下次更新将NetWorkUtils与WifiUtils合并
 	protected NetWorkUtils mNetWorkUtils;
-	protected WifiUtils mWifiUtils;
+    protected WifiUtils mWifiUtils;
 	protected FlippingLoadingDialog mLoadingDialog;
 	protected UDPSocketThread mUDPSocketThread;
 	private static SoundPool notificationplayer;
@@ -64,7 +64,7 @@ public abstract class BaseActivity extends FragmentActivity {
 		mScreenWidth = metric.widthPixels;
 		mScreenHeight = metric.heightPixels;
 		mDensity = metric.density;
-
+		
 		if (!queue.contains(this)) {
 			queue.add(this);
 		}

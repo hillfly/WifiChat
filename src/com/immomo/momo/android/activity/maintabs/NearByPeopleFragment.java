@@ -22,7 +22,6 @@ import com.immomo.momo.android.BaseFragment;
 import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.OtherProfileActivity;
 import com.immomo.momo.android.adapter.NearByPeopleAdapter;
-import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.view.MoMoRefreshListView;
 import com.immomo.momo.android.view.MoMoRefreshListView.OnCancelListener;
@@ -102,8 +101,9 @@ public class NearByPeopleFragment extends BaseFragment implements
 	}
 
 	/** 刷新用户在线列表UI **/
-	public void refreshAdapter(List<? extends Entity> datas) {
-		mAdapter.setData(datas); // Adapter加载List数据
+	public void refreshAdapter() {
+		Log.i("SZU NearBypeopleFragment","refreshAdapter");
+		mAdapter.setData(mNearByPeoples); // Adapter加载List数据
 		mAdapter.notifyDataSetChanged();
 	}
 
@@ -172,7 +172,7 @@ public class NearByPeopleFragment extends BaseFragment implements
 			@Override
 			protected void onPostExecute(Boolean result) {
 				mMmrlvList.onRefreshComplete();
-				refreshAdapter(mNearByPeoples);
+				refreshAdapter();
 				setLvSelection(0);
 				super.onPostExecute(result);
 			}

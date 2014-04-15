@@ -2,6 +2,8 @@
 
 import java.util.ArrayList;
 
+import com.immomo.momo.android.util.WifiUtils;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +19,7 @@ public class WifiapBroadcast extends BroadcastReceiver {
     private NetworkInfo mNetworkInfo;
 
     public void onReceive(Context paramContext, Intent paramIntent) {
-
+        WifiUtils mWifiUtils = WifiUtils.getInstance(paramContext);
         // 搜索到wifi热点
         if (paramIntent.getAction().equals(
                 WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
@@ -35,7 +37,7 @@ public class WifiapBroadcast extends BroadcastReceiver {
                 ((EventHandler) ehList.get(j)).wifiStatusNotification();
 
             // 连接 SSID
-        } else if (paramIntent.getAction().equals(
+        } else if (paramIntent.getAction().equals(        		
                 WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
             mNetworkInfo = paramIntent.getParcelableExtra("networkInfo");
             Log.d(TAG, WifiManager.NETWORK_STATE_CHANGED_ACTION + " | "

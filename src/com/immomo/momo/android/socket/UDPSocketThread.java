@@ -1,6 +1,5 @@
 package com.immomo.momo.android.socket;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
@@ -15,18 +14,11 @@ import com.immomo.momo.android.BaseActivity;
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.Message;
-import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.entity.Message.CONTENT_TYPE;
-import com.immomo.momo.android.file.explore.Constant;
-import com.immomo.momo.android.file.explore.FileState;
-import com.immomo.momo.android.file.explore.FileStyle;
+import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.sql.SqlDBOperate;
 import com.immomo.momo.android.tcp.socket.TcpService;
-import com.immomo.momo.android.util.FileUtils;
 import com.immomo.momo.android.util.SessionUtils;
-import com.immomo.momo.sql.ChattingDAO;
-import com.immomo.momo.sql.ChattingInfo;
-import com.immomo.momo.sql.SqlDBOperate;
-import com.immomo.momo.sql.UserDAO;
 
 public class UDPSocketThread implements Runnable {
 
@@ -50,15 +42,15 @@ public class UDPSocketThread implements Runnable {
 
     private String mIMEI;
     private NearByPeople mNearByPeople; // 本机用户类
-//    private UserDAO mUserDAO;
-//    private ChattingDAO mChattingDAO;
-    private SqlDBOperate mDBOperate;//新增数据库类可以操作用户数据库和聊天信息数据库
+    // private UserDAO mUserDAO;
+    // private ChattingDAO mChattingDAO;
+    private SqlDBOperate mDBOperate;// 新增数据库类可以操作用户数据库和聊天信息数据库
 
     private UDPSocketThread() {
         mApplication.initParam(); // 初始化相关参数
-//        mUserDAO = new UserDAO(mContext);
-//        mChattingDAO = new ChattingDAO(mContext);
-        mDBOperate=new SqlDBOperate(mContext);
+        // mUserDAO = new UserDAO(mContext);
+        // mChattingDAO = new ChattingDAO(mContext);
+        mDBOperate = new SqlDBOperate(mContext);
     }
 
     /**
@@ -85,8 +77,7 @@ public class UDPSocketThread implements Runnable {
 
             try {
                 UDPSocket.receive(receiveDatagramPacket);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 isThreadRunning = false;
                 receiveDatagramPacket = null;
                 if (UDPSocket != null) {
@@ -106,10 +97,9 @@ public class UDPSocketThread implements Runnable {
 
             String UDPListenResStr = ""; // 清空以前的监听数据
             try {
-                UDPListenResStr = new String(receiveBuffer, 0, receiveDatagramPacket.getLength(),
-                        "gbk");
-            }
-            catch (UnsupportedEncodingException e) {
+                UDPListenResStr = new String(receiveBuffer, 0,
+                        receiveDatagramPacket.getLength(), "gbk");
+            } catch (UnsupportedEncodingException e) {
                 Log.e(TAG, "系统不支持GBK编码");
             }
             Log.i(TAG, "接收到的UDP数据内容为:" + UDPListenResStr);
@@ -122,94 +112,97 @@ public class UDPSocketThread implements Runnable {
                 switch (commandNo) {
 
                 // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
-                    case IPMSGConst.IPMSG_BR_ENTRY: {
-                        Log.i(TAG, "收到上线通知");
-                        addUser(ipmsgRes); // 增加用户至在线列表
-                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
+                case IPMSGConst.IPMSG_BR_ENTRY: {
+                    Log.i(TAG, "收到上线通知");
+                    addUser(ipmsgRes); // 增加用户至在线列表
+                    // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
 
-                        sendUDPdata(IPMSGConst.IPMSG_ANSENTRY, receiveDatagramPacket.getAddress(),
-                                mNearByPeople);
-                        Log.i(TAG, "成功发送上线应答");
-                    }
-                        break;
+                    sendUDPdata(IPMSGConst.IPMSG_ANSENTRY,
+                            receiveDatagramPacket.getAddress(), mNearByPeople);
+                    Log.i(TAG, "成功发送上线应答");
+                }
+                    break;
 
-                    // 收到上线应答，更新在线用户列表
-                    case IPMSGConst.IPMSG_ANSENTRY: {
-                        Log.i(TAG, "收到上线应答");
-                        addUser(ipmsgRes); // 增加用户至在线列表
-                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_ANSENTRY);
-                    }
-                        break;
+                // 收到上线应答，更新在线用户列表
+                case IPMSGConst.IPMSG_ANSENTRY: {
+                    Log.i(TAG, "收到上线应答");
+                    addUser(ipmsgRes); // 增加用户至在线列表
+                }
+                    break;
 
-                    // 收到下线广播
-                    case IPMSGConst.IPMSG_BR_EXIT: {
-                        mApplication.removeOnlineUser(senderIMEI, 1); // 移除用户
-                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
+                // 收到下线广播
+                case IPMSGConst.IPMSG_BR_EXIT: {
+                    mApplication.removeOnlineUser(senderIMEI, 1); // 移除用户
+                    // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_EXIT);
 
-                        Log.i(TAG, "根据下线报文成功删除imei为" + senderIMEI + "的用户");
-                    }
-                        break;
+                    Log.i(TAG, "根据下线报文成功删除imei为" + senderIMEI + "的用户");
+                }
+                    break;
 
-                    // 拒绝接受文件
-                    case IPMSGConst.IPMSG_RELEASEFILES: {
-                        // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
-                    }
-                        break;
+                // 拒绝接受文件
+                case IPMSGConst.IPMSG_RELEASEFILES: {
+                    // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_RELEASEFILES);
+                }
+                    break;
 
-                    // 收到消息
-                    case IPMSGConst.IPMSG_SENDMSG: {
-                        Log.i(TAG, "收到MSG消息");
-                        String senderIp = receiveDatagramPacket.getAddress().getHostAddress();
-                        Message msg = (Message) ipmsgRes.getAddObject();
-                        Log.d(TAG, msg.getContentType().toString());
-                        if(msg.getContentType()==CONTENT_TYPE.IMAGE)
-                        {
-                        	Log.d(TAG, "收到图片发送请求");
-                        	TcpService tcpService=TcpService.getInstance(mContext);
-                        	String filePathString="/storage/sdcard0/";
-                        	tcpService.setSavePath(filePathString);
-                        	tcpService.startReceive();
-                        	sendUDPdata(IPMSGConst.IPMSG_RECIEVEIMAGEDATA, senderIp);
-                        	msg.setMsgContent(filePathString+msg.getMsgContent());
-                        	Log.d(TAG, "接收路径:"+msg.getMsgContent());
-                        	mDBOperate.addChattingInfo(senderIMEI, mIMEI,  msg.getSendTime(), 
-                            		msg.getMsgContent(), msg.getContentType());//将聊天记录加入数据库
-                        }else if(msg.getContentType()==CONTENT_TYPE.TEXT)
-                        {
-                        	sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp, ipmsgRes.getPacketNo());
-                        	
-                        }
-                        // 消息接受确认
+                // 收到消息
+                case IPMSGConst.IPMSG_SENDMSG: {
+                    Log.i(TAG, "收到MSG消息");
+                    String senderIp = receiveDatagramPacket.getAddress()
+                                                           .getHostAddress();
+                    Message msg = (Message) ipmsgRes.getAddObject();
+                    Log.d(TAG, msg.getContentType().toString());
+                    if (msg.getContentType() == CONTENT_TYPE.IMAGE) {
 
-                        Log.d(TAG, msg.getMsgContent());
-                        
-                        // TODO 这里可以判断是否含有文件，有则通知handler刷新UI，出现是否接受提示框
+                        Log.d(TAG, "收到图片发送请求");
+                        TcpService tcpService = TcpService.getInstance(mContext);
+                        String filePathString = "/storage/sdcard0/";
+                        tcpService.setSavePath(filePathString);
+                        tcpService.startReceive();
+                        sendUDPdata(IPMSGConst.IPMSG_RECIEVEIMAGEDATA, senderIp);
 
-                        if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
-                            mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
-                            mApplication.addLastMsgCache(senderIMEI, msg.getMsgContent()); // 添加到消息缓存
-                            if(msg.getContentType()==CONTENT_TYPE.TEXT)
-                            	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
-//                            mChattingDAO.add(new ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
-//                                    .getID(mIMEI), msg.getSendTime(), msg.getMsgContent())); //将聊天记录加入数据库，旧
-                            mDBOperate.addChattingInfo(senderIMEI, mIMEI,  msg.getSendTime(), 
-                            		msg.getMsgContent(), msg.getContentType());//将聊天记录加入数据库
-                            
-                        }
+                        msg.setMsgContent(filePathString + msg.getMsgContent());
+                        Log.d(TAG, "接收路径:" + msg.getMsgContent());
+                        mDBOperate.addChattingInfo(senderIMEI, mIMEI,
+                                msg.getSendTime(), msg.getMsgContent(),
+                                msg.getContentType());// 将聊天记录加入数据库
+
+                    } else if (msg.getContentType() == CONTENT_TYPE.TEXT) {
+                        sendUDPdata(IPMSGConst.IPMSG_RECVMSG, senderIp,
+                                ipmsgRes.getPacketNo());
 
                     }
-                        break;
-                        
-                    case IPMSGConst.IPMSG_RECIEVEIMAGEDATA:{
-                    	Log.d(TAG, "收到图片发送请求确认");
-                    	BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVEIMAGEDATA);
+                    // 消息接受确认
+
+                    Log.d(TAG, msg.getMsgContent());
+
+                    if (!isExistActiveActivity(msg)) { // 若没有对应的ChatActivity打开
+                        mApplication.addUnReadPeople(mApplication.getOnlineUser(senderIMEI)); // 添加到未读用户列表
+                        if (msg.getContentType() == CONTENT_TYPE.TEXT)
+                            BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
+                        // mChattingDAO.add(new
+                        // ChattingInfo(mUserDAO.getID(senderIMEI), mUserDAO
+                        // .getID(mIMEI), msg.getSendTime(),
+                        // msg.getMsgContent())); //将聊天记录加入数据库，旧
+                        mDBOperate.addChattingInfo(senderIMEI, mIMEI,
+                                msg.getSendTime(), msg.getMsgContent(),
+                                msg.getContentType());// 将聊天记录加入数据库
+
                     }
-                    	break;
-                    case IPMSGConst.IPMSG_GETIMAGESUCCESS:
-                    {
-                    	
-                    }
-                    	break;
+                    mApplication.addLastMsgCache(senderIMEI, msg); // 添加到消息缓存
+
+                }
+                    break;
+
+                case IPMSGConst.IPMSG_RECIEVEIMAGEDATA: {
+                    Log.d(TAG, "收到图片发送请求确认");
+                    BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVEIMAGEDATA);
+                }
+                    break;
+                case IPMSGConst.IPMSG_GETIMAGESUCCESS: {
+
+                }
+                    break;
                 } // End of switch
 
                 // 每次接收完UDP数据后，重置长度。否则可能会导致下次收到数据包被截断。
@@ -238,12 +231,12 @@ public class UDPSocketThread implements Runnable {
 
             // 创建数据接受包
             if (receiveDatagramPacket == null)
-                receiveDatagramPacket = new DatagramPacket(receiveBuffer, BUFFERLENGTH);
+                receiveDatagramPacket = new DatagramPacket(receiveBuffer,
+                        BUFFERLENGTH);
             Log.i(TAG, "connectUDPSocket() 创建数据接收包成功");
 
             startUDPSocketThread();
-        }
-        catch (SocketException e) {
+        } catch (SocketException e) {
             e.printStackTrace();
         }
     }
@@ -278,8 +271,8 @@ public class UDPSocketThread implements Runnable {
         String logintime = SessionUtils.getLoginTime();
         int avatar = SessionUtils.getAvatar();
         int age = SessionUtils.getAge();
-        mNearByPeople = new NearByPeople(mIMEI, avatar, device, nickname, gender, age,
-                constellation, localIPaddress, logintime);
+        mNearByPeople = new NearByPeople(mIMEI, avatar, device, nickname,
+                gender, age, constellation, localIPaddress, logintime);
         sendUDPdata(IPMSGConst.IPMSG_BR_ENTRY, BROADCASTIP, mNearByPeople);
     }
 
@@ -298,8 +291,7 @@ public class UDPSocketThread implements Runnable {
     private boolean isExistActiveActivity(Message paramMsg) {
         if (!BaseActivity.isExistActiveChatActivity()) {
             return false;
-        }
-        else {
+        } else {
             OnActiveChatActivityListenner listenner = BaseActivity.getActiveChatActivityListenner();
             return listenner.isThisActivityMsg(paramMsg);
         }
@@ -322,10 +314,10 @@ public class UDPSocketThread implements Runnable {
         String receiveIMEI = paramIPMSGProtocol.getSenderIMEI();
         if (!SessionUtils.isItself(receiveIMEI)) {
             NearByPeople newUser = (NearByPeople) paramIPMSGProtocol.getAddObject();
-            mApplication.addOnlineUser(receiveIMEI, newUser);         
+            mApplication.addOnlineUser(receiveIMEI, newUser);
             // TODO 添加用户进数据库
-//            mUserDAO.add(newUser);//旧
-            mDBOperate.addUserInfo(newUser);//新
+            // mUserDAO.add(newUser);//旧
+            mDBOperate.addUserInfo(newUser);// 新
             Log.i(TAG, "成功添加imei为" + receiveIMEI + "的用户");
         }
     }
@@ -358,12 +350,12 @@ public class UDPSocketThread implements Runnable {
         IPMSGProtocol ipmsgProtocol = null;
         if (addData == null) {
             ipmsgProtocol = new IPMSGProtocol(mIMEI, commandNo);
-        }
-        else if (addData instanceof Entity) {
-            ipmsgProtocol = new IPMSGProtocol(mIMEI, commandNo, (Entity) addData);
-        }
-        else if (addData instanceof String) {
-            ipmsgProtocol = new IPMSGProtocol(mIMEI, commandNo, (String) addData);
+        } else if (addData instanceof Entity) {
+            ipmsgProtocol = new IPMSGProtocol(mIMEI, commandNo,
+                    (Entity) addData);
+        } else if (addData instanceof String) {
+            ipmsgProtocol = new IPMSGProtocol(mIMEI, commandNo,
+                    (String) addData);
         }
         sendUDPdata(ipmsgProtocol, targetIP);
     }
@@ -374,17 +366,15 @@ public class UDPSocketThread implements Runnable {
         try {
             targetAddr = InetAddress.getByName(targetIP); // 目的地址
             sendBuffer = ipmsgProtocol.getProtocolJSON().getBytes("gbk");
-            sendDatagramPacket = new DatagramPacket(sendBuffer, sendBuffer.length, targetAddr,
-                    IPMSGConst.PORT);
+            sendDatagramPacket = new DatagramPacket(sendBuffer,
+                    sendBuffer.length, targetAddr, IPMSGConst.PORT);
             Log.i(TAG, "sendDatagramPacket 创建成功");
             UDPSocket.send(sendDatagramPacket);
             Log.i(TAG, "sendUDPdata() 数据发送成功");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "sendUDPdata() 发送UDP数据包失败");
-        }
-        finally {
+        } finally {
             sendDatagramPacket = null;
         }
     }

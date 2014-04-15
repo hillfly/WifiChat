@@ -25,13 +25,17 @@ public class WifiUtils {
 	private WifiInfo mWifiInfo;
 	private DhcpInfo mDhcpInfo;
 	private List<ScanResult> mWifiList;
-	WifiManager.WifiLock mWifiLock;
+	private WifiManager.WifiLock mWifiLock;
 	public WifiManager mWifiManager;
 
 	private WifiUtils(Context paramContext) {
 		mWifiManager = (WifiManager) paramContext
 				.getSystemService(Context.WIFI_SERVICE);
 		mDhcpInfo = mWifiManager.getDhcpInfo();
+		mWifiInfo = mWifiManager.getConnectionInfo();
+	}
+	
+	public void setNewWifiInfo(){
 		mWifiInfo = mWifiManager.getConnectionInfo();
 	}
 
@@ -236,7 +240,6 @@ public class WifiUtils {
 	public String getLocalIPAddress() {
 		if (mDhcpInfo == null)
 			return "NULL";
-		Log.i("Wifi", intToIp(mDhcpInfo.ipAddress));
 		return intToIp(mDhcpInfo.ipAddress);
 	}
 

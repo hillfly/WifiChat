@@ -1,12 +1,5 @@
 package com.immomo.momo.android.socket;
 
-import android.R.integer;
-
-
-
-/**
- * 飞鸽协议常量
- */
 public class IPMSGConst {
 	public static final int VERSION = 0x001;		// 版本号
 	public static final int PORT = 0x0979;			// 端口号，飞鸽协议默认端口2425

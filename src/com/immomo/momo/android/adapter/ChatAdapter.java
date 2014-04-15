@@ -27,9 +27,9 @@ public class ChatAdapter extends BaseObjectListAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Message msg = (Message) getItem(position);
-		Log.i("ChatAdapter", "msg:" + (msg != null));
+		Log.i("SZU ChatAdapter", "msg:" + (msg != null));
 		MessageItem messageItem = MessageItem.getInstance(msg, mContext);
-		Log.i("ChatAdapter", "messageItem:" + (messageItem != null));
+		Log.i("SZU ChatAdapter", "messageItem:" + (messageItem != null));
 		messageItem.fillContent();
 		View view = messageItem.getRootView();
 		return view;
