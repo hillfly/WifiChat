@@ -9,29 +9,47 @@ import android.view.ViewGroup;
 
 import com.immomo.momo.android.BaseApplication;
 import com.immomo.momo.android.BaseObjectListAdapter;
+import com.immomo.momo.android.activity.message.ImageMessageItem;
 import com.immomo.momo.android.activity.message.MessageItem;
 import com.immomo.momo.android.entity.Entity;
 import com.immomo.momo.android.entity.Message;
+import com.immomo.momo.android.util.FileUtils;
 
-public class ChatAdapter extends BaseObjectListAdapter {
+public class ChatAdapter extends BaseObjectListAdapter
+{
 
 	public ChatAdapter(BaseApplication application, Context context,
-			List<? extends Entity> datas) {
+			List<? extends Entity> datas)
+	{
 		super(application, context, datas);
 	}
-	
-	public void setData(List<? extends Entity> datas){
-	    super.setData(datas);
+
+	public void setData(List<? extends Entity> datas)
+	{
+		super.setData(datas);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 		Message msg = (Message) getItem(position);
 		Log.i("SZU ChatAdapter", "msg:" + (msg != null));
 		MessageItem messageItem = MessageItem.getInstance(msg, mContext);
 		Log.i("SZU ChatAdapter", "messageItem:" + (messageItem != null));
 		messageItem.fillContent();
+	
 		View view = messageItem.getRootView();
+		if (msg.getContentType() == Message.CONTENT_TYPE.IMAGE)
+		{
+			String imagPath = msg.getMsgContent();
+			if (FileUtils.isFileExists(imagPath))
+			{
+				ImageMessageItem imageMessageItem=(ImageMessageItem)messageItem;
+				imageMessageItem.setProgress(100);
+			}
+		}
 		return view;
 	}
+
+
 }

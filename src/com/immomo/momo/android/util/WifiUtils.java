@@ -11,7 +11,6 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 /**
  * Wifi 工具类
@@ -20,7 +19,7 @@ import android.util.Log;
  */
 
 public class WifiUtils {
-	private static WifiUtils wiFiAdmin = null;
+	private static WifiUtils mWifiUtils = null;
 	private List<WifiConfiguration> mWifiConfiguration;
 	private WifiInfo mWifiInfo;
 	private DhcpInfo mDhcpInfo;
@@ -40,9 +39,9 @@ public class WifiUtils {
 	}
 
 	public static WifiUtils getInstance(Context paramContext) {
-		if (wiFiAdmin == null)
-			wiFiAdmin = new WifiUtils(paramContext);
-		return wiFiAdmin;
+		if (mWifiUtils == null)
+			mWifiUtils = new WifiUtils(paramContext);
+		return mWifiUtils;
 	}
 
 	private WifiConfiguration isExsits(String paramString) {

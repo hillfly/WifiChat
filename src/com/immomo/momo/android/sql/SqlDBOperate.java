@@ -1,6 +1,7 @@
 package com.immomo.momo.android.sql;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONException;
@@ -484,6 +485,7 @@ public class SqlDBOperate
            messages.add(message);
         }
         cursor.close();
+        Collections.reverse(messages);//更正最后一条数据存在最后的BUG
         return messages;
     }
     private Message chattingInfoToMessage(ChattingInfo chattingInfo)

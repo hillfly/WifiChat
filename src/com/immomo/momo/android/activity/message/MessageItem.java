@@ -60,15 +60,17 @@ public abstract class MessageItem {
     public static MessageItem getInstance(Message msg, Context context) {
         MessageItem messageItem = null;
         switch (msg.getContentType()) {
-        case TEXT:
-            messageItem = new TextMessageItem(msg, context);
-            break;
-
-        case IMAGE:
-            messageItem = new ImageMessageItem(msg, context);
-            break;
-        default:
-            break;
+            case TEXT:
+                messageItem = new TextMessageItem(msg, context);
+                break;
+            case IMAGE:
+                messageItem = new ImageMessageItem(msg, context);
+                break;
+            case VOICE:
+                messageItem = new VoiceMessageItem(msg, context);
+                break;
+            default:
+                break;
 
         // case VOICE:
         // messageItem = new VoiceMessageItem(msg, context);
@@ -88,13 +90,12 @@ public abstract class MessageItem {
     private void init(boolean paramIsSelfMsg) {
         Log.i("SZU MessgaeItem", "paramIsSelfMsg:" + paramIsSelfMsg);
         if (paramIsSelfMsg) {
-            mRootView = mInflater.inflate(R.layout.message_group_send_template,
-                    null);
+            mRootView = mInflater.inflate(R.layout.message_group_send_template, null);
             mBackground = R.drawable.bg_message_box_send;
             initViews(mRootView);
-        } else {
-            mRootView = mInflater.inflate(
-                    R.layout.message_group_receive_template, null);
+        }
+        else {
+            mRootView = mInflater.inflate(R.layout.message_group_receive_template, null);
             mBackground = R.drawable.bg_message_box_receive;
             initReceiveViews(mRootView);
         }
@@ -107,17 +108,21 @@ public abstract class MessageItem {
      */
     protected void initViews(View view) {
         Log.i("szu MessageItem", "进入initViews()");
-        mLayoutTimeStampContainer = (RelativeLayout) view.findViewById(R.id.message_layout_timecontainer);
+        mLayoutTimeStampContainer = (RelativeLayout) view
+                .findViewById(R.id.message_layout_timecontainer);
         mHtvTimeStampTime = (HandyTextView) view.findViewById(R.id.message_timestamp_htv_time);
 
-        mLayoutLeftContainer = (RelativeLayout) view.findViewById(R.id.message_layout_leftcontainer);
+        mLayoutLeftContainer = (RelativeLayout) view
+                .findViewById(R.id.message_layout_leftcontainer);
         mLayoutStatus = (LinearLayout) view.findViewById(R.id.message_layout_status);
         mHtvStatus = (HandyTextView) view.findViewById(R.id.message_htv_status);
 
-        mLayoutMessageContainer = (LinearLayout) view.findViewById(R.id.message_layout_messagecontainer);
+        mLayoutMessageContainer = (LinearLayout) view
+                .findViewById(R.id.message_layout_messagecontainer);
         mLayoutMessageContainer.setBackgroundResource(mBackground);
 
-        mLayoutRightContainer = (LinearLayout) view.findViewById(R.id.message_layout_rightcontainer);
+        mLayoutRightContainer = (LinearLayout) view
+                .findViewById(R.id.message_layout_rightcontainer);
         mIvPhotoView = (ImageView) view.findViewById(R.id.message_iv_userphoto);
         onInitViews();
     }
@@ -129,15 +134,19 @@ public abstract class MessageItem {
      */
     protected void initReceiveViews(View view) {
         Log.i("SZU MessageItem", "进入initReceiveViews()");
-        mLayoutTimeStampContainer = (RelativeLayout) view.findViewById(R.id.message_layout_timecontainer);
+        mLayoutTimeStampContainer = (RelativeLayout) view
+                .findViewById(R.id.message_layout_timecontainer);
         mHtvTimeStampTime = (HandyTextView) view.findViewById(R.id.message_timestamp_htv_time);
 
-        mLayoutLeftContainer = (RelativeLayout) view.findViewById(R.id.message_layout_leftcontainer);
+        mLayoutLeftContainer = (RelativeLayout) view
+                .findViewById(R.id.message_layout_leftcontainer);
 
-        mLayoutMessageContainer = (LinearLayout) view.findViewById(R.id.message_layout_messagecontainer);
+        mLayoutMessageContainer = (LinearLayout) view
+                .findViewById(R.id.message_layout_messagecontainer);
         mLayoutMessageContainer.setBackgroundResource(mBackground);
 
-        mLayoutRightContainer = (LinearLayout) view.findViewById(R.id.message_layout_rightcontainer);
+        mLayoutRightContainer = (LinearLayout) view
+                .findViewById(R.id.message_layout_rightcontainer);
         mIvPhotoView = (ImageView) view.findViewById(R.id.message_iv_userphoto);
         onInitViews();
     }
@@ -146,7 +155,8 @@ public abstract class MessageItem {
         fillTimeStamp();
         if (SessionUtils.isItself(mMsg.getSenderIMEI())) { // 若为自己发的信息，就初始化消息状态
             fillStatus();
-        } else {
+        }
+        else {
             mLayoutLeftContainer.setVisibility(View.VISIBLE);
         }
         fillMessage();
@@ -178,12 +188,11 @@ public abstract class MessageItem {
         mLayoutRightContainer.setVisibility(View.VISIBLE);
         Bitmap bitmap = null;
         if (SessionUtils.isItself(mMsg.getSenderIMEI())) {
-            bitmap = mBaseApplication.getAvatar(NearByPeople.AVATAR
-                    + SessionUtils.getAvatar());
-        } else {
+            bitmap = mBaseApplication.getAvatar(NearByPeople.AVATAR + SessionUtils.getAvatar());
+        }
+        else {
             NearByPeople m = mBaseApplication.getOnlineUser(mMsg.getSenderIMEI()); // 获取用户对象
-            bitmap = mBaseApplication.getAvatar(NearByPeople.AVATAR
-                    + m.getAvatar());
+            bitmap = mBaseApplication.getAvatar(NearByPeople.AVATAR + m.getAvatar());
         }
         mIvPhotoView.setImageBitmap(bitmap);
     }

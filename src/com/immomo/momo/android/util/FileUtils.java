@@ -6,21 +6,27 @@ import java.text.DecimalFormat;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * @fileName FileUtils.java
  * @package com.immomo.momo.android.util
  * @description 文件工具类
  */
-public class FileUtils {
+public class FileUtils
+{
+	private static final String TAG = "SZU_FileUtils";
+
 	/**
 	 * 判断SD是否可以
 	 * 
 	 * @return
 	 */
-	public static boolean isSdcardExist() {
+	public static boolean isSdcardExist()
+	{
 		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+				Environment.MEDIA_MOUNTED))
+		{
 			return true;
 		}
 		return false;
@@ -32,10 +38,13 @@ public class FileUtils {
 	 * @param path
 	 *            目录路径
 	 */
-	public static void createDirFile(String path) {
+	public static void createDirFile(String path)
+	{
 		File dir = new File(path);
-		if (!dir.exists()) {
+		if (!dir.exists())
+		{
 			dir.mkdirs();
+			Log.d(TAG, path);
 		}
 	}
 
@@ -46,12 +55,16 @@ public class FileUtils {
 	 *            文件路径
 	 * @return 创建的文件
 	 */
-	public static File createNewFile(String path) {
+	public static File createNewFile(String path)
+	{
 		File file = new File(path);
-		if (!file.exists()) {
-			try {
+		if (!file.exists())
+		{
+			try
+			{
 				file.createNewFile();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				return null;
 			}
 		}
@@ -64,7 +77,8 @@ public class FileUtils {
 	 * @param folderPath
 	 *            文件夹的路径
 	 */
-	public static void delFolder(String folderPath) {
+	public static void delFolder(String folderPath)
+	{
 		delAllFile(folderPath);
 		String filePath = folderPath;
 		filePath = filePath.toString();
@@ -78,27 +92,35 @@ public class FileUtils {
 	 * @param path
 	 *            文件的路径
 	 */
-	public static void delAllFile(String path) {
+	public static void delAllFile(String path)
+	{
 		File file = new File(path);
-		if (!file.exists()) {
+		if (!file.exists())
+		{
 			return;
 		}
-		if (!file.isDirectory()) {
+		if (!file.isDirectory())
+		{
 			return;
 		}
 		String[] tempList = file.list();
 		File temp = null;
 		int mLength = tempList.length;
-		for (int i = 0; i < mLength; i++) {
-			if (path.endsWith(File.separator)) {
+		for (int i = 0; i < mLength; i++)
+		{
+			if (path.endsWith(File.separator))
+			{
 				temp = new File(path + tempList[i]);
-			} else {
+			} else
+			{
 				temp = new File(path + File.separator + tempList[i]);
 			}
-			if (temp.isFile()) {
+			if (temp.isFile())
+			{
 				temp.delete();
 			}
-			if (temp.isDirectory()) {
+			if (temp.isDirectory())
+			{
 				delAllFile(path + "/" + tempList[i]);
 				delFolder(path + "/" + tempList[i]);
 			}
@@ -112,7 +134,8 @@ public class FileUtils {
 	 *            文件的路径
 	 * @return
 	 */
-	public static Uri getUriFromFile(String path) {
+	public static Uri getUriFromFile(String path)
+	{
 		File file = new File(path);
 		return Uri.fromFile(file);
 	}
@@ -123,21 +146,26 @@ public class FileUtils {
 	 * @param size
 	 * @return
 	 */
-	public static String formatFileSize(long size) {
+	public static String formatFileSize(long size)
+	{
 		DecimalFormat df = new DecimalFormat("#.00");
 		String fileSizeString = "未知大小";
-		if (size < 1024) {
+		if (size < 1024)
+		{
 			fileSizeString = df.format((double) size) + "B";
-		} else if (size < 1048576) {
+		} else if (size < 1048576)
+		{
 			fileSizeString = df.format((double) size / 1024) + "K";
-		} else if (size < 1073741824) {
+		} else if (size < 1073741824)
+		{
 			fileSizeString = df.format((double) size / 1048576) + "M";
-		} else {
+		} else
+		{
 			fileSizeString = df.format((double) size / 1073741824) + "G";
 		}
 		return fileSizeString;
 	}
-	
+
 	/**
 	 * 通过路径获得文件名字
 	 * 
@@ -146,6 +174,52 @@ public class FileUtils {
 	 */
 	public static String getNameByPath(String path)
 	{
-		return path.substring(path.lastIndexOf(File.separator)+1);
+		return path.substring(path.lastIndexOf(File.separator) + 1);
 	}
+
+	/**
+	 * 通过判断文件是否存在
+	 * 
+	 * @param path
+	 * @return
+	 */
+
+	public static boolean isFileExists(String path)
+	{
+		try
+		{
+			File file = new File(path);
+			if (!file.exists())
+			{
+				return false;
+			}
+
+		} catch (Exception e)
+		{
+			// TODO: handle exception
+			Log.d(TAG, "判断文件");
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 获得SD卡路径
+	 * 
+	 * @param
+	 * @return String
+	 */
+	public static String getSDPath()
+	{
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED); // 判断sd卡是否存在
+		if (sdCardExist)
+		{
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+			return sdDir.toString();
+		}
+		return null;
+	}
+
 }

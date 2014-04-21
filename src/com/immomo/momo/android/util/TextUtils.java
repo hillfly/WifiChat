@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Random;
 
 import android.content.Context;
 import android.text.SpannableString;
@@ -178,6 +179,23 @@ public class TextUtils {
     }
 
     /**
+     * 返回指定长度的一串数字
+     * 
+     * @param NumLen 数字串位数
+     * @return
+     */
+    public static String getRandomNumStr(int NumLen) {
+        Random random = new Random(System.currentTimeMillis());
+        StringBuffer str = new StringBuffer();
+        int i, num;
+        for (i = 0; i < NumLen; i++) {
+            num = random.nextInt(10); // 0-10的随机数
+            str.append(num);
+        }
+        return str.toString();
+    }
+
+    /**
      * 获取Assets中的json文本
      * 
      * @param context
@@ -187,6 +205,7 @@ public class TextUtils {
      * @return
      */
     public static String getJson(Context context, String name) {
+        // TODO 待清除
         if (name != null) {
             String path = "json/" + name;
             InputStream is = null;
@@ -220,6 +239,7 @@ public class TextUtils {
      * @return
      */
     public static String readTextFile(InputStream inputStream) {
+        // TODO 待清除
         String readedStr = "";
         BufferedReader br;
         try {

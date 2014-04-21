@@ -13,12 +13,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.immomo.momo.android.BaseApplication;
+import com.immomo.momo.android.activity.message.ImageMessageItem;
+import com.immomo.momo.android.entity.Message;
+import com.immomo.momo.android.entity.Message.CONTENT_TYPE;
 import com.immomo.momo.android.file.explore.Constant;
 import com.immomo.momo.android.file.explore.FileState;
 import com.immomo.momo.android.file.explore.FileStyle;
+import com.immomo.momo.android.util.SessionUtils;
 
 public class TcpClient implements Runnable {
-    private static final String TAG = "TcpClient"; // Log标识符
+    private static final String TAG = "SZU_TcpClient"; // Log标识符
 
     private Thread mThread; // 线程，对于一个网络连接，安卓系统要求必须新开一个线程
     private boolean IS_THREAD_STOP = false; // 是否线程开始标志
@@ -27,7 +32,7 @@ public class TcpClient implements Runnable {
     private static TcpClient instance; // 唯一实例
     private ArrayList<FileStyle> fileStyles;
     private ArrayList<FileState> fileStates;
-    private ArrayList<SendFileThread> sendFileThreads;
+    private ArrayList<SendFileThread> sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
     // private static final String TARGET_IP = "192.16.137.2"; //广播地址
     // private String filePath;
     private SendFileThread sendFileThread;
@@ -60,10 +65,8 @@ public class TcpClient implements Runnable {
         this.fileStyles = fileStyles;
         this.fileStates = fileStates;
         // sendFileThreads.clear();
-        while (SEND_FLAG == true)
-            ;
+        while (SEND_FLAG == true);
 
-        sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
         for (FileStyle fileStyle : fileStyles) {
             Log.d(TAG, fileStyle.fullPath);
             SendFileThread sendFileThread = new SendFileThread(target_IP,
@@ -87,16 +90,22 @@ public class TcpClient implements Runnable {
     }
 
     public void sendFile(String filePath, String target_IP) {
-        while (SEND_FLAG == true)
-            ;
-        // sendFileThread=new SendFileThread(target_IP, filePath);
-        // SEND_FLAG=true;
-        sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
-        SendFileThread sendFileThread = new SendFileThread(target_IP, filePath);
+    	SendFileThread sendFileThread = new SendFileThread(target_IP, filePath);
+        while (SEND_FLAG == true);
         sendFileThreads.add(sendFileThread);
         SEND_FLAG = true;
     }
 
+    //重写方法
+    public void sendFile(String filePath, String target_IP,Message.CONTENT_TYPE type) {
+    	SendFileThread sendFileThread = new SendFileThread(target_IP, filePath,type);
+        while (SEND_FLAG == true);
+        sendFileThreads.add(sendFileThread);
+        FileState sendFileState=new FileState(filePath);
+    	BaseApplication.sendFileStates.put(filePath,sendFileState);//全局可访问的文件发送状态读取
+        SEND_FLAG = true;
+    }
+    
     @Override
     public void run() {
         // TODO Auto-generated method stub
@@ -104,10 +113,10 @@ public class TcpClient implements Runnable {
 
         while (!IS_THREAD_STOP) {
             if (SEND_FLAG) {
-                // sendFileThread.start();
                 for (SendFileThread sendFileThread : sendFileThreads) {
                     sendFileThread.start();
                 }
+                sendFileThreads.clear();
                 SEND_FLAG = false;
             }
 
@@ -133,7 +142,7 @@ public class TcpClient implements Runnable {
     }
 
     public class SendFileThread extends Thread {
-        private static final String TAG = "SendFileThread";
+        private static final String TAG = "SZU_SendFileThread";
         private boolean SEND_FLAG = true; // 是否发送广播标志
         private byte[] mBuffer = new byte[Constant.READ_BUFFER_SIZE]; // 数据报内容
         private OutputStream output = null;
@@ -142,12 +151,16 @@ public class TcpClient implements Runnable {
         private Socket socket = null;
         private String target_IP;
         private String filePath;
-
+        private Message.CONTENT_TYPE type;
         public SendFileThread(String target_IP, String filePath) {
             this.target_IP = target_IP;
             this.filePath = filePath;
         }
 
+        public SendFileThread(String target_IP, String filePath,Message.CONTENT_TYPE type) {
+           this(target_IP,filePath);
+           this.type=type;
+        }
         public void sendFile() {
             int readSize = 0;
             try {
@@ -155,35 +168,66 @@ public class TcpClient implements Runnable {
                 fileInputStream = new FileInputStream(new File(filePath));
                 output = socket.getOutputStream(); // 构造一个输出流
                 dataOutput = new DataOutputStream(output);
+                int fileSize=fileInputStream.available();
                 dataOutput.writeUTF(filePath.substring(filePath.lastIndexOf(File.separator) + 1)
-                        + "!" + fileInputStream.available());
+                        + "!" +fileSize +"!"+SessionUtils.getIMEI()+"!"+type);
                 int count = 0;
                 long length = 0;
-                // FileState fs = getFileStateByName(filePath, fileStates);
+
+            	FileState fs=BaseApplication.sendFileStates.get(filePath);
+            	fs.fileSize=fileSize;
+            	fs.type=type;
+//                FileState fs = getFileStateByName(filePath, fileStates);
                 while (-1 != (readSize = fileInputStream.read(mBuffer))) {
                     length += readSize;
                     dataOutput.write(mBuffer, 0, readSize);
                     count++;
+                    fs.percent=(int) (length*100/fileSize);
+                    
                     // if(count%10==0)
                     // {
                     // fs.currentSize=length;
                     // fs.percent=(int)((float)length/(float)fs.fileSize*100);
                     Intent intent = new Intent();
-                    intent.setAction(Constant.fileSendStateUpdateAction);
+                    if(type==CONTENT_TYPE.IMAGE)
+                    {
+                    	intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
+//                    	intent.setAction(Constant.fileSendStateUpdateAction);
+                    	Log.d(TAG, "更新图片，路径:"+fs.fileName+" 进度"+fs.percent);
+                    	intent.putExtra(fs.fileName, fs.percent);
+                    }
+                    else if(type==CONTENT_TYPE.FILE)
+                    {
+                    	intent.setAction(Constant.fileSendStateUpdateAction);
+                    }
+//                    intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
                     mContext.sendBroadcast(intent);
                     // }
                     dataOutput.flush();
                 }
-
+                Log.d(TAG, fs.fileName+"发送完毕");
                 // fs.currentSize=length;
                 // fs.percent=100;
-                Intent intent = new Intent();
-                intent.setAction(Constant.fileSendStateUpdateAction);
-                mContext.sendBroadcast(intent);
 
                 output.close();
                 dataOutput.close();
                 socket.close();
+                
+                Intent intent = new Intent();
+                
+                if(type==CONTENT_TYPE.IMAGE)
+                {
+                	intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
+                	intent.putExtra(fs.fileName, 100);
+//                	intent.setAction(Constant.fileSendStateUpdateAction);
+                	Log.d(TAG, "图片发送完毕");
+                } else if(type==CONTENT_TYPE.FILE)
+                {
+                	intent.setAction(Constant.fileSendStateUpdateAction);
+                	
+                }
+                mContext.sendBroadcast(intent);
+                BaseApplication.sendFileStates.remove(fs.fileName);
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
                 Log.d(TAG, "建立客户端socket失败");

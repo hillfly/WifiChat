@@ -52,7 +52,7 @@ public class Constant
 	public static final int DATAGRAM_CLIENT_SEND_PORT = 4446;      //UDP客户端发送端口
 	public static int CMD_BUFFER_SIZE=256;//文件流缓冲大小
 	public static int READ_BUFFER_SIZE=4161536;//文件流缓冲大小
-	
+//	public static int READ_BUFFER_SIZE=1024;//文件流缓冲大小
 	//其它定义
 	public static final int FILE_RESULT_CODE = 1;
 	public static final int SELECT_FILES = 1;//是否要在文件选择器中显示文件

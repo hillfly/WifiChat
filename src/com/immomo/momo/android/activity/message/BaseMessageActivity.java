@@ -1,6 +1,7 @@
 package com.immomo.momo.android.activity.message;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.DialogInterface;
@@ -33,7 +34,6 @@ import com.immomo.momo.android.dialog.SimpleListDialog.onSimpleListItemClickList
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByPeople;
 import com.immomo.momo.android.file.explore.FileState;
-import com.immomo.momo.android.file.explore.FileStyle;
 import com.immomo.momo.android.popupwindow.ChatPopupWindow;
 import com.immomo.momo.android.popupwindow.ChatPopupWindow.OnChatPopupItemClickListener;
 import com.immomo.momo.android.socket.UDPSocketThread;
@@ -102,14 +102,14 @@ public abstract class BaseMessageActivity extends BaseActivity implements
 
     protected TcpClient tcpClient = null;
     protected TcpService tcpService = null;
-    protected ArrayList<FileStyle> fileStyles;
-    protected ArrayList<FileState> fileStates;
-
+    protected HashMap<String,FileState> sendFileStates;
+    protected HashMap<String, FileState> reciveFileStates;
+    
     protected String mNickName;
     protected String mIMEI;
     protected int mID;
     protected int mSenderID;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

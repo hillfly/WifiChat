@@ -29,7 +29,6 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-import com.immomo.momo.android.R;
 import com.immomo.momo.android.activity.imagefactory.ImageFactoryActivity;
 import com.immomo.momo.android.activity.imagefactory.ImageFactoryFliter.FilterType;
 

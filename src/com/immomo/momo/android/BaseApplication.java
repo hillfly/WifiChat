@@ -1,5 +1,6 @@
 package com.immomo.momo.android;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +20,11 @@ import android.util.Log;
 import com.immomo.momo.android.entity.Message;
 import com.immomo.momo.android.entity.NearByGroup;
 import com.immomo.momo.android.entity.NearByPeople;
+import com.immomo.momo.android.file.explore.FileState;
+import com.immomo.momo.android.util.FileUtils;
 
-public class BaseApplication extends Application {
+public class BaseApplication extends Application
+{
 
 	/** mEmoticons 表情 **/
 	public static Map<String, Integer> mEmoticonsId = new HashMap<String, Integer>();
@@ -36,13 +40,47 @@ public class BaseApplication extends Application {
 	private ArrayList<NearByPeople> mUnReadPeople; // 未读用户队列
 	private HashMap<String, String> mLocalUserSession; // 本机用户Session信息
 	private HashMap<String, NearByPeople> mOnlineUsers; // 在线用户集合，以IMEI为KEY
-
+	
+	public static HashMap<String,FileState> sendFileStates;//存放文件状态
+	public static HashMap<String,FileState> recieveFileStates;//存放文件状态
 	/** 屏幕长宽 **/
 	public double mLongitude;
 	public double mLatitude;
 
 	private Bitmap mDefaultAvatar; // 默认头像
 	private static BaseApplication instance; // 唯一实例
+
+	//本地图像、声音、文件存储路径
+	public static String IMAG_PATH;
+	public static String VOICE_PATH;
+	public static String FILE_PATH;
+	public static String SAVE_PATH;
+	// 程序在开始运行的时候,调用以下函数创建存储图片语音文件目录
+	private void createSavePath()
+	{
+		if (null == IMAG_PATH)
+		{
+			SAVE_PATH = FileUtils.getSDPath();// 获取SD卡的根目录路径,如果不存在就返回Null
+			if (null == SAVE_PATH)
+			{
+				SAVE_PATH = instance.getFilesDir().toString();// 获取内置存储区的地址
+			}
+			String appName = instance.getString(R.string.app_name);
+			IMAG_PATH = SAVE_PATH + File.separator + appName + File.separator
+					+ "image";
+			VOICE_PATH = SAVE_PATH + File.separator + appName + File.separator
+					+ "voice";
+			FILE_PATH = SAVE_PATH + File.separator + appName + File.separator
+					+ "file";
+			if (!FileUtils.isFileExists(IMAG_PATH))
+				FileUtils.createDirFile(BaseApplication.IMAG_PATH);// 如果目录不存在则创建目录
+			if (!FileUtils.isFileExists(VOICE_PATH))
+				FileUtils.createDirFile(BaseApplication.VOICE_PATH);
+			if (!FileUtils.isFileExists(FILE_PATH))
+				FileUtils.createDirFile(BaseApplication.FILE_PATH);
+
+		}
+	}
 
 	/**
 	 * <p>
@@ -52,20 +90,26 @@ public class BaseApplication extends Application {
 	 * 
 	 * @return instance
 	 */
-	public static BaseApplication getInstance() {
+	public static BaseApplication getInstance()
+	{
 		return instance;
 	}
 
 	@Override
-	public void onCreate() {
+	public void onCreate()
+	{
 		super.onCreate();
-		if (instance == null) {
+		if (instance == null)
+		{
 			instance = this;
 		}
+		sendFileStates=new HashMap<String, FileState>();
+		recieveFileStates=new HashMap<String, FileState>();
 		mLocalUserSession = new HashMap<String, String>(14); // 存储用户登陆信息
 		mDefaultAvatar = BitmapFactory.decodeResource(getResources(),
 				R.drawable.ic_common_def_header);
-		for (int i = 1; i < 64; i++) {
+		for (int i = 1; i < 64; i++)
+		{
 			String emoticonsName = "[zem" + i + "]";
 			int emoticonsId = getResources().getIdentifier("zem" + i,
 					"drawable", getPackageName());
@@ -73,7 +117,8 @@ public class BaseApplication extends Application {
 			mEmoticons_Zem.add(emoticonsName);
 			mEmoticonsId.put(emoticonsName, emoticonsId);
 		}
-		for (int i = 1; i < 59; i++) {
+		for (int i = 1; i < 59; i++)
+		{
 			String emoticonsName = "[zemoji" + i + "]";
 			int emoticonsId = getResources().getIdentifier("zemoji_e" + i,
 					"drawable", getPackageName());
@@ -82,41 +127,49 @@ public class BaseApplication extends Application {
 			mEmoticonsId.put(emoticonsName, emoticonsId);
 		}
 
+		createSavePath();
 	}
 
 	@Override
-	public void onLowMemory() {
+	public void onLowMemory()
+	{
 		super.onLowMemory();
 		Log.e("BaseApplication", "onLowMemory");
 	}
 
 	@Override
-	public void onTerminate() {
+	public void onTerminate()
+	{
 		super.onTerminate();
 		Log.e("BaseApplication", "onTerminate");
 	}
 
-	public HashMap<String, String> getUserSession() {
+	public HashMap<String, String> getUserSession()
+	{
 		return mLocalUserSession;
 	}
 
 	/** 初始化相关基本参数 */
-	public void initParam() {
+	public void initParam()
+	{
 		initOnlineUserMap(); // 初始化用户列表
 		initUnReadMessages(); // 初始化未读消息
 		initLastMsgCache(); // 初始化消息缓存
 	}
 
 	// mOnlineUsers setter getter
-	public void initOnlineUserMap() {
+	public void initOnlineUserMap()
+	{
 		mOnlineUsers = new LinkedHashMap<String, NearByPeople>();
 	}
 
-	public void addOnlineUser(String paramIMEI, NearByPeople paramObject) {
+	public void addOnlineUser(String paramIMEI, NearByPeople paramObject)
+	{
 		mOnlineUsers.put(paramIMEI, paramObject);
 	}
 
-	public NearByPeople getOnlineUser(String paramIMEI) {
+	public NearByPeople getOnlineUser(String paramIMEI)
+	{
 		return mOnlineUsers.get(paramIMEI);
 	}
 
@@ -128,21 +181,26 @@ public class BaseApplication extends Application {
 	 * @param paramtype
 	 *            操作类型，0:清空在线列表，1:移除指定用户
 	 */
-	public void removeOnlineUser(String paramIMEI, int paramtype) {
-		if (paramtype == 1) {
+	public void removeOnlineUser(String paramIMEI, int paramtype)
+	{
+		if (paramtype == 1)
+		{
 			mOnlineUsers.remove(paramIMEI);
-		} else if (paramtype == 0) {
+		} else if (paramtype == 0)
+		{
 			mOnlineUsers.clear();
 		}
 	}
 
-	public HashMap<String, NearByPeople> getOnlineUserMap() {
+	public HashMap<String, NearByPeople> getOnlineUserMap()
+	{
 		return mOnlineUsers;
 	}
 
 	// mLastMsgCache setter getter
 	/** 初始化消息缓存 */
-	public void initLastMsgCache() {
+	public void initLastMsgCache()
+	{
 		mLastMsgCache = new HashMap<String, String>();
 	}
 
@@ -154,9 +212,11 @@ public class BaseApplication extends Application {
 	 * @param paramMsg
 	 *            需要缓存的消息对象
 	 */
-	public void addLastMsgCache(String paramIMEI, Message msg) {
+	public void addLastMsgCache(String paramIMEI, Message msg)
+	{
 		StringBuffer content = new StringBuffer();
-		switch (msg.getContentType()) {
+		switch (msg.getContentType())
+		{
 		case FILE:
 			content.append("<FILE>: ").append(msg.getMsgContent());
 			break;
@@ -170,7 +230,8 @@ public class BaseApplication extends Application {
 			content.append(msg.getMsgContent());
 			break;
 		}
-		if (msg.getMsgContent().isEmpty()) {
+		if (msg.getMsgContent().isEmpty())
+		{
 			content.append(" ");
 		}
 		mLastMsgCache.put(paramIMEI, content.toString());
@@ -183,7 +244,8 @@ public class BaseApplication extends Application {
 	 *            需要获取消息缓存记录的用户IMEI
 	 * @return
 	 */
-	public String getLastMsgCache(String paramIMEI) {
+	public String getLastMsgCache(String paramIMEI)
+	{
 		return mLastMsgCache.get(paramIMEI);
 	}
 
@@ -193,13 +255,15 @@ public class BaseApplication extends Application {
 	 * @param paramIMEI
 	 *            需要清除缓存的用户IMEI
 	 */
-	public void removeLastMsgCache(String paramIMEI) {
+	public void removeLastMsgCache(String paramIMEI)
+	{
 		mLastMsgCache.remove(paramIMEI);
 	}
 
 	// mUnReadMessags setter getter
 	/** 初始化未读消息队列 */
-	public void initUnReadMessages() {
+	public void initUnReadMessages()
+	{
 		mUnReadPeople = new ArrayList<NearByPeople>();
 	}
 
@@ -208,7 +272,8 @@ public class BaseApplication extends Application {
 	 * 
 	 * @param people
 	 */
-	public void addUnReadPeople(NearByPeople people) {
+	public void addUnReadPeople(NearByPeople people)
+	{
 		Log.i("BaseActivity", "进入到 UnReadMessages()");
 		if (!mUnReadPeople.contains(people))
 			mUnReadPeople.add(people);
@@ -219,7 +284,8 @@ public class BaseApplication extends Application {
 	 * 
 	 * @return
 	 */
-	public ArrayList<NearByPeople> getUnReadPeopleList() {
+	public ArrayList<NearByPeople> getUnReadPeopleList()
+	{
 		return mUnReadPeople;
 	}
 
@@ -228,7 +294,8 @@ public class BaseApplication extends Application {
 	 * 
 	 * @return
 	 */
-	public int getUnReadPeopleSize() {
+	public int getUnReadPeopleSize()
+	{
 		return mUnReadPeople.size();
 	}
 
@@ -237,7 +304,8 @@ public class BaseApplication extends Application {
 	 * 
 	 * @param people
 	 */
-	public void removeUnReadPeople(NearByPeople people) {
+	public void removeUnReadPeople(NearByPeople people)
+	{
 		if (mUnReadPeople.contains(people))
 			mUnReadPeople.remove(people);
 	}
@@ -251,16 +319,21 @@ public class BaseApplication extends Application {
 	 *            头像文件名 "Avatar" + avatarID，例如 Avatar2
 	 * @return
 	 */
-	public Bitmap getAvatar(String paramAvatarName) {
-		if (mAvatarCache.containsKey(paramAvatarName)) {
+	public Bitmap getAvatar(String paramAvatarName)
+	{
+		if (mAvatarCache.containsKey(paramAvatarName))
+		{
 			Reference<Bitmap> reference = mAvatarCache.get(paramAvatarName);
-			if (reference.get() == null || reference.get().isRecycled()) {
+			if (reference.get() == null || reference.get().isRecycled())
+			{
 				mAvatarCache.remove(paramAvatarName);
 				return getAvatarFromRes(paramAvatarName);
-			} else {
+			} else
+			{
 				return reference.get();
 			}
-		} else {
+		} else
+		{
 			return getAvatarFromRes(paramAvatarName);
 		}
 	}
@@ -272,29 +345,37 @@ public class BaseApplication extends Application {
 	 *            需要转换的图片文件名
 	 * @return
 	 */
-	private Bitmap getAvatarFromRes(String paramAvatarName) {
+	private Bitmap getAvatarFromRes(String paramAvatarName)
+	{
 		Bitmap returnBitmap = null;
 		InputStream is = null;
 		Bitmap bitmap = null;
-		try {
+		try
+		{
 			is = this.getResources().openRawResource(
 					getIDfromDrawable(paramAvatarName));
 			bitmap = BitmapFactory.decodeStream(is);
-			if (bitmap == null) {
+			if (bitmap == null)
+			{
 				throw new FileNotFoundException(paramAvatarName + "is not find");
 			}
 			mAvatarCache
 					.put(paramAvatarName, new SoftReference<Bitmap>(bitmap));
 			returnBitmap = bitmap;
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			returnBitmap = mDefaultAvatar;
-		} finally {
-			try {
-				if (is != null) {
+		} finally
+		{
+			try
+			{
+				if (is != null)
+				{
 					is.close();
 					is = null;
 				}
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 
 			}
 		}
@@ -308,7 +389,8 @@ public class BaseApplication extends Application {
 	 *            图片名
 	 * @return
 	 */
-	public int getIDfromDrawable(String paramAvatarName) {
+	public int getIDfromDrawable(String paramAvatarName)
+	{
 		return this.getResources().getIdentifier(paramAvatarName, "drawable",
 				getPackageName());
 	}

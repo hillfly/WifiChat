@@ -25,6 +25,11 @@
         <item name="android:windowSoftInputMode">adjustPan</item>
     </style>
 
+    <style name="DialogStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground"> @android:color/transparent </item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <style name="BaseDialog" parent="@android:style/Theme.Dialog" />
 
     <style name="Style_Dialog_Button">
@@ -110,8 +115,7 @@
         <item name="android:windowExitAnimation">@anim/exit_dropdown</item>
     </style>
 
-
-  <style name="layout_top">
+    <style name="layout_top">
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/bg_top_navigation_bar</item>
