@@ -35,7 +35,7 @@
                 android:layout_marginRight="3dip"
                 android:layout_marginTop="8dip">
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:id="@+id/message_htv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -39,7 +39,7 @@
             android:src="@drawable/ic_loading_msgplus_02" />
     </LinearLayout>
 
-    <com.immomo.momo.android.view.HandyTextView
+    <szu.wifichat.android.view.HandyTextView
         android:id="@+id/message_htv_loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/my_information_page_header"
+        layout="@layout/include_header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/my_information_page_header"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/login_linearlayout_main"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="15dip" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:id="@+id/setting_my_avater_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/corners_avatar"
+                        android:maxHeight="90dp"
+                        android:maxWidth="90dp"
+                        android:padding="5dp"
+                        android:src="@drawable/avatar12" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/setting_my_nickname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="10dip"
+                    android:layout_weight="2"
+                    android:background="@drawable/edittext_default"
+                    android:hint="输入您的昵称"
+                    android:maxLength="8"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="15dip" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip" >
+
+                    <szu.wifichat.android.view.HandyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="出生日期"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:orientation="horizontal" >
+
+                        <szu.wifichat.android.view.HandyTextView
+                            android:id="@+id/setting_birthday_htv_constellation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="20dip"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+
+                        <szu.wifichat.android.view.HandyTextView
+                            android:id="@+id/setting_birthday_htv_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+
+                        <szu.wifichat.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="岁"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/devideline" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="15dip" >
+
+                    <DatePicker
+                        android:id="@+id/setting_birthday_dp_birthday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dip"
+                        android:calendarViewShown="false"
+                        android:spinnersShown="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <szu.wifichat.android.view.HandyTextView
+                android:id="@+id/setting_htv_nickname_note"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
+                android:layout_marginRight="8dip"
+                android:layout_marginTop="8dip"
+                android:text="提醒：您的出生日期不会出现在个人资料中。"
+                android:textColor="@color/notes_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_marginTop="10dip"
+                android:background="@color/devideline" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="8dip" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <szu.wifichat.android.view.HandyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"
+                        android:text="选择性别"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp" />
+
+                    <RadioGroup
+                        android:id="@+id/setting_baseinfo_rg_gender"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:orientation="horizontal" >
+
+                        <RadioButton
+                            android:id="@+id/setting_baseinfo_rb_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <szu.wifichat.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="3.0dip"
+                            android:text="男"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/setting_baseinfo_rb_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <szu.wifichat.android.view.HandyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="女"
+                            android:textColor="@color/text_color"
+                            android:textSize="17sp" />
+                    </RadioGroup>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_unlogin_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp" >
+
+            <Button
+                android:id="@+id/setting_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginRight="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="返    回"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/setting_btn_next"
+                android:layout_width="wrap_content"
+                android:layout_height="42dip"
+                android:layout_marginLeft="9dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bottombar"
+                android:gravity="center"
+                android:text="完成"
+                android:textColor="@color/profile_bottom_text_color"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/my_information_page_header"
+        android:background="@drawable/bg_topbar_shadow"
+        android:focusable="false" />
+
+</RelativeLayout>

@@ -6,13 +6,13 @@
     android:orientation="horizontal" 
     android:background="@drawable/bg_common_toast" >
 
-    <com.immomo.momo.android.view.FlippingImageView
+    <szu.wifichat.android.view.FlippingImageView
         android:id="@+id/loadingdialog_fiv_icon"
         android:layout_width="30dip"
         android:layout_height="30dip"
-        android:src="@drawable/ic_logo_blue" />
+        android:src="@drawable/app_icon" />
 
-    <com.immomo.momo.android.view.HandyTextView
+    <szu.wifichat.android.view.HandyTextView
         android:id="@+id/loadingdialog_htv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

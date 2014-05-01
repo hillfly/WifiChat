@@ -35,7 +35,7 @@
                 android:layout_height="30.0dip"
                 android:layout_gravity="center_vertical"
                 android:gravity="right|center"
-                android:text="@string/connect"
+                android:text="@string/wifiap_btn_connectwifi"
                 android:textColor="@color/drap_bar_word_color"
                 android:textSize="14.0sp" />
 
@@ -59,7 +59,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="right|center"
                     android:singleLine="true"
-                    android:text="@string/disconnect"
+                    android:text="@string/wifiap_btn_disconnect"
                     android:textColor="@color/drap_bar_word_color"
                     android:textSize="14.0sp" />
             </LinearLayout>

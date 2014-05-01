@@ -28,7 +28,7 @@
                 android:layout_marginRight="2dip"
                 android:scaleType="fitXY" />
 
-            <com.immomo.momo.android.view.HandyTextView
+            <szu.wifichat.android.view.HandyTextView
                 android:id="@+id/otherprofile_htv_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <com.immomo.momo.android.view.HandyTextView
+        <szu.wifichat.android.view.HandyTextView
             android:id="@+id/otherprofile_htv_constellation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="1dip"
                     android:src="@drawable/ic_user_loctime" />
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:id="@+id/otherprofile_htv_time"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"

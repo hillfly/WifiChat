@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
-            <com.immomo.momo.android.view.ChatListView
+            <szu.wifichat.android.view.ChatListView
                 android:id="@+id/chat_clv_list"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -40,7 +40,7 @@
                 android:background="@drawable/bg_chatbar_textmode"
                 android:orientation="vertical" >
 
-                <com.immomo.momo.android.view.ScrollLayout
+                <szu.wifichat.android.view.ScrollLayout
                     android:id="@+id/chat_slayout_scroll"
                     android:layout_width="fill_parent"
                     android:layout_height="52dip" >
@@ -48,7 +48,7 @@
                     <include layout="@layout/include_message_textditor" />
 
                     <include layout="@layout/include_message_audioditor" />
-                </com.immomo.momo.android.view.ScrollLayout>
+                </szu.wifichat.android.view.ScrollLayout>
 
                 <LinearLayout
                     android:id="@+id/chat_layout_rounds"
@@ -68,7 +68,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/msg_editor_backgroud" >
 
-                <com.immomo.momo.android.view.EmoteInputView
+                <szu.wifichat.android.view.EmoteInputView
                     android:id="@+id/chat_eiv_inputview"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

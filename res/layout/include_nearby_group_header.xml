@@ -18,7 +18,7 @@
         android:paddingRight="10dip"
         android:paddingTop="7dip" >
 
-        <com.immomo.momo.android.view.HandyTextView
+        <szu.wifichat.android.view.HandyTextView
             android:id="@+id/nearby_group_header_htv_address"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textColor="@color/blue"
             android:textSize="14sp" />
 
-        <com.immomo.momo.android.view.HandyTextView
+        <szu.wifichat.android.view.HandyTextView
             android:id="@+id/nearby_group_header_htv_count"
             android:layout_width="100dip"
             android:layout_height="wrap_content"

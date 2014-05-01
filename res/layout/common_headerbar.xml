@@ -13,7 +13,7 @@
         android:layout_height="40dip"
         android:layout_marginLeft="6dip"
         android:layout_marginRight="6dip"
-        android:src="@drawable/ic_topbar_logo"
+        android:src="@drawable/app_icon"
         android:scaleType="centerInside" />
 
     <LinearLayout
@@ -33,7 +33,7 @@
             android:paddingRight="8dip"
             android:visibility="gone" >
 
-            <com.immomo.momo.android.view.ScrollingTextView
+            <szu.wifichat.android.view.ScrollingTextView
                 android:id="@+id/header_stv_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textColor="#FFFFFFFF"
                 android:textSize="18sp" />
 
-            <com.immomo.momo.android.view.HandyTextView
+            <szu.wifichat.android.view.HandyTextView
                 android:id="@+id/header_htv_subtitle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <com.immomo.momo.android.view.HeaderSpinner
+        <szu.wifichat.android.view.HeaderSpinner
             android:id="@+id/header_hs_spinner"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -152,13 +152,13 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <com.immomo.momo.android.view.SwitcherButton
+        <szu.wifichat.android.view.SwitcherButton
             android:id="@+id/header_sb_rightview_switcherbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dip"
             android:visibility="gone" >
-        </com.immomo.momo.android.view.SwitcherButton>
+        </szu.wifichat.android.view.SwitcherButton>
     </LinearLayout>
 
 </LinearLayout>

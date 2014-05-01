@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"/>
 
-    <com.immomo.momo.android.view.HandyTextView
+    <szu.wifichat.android.view.HandyTextView
         android:id="@+id/welcome_item_htv_distance"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

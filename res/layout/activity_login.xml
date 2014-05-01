@@ -40,11 +40,11 @@
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
                     android:background="@drawable/edittext_default"
-                    android:hint="输入您的昵称"
+                    android:hint="@string/login_hint_nickname"
                     android:maxLength="8"
                     android:singleLine="true" />
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:id="@+id/login_htv_onlinestate"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     android:clickable="true"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="在线"
+                    android:text="@string/login_text_onlinestate"
                     android:textColor="@color/font_value"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -72,10 +72,10 @@
                     android:orientation="horizontal"
                     android:paddingBottom="15dip" >
 
-                    <com.immomo.momo.android.view.HandyTextView
+                    <szu.wifichat.android.view.HandyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="出生日期"
+                        android:text="@string/login_text_birthday"
                         android:textColor="@color/text_color"
                         android:textSize="17sp" />
 
@@ -87,7 +87,7 @@
                         android:gravity="right"
                         android:orientation="horizontal" >
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:id="@+id/login_birthday_htv_constellation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:id="@+id/login_birthday_htv_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -104,10 +104,10 @@
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="岁"
+                            android:text="@string/login_text_age"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
                     </LinearLayout>
@@ -135,14 +135,14 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.immomo.momo.android.view.HandyTextView
+            <szu.wifichat.android.view.HandyTextView
                 android:id="@+id/login_htv_nickname_note"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dip"
                 android:layout_marginRight="8dip"
                 android:layout_marginTop="8dip"
-                android:text="提醒：您的出生日期不会出现在个人资料中。"
+                android:text="@string/login_text_birthdaytips"
                 android:textColor="@color/notes_color"
                 android:textSize="14sp" />
 
@@ -165,11 +165,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <com.immomo.momo.android.view.HandyTextView
+                    <szu.wifichat.android.view.HandyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:gravity="center"
-                        android:text="选择性别"
+                        android:text="@string/login_text_selectsex"
                         android:textColor="@color/text_color"
                         android:textSize="17sp" />
 
@@ -187,11 +187,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="3.0dip"
-                            android:text="男"
+                            android:text="@string/login_text_male"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
 
@@ -200,10 +200,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="女"
+                            android:text="@string/login_text_female"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
                     </RadioGroup>
@@ -274,7 +274,7 @@
                             android:layout_marginRight="2dip"
                             android:scaleType="fitXY" />
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:id="@+id/login_htv_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -301,7 +301,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="上次登录: "
+                        android:text="@string/login_text_lastlogin"
                         android:textSize="12sp" />
 
                     <TextView
@@ -318,7 +318,7 @@
                     android:layout_below="@id/login_img_existImg"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/btn_default"
-                    android:text="更  换  账  户"
+                    android:text="@string/login_text_changeuser"
                     android:textColor="#636363"
                     android:textSize="20sp" />
             </RelativeLayout>
@@ -343,7 +343,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_bottombar"
                 android:gravity="center"
-                android:text="返    回"
+                android:text="@string/btn_return"
                 android:textColor="@color/profile_bottom_text_color"
                 android:textSize="14sp" />
 
@@ -355,7 +355,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_bottombar"
                 android:gravity="center"
-                android:text="下 一 步"
+                android:text="@string/btn_next"
                 android:textColor="@color/profile_bottom_text_color"
                 android:textSize="14sp" />
         </LinearLayout>

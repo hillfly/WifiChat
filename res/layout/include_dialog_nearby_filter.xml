@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
@@ -81,7 +81,7 @@
                         android:textSize="14sp" />
                 </RadioGroup>
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"

@@ -32,7 +32,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" >
 
-                <com.immomo.momo.android.view.HandyTextView
+                <szu.wifichat.android.view.HandyTextView
                     android:id="@+id/dialog_generic_htv_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                         android:paddingBottom="8dip"
                         android:paddingTop="4dip" >
 
-                        <com.immomo.momo.android.view.HandyTextView
+                        <szu.wifichat.android.view.HandyTextView
                             android:id="@+id/dialog_generic_htv_message"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

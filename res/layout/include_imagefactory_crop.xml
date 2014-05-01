@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.immomo.momo.android.view.CropImageView
+    <szu.wifichat.android.view.CropImageView
         android:id="@+id/imagefactory_crop_civ_display"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" 

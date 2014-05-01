@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.immomo.momo.android.view.RotateImageView
+    <szu.wifichat.android.view.RotateImageView
         android:id="@+id/imagefactory_fliter_riv_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -29,8 +29,9 @@
             android:scrollbars="none" >
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal" >
 
                 <include

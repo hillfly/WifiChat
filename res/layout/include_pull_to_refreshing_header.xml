@@ -40,14 +40,14 @@
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
-            <com.immomo.momo.android.view.HandyTextView
+            <szu.wifichat.android.view.HandyTextView
                 android:id="@+id/refreshing_header_htv_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dropbar_text_color"
                 android:textSize="16sp" />
 
-            <com.immomo.momo.android.view.HandyTextView
+            <szu.wifichat.android.view.HandyTextView
                 android:id="@+id/refreshing_header_htv_time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

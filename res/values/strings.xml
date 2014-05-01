@@ -2,33 +2,52 @@
 <resources>
     <string name="app_name">WifiChat</string> 
     
-    <string name="wt">创建连接</string>
-    <string name="connect">点击连接</string>
-    <string name="disconnect">点击断开</string>
-    <string name="wt_list_empty">"未搜索到可用热点，可尝试重新搜索。"</string>
-    <string name="create_ap_fail">"热点创建失败，请尝试重新创建。"</string>
-    <string name="wt_searching">正在搜索附近的热点...</string>
-    <string name="not_create_ap">您的设备不支持热点创建</string>
-    <string name="creating_ap">正在创建热点</string>
-    <string name="close_wifi_prompt">创建热点会关闭当前的WiFi，确认继续？</string>
-    <string name="ap_used">系统热点被占用，点确定开启热点以传输文件。</string>
-    <string name="closed_wifi_prompt">WLAN未开启，点确定开启WLAN以搜索热点。</string>
-    <string name="opened_ap_prompt">是否关闭当前热点去搜索其他热点？</string>
-    <string name="close_ap_prompt">您确定需要关闭热点？</string>
-    <string name="wt_connect_ok">热点连接成功</string>
-    <string name="create_connect_ok">热点创建成功！</string>
-    <string name="ssid_connect_ok">\n热点名：</string>
-    <string name="password_connect_ok">\n连接密码：wifichat123</string>
+    <string name="aboutus_copyright">Copyright © 2014 WiFiChat By _Hill3、Zhuang</string> 
+    
+    <string name="btn_return">返    回</string>    
+    <string name="btn_next">下一步</string>   
+    <string name="dialog_tips">提 示</string>   
+     
+    <string name="welcome_btn_login">登 陆</string>    
+    
+    <string name="login_hint_nickname">输入您的昵称</string>
+    <string name="login_text_onlinestate">在线</string>
+    <string name="login_text_birthday">出生日期</string>
+    <string name="login_text_age">岁</string>
+    <string name="login_text_birthdaytips">提醒：您的出生日期不会出现在个人资料中。</string>
+    <string name="login_text_selectsex">选择性别</string>
+    <string name="login_text_male">男</string>
+    <string name="login_text_female">女</string>
+    <string name="login_text_lastlogin">上次登录: </string>
+    <string name="login_text_changeuser">更  换  账  户</string>
+    
+    <string name="wifiap_btn_connectwifi">点击连接</string>
+    <string name="wifiap_btn_disconnect">点击断开</string>
+    <string name="wifiap_text_searchap_empty">未搜索到可用热点，可尝试重新搜索</string>
+    <string name="wifiap_text_searchap_searching">正在搜索附近的热点</string>
+    <string name="wifiap_text_createap_fail">热点创建失败，请尝试重新创建</string>
+    <string name="wifiap_dialog_createap_nonsupport">您的设备不支持热点创建</string>
+    <string name="wifiap_text_createap_creating">正在创建热点</string>
+    <string name="wifiap_dialog_createap_closewifi_confirm">创建热点会关闭当前的WiFi，确认继续？</string>
+    <string name="wifiap_dialog_createap_used">系统热点被占用，点确定开启热点以传输文件。</string>
+    <string name="wifiap_dialog_searchap_closeap_confirm">是否关闭当前热点去搜索其他热点？</string>
+    <string name="wifiap_dialog_closeap_confirm">您确定需要关闭热点？</string>
+    <string name="wifiap_text_connectap_succeed">热点创建成功！</string>
+    <string name="wifiap_text_connectap_ssid">\n热点名：</string>
+    
+    <string name="setting_text_myprofile">我的资料</string>
+    <string name="setting_text_sysconfig">系统设置</string>
+    <string name="setting_text_sysconfig_sound">声音提醒</string>
+    <string name="setting_text_sysconfig_vibra">震动提醒</string>
+    <string name="setting_btn_cleandb">删除聊天记录</string>
+    <string name="setting_btn_aboutus">关 于 我 们</string>
+    <string name="setting_btn_closeapp">退 出</string>
     
     <string name="no_file">No files</string>
 	<string name="enable_sd_card">SD card is not available, please connect one</string>
 	<string name="current_path_label">当前路径: </string>
 	<string name="select_file_for_send">选择要发送的文件</string>
     <string name="select_path_for_save">选择接收文件的文件夹</string>
-    <string name="folder_can_not_write">文件夹不可写，无法保存文件！</string>
-    <string name="start_to_send_file">正在发送文件</string>
     <string name="accept">接收</string>
     <string name="close">关闭</string>
-    <string name="refuse_receive_file">对方拒绝接收文件</string>
-    <string name="sending_file_to_you">正在给您发送文件!</string>
 </resources>

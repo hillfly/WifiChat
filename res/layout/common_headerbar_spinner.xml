@@ -8,7 +8,7 @@
     android:paddingLeft="4dip" 
     android:clickable="true">
 
-    <com.immomo.momo.android.view.HandyTextView
+    <szu.wifichat.android.view.HandyTextView
         android:id="@+id/header_spinner_htv_text"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -21,7 +21,7 @@
         android:textColor="@color/white"
         android:textSize="18sp" />
 
-    <com.immomo.momo.android.view.RotatingImageView
+    <szu.wifichat.android.view.RotatingImageView
         android:id="@+id/header_spinner_riv_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

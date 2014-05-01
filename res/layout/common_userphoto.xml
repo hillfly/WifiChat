@@ -8,10 +8,10 @@
     android:paddingBottom="10dip"
     android:paddingTop="10dip" >
 
-    <com.immomo.momo.android.view.ScrollViewPager
+    <szu.wifichat.android.view.ScrollViewPager
         android:id="@+id/userphoto_scrollviewpager"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-    </com.immomo.momo.android.view.ScrollViewPager>
+    </szu.wifichat.android.view.ScrollViewPager>
 
 </LinearLayout>

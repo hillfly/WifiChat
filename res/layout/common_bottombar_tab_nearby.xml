@@ -6,7 +6,7 @@
     android:background="@drawable/bg_tb_item_center"
     android:paddingBottom="2dip" >
 
-    <com.immomo.momo.android.view.HandyTextView
+    <szu.wifichat.android.view.HandyTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

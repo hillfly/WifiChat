@@ -5,17 +5,13 @@
     android:background="@drawable/pic_index_bg"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
-
-<!--         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:src="@drawable/pic_index_logo" />      --> 
-    </RelativeLayout>
+        android:layout_centerHorizontal="true"
+        android:paddingTop="30dp"
+        android:scaleType="center"
+        android:src="@drawable/pic_index_logo" />
 
     <LinearLayout
         android:id="@+id/welcome_linear_ctrlbar"
@@ -23,37 +19,30 @@
         android:layout_height="73dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_welcome_ctrlbar"
-        android:gravity="center_horizontal|bottom"
-        android:orientation="vertical"
-        android:paddingBottom="4dip"
-        android:paddingTop="4dip"               
-        android:paddingLeft="5dip"
-        android:paddingRight="5dip" >
+        android:gravity="center"
+        android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/welcome_btn_login"
+            android:layout_width="fill_parent"
+            android:layout_height="42dip"
+            android:layout_marginLeft="9dip"
+            android:layout_marginRight="9dip"
+            android:background="@drawable/btn_bottombar"
             android:gravity="center"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/welcome_btn_login"
-                android:layout_width="100dip"
-                android:layout_height="40dip"
-                android:layout_margin="5dip"
-                android:background="@drawable/btn_default_white"
-                android:text="登录"
-                android:textColor="#ff465579" />
-
-            <ImageButton
-                android:id="@+id/welcome_ibtn_about"
-                android:layout_width="wrap_content"
-                android:layout_height="40dip"
-                android:layout_margin="5dip"
-                android:layout_marginLeft="10dip"
-                android:background="@drawable/btn_default_white"
-                android:src="@drawable/ic_welcome_about_normal" />
-        </LinearLayout>
+            android:text="@string/welcome_btn_login"
+            android:textColor="@color/profile_bottom_text_color"
+            android:textSize="14sp" />
     </LinearLayout>
+
+    <szu.wifichat.android.view.HandyTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_above="@id/welcome_linear_ctrlbar"
+        android:text="@string/aboutus_copyright"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
 
 </RelativeLayout>

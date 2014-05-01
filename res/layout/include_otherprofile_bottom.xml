@@ -19,7 +19,7 @@
         android:orientation="horizontal" 
         android:layout_marginLeft="2dip">
 
-        <com.immomo.momo.android.view.HandyTextView
+        <szu.wifichat.android.view.HandyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="与 ta 聊天"

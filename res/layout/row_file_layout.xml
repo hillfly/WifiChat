@@ -5,24 +5,34 @@
     android:descendantFocusability="blocksDescendants"
     android:stretchColumns="1" >
 
-  	<TableRow android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-  		android:gravity="center_vertical">
-	  <ImageView android:id="@+id/file_icon"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"/>
-	  <TextView android:id="@+id/file_name"
-	     android:textColor="@android:color/background_dark"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:ems="8"/>
-	  <TextView android:layout_width="wrap_content"
-	      android:textColor="@android:color/background_dark"
-	  	android:layout_height="wrap_content"
-	  	android:id="@+id/file_size"/>
-	  <CheckBox android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content"
-	  	android:onClick="onCheck"
-	  	android:id="@+id/file_selected"/>
-	 </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/file_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="8"
+            android:textColor="@android:color/background_dark" />
+
+        <TextView
+            android:id="@+id/file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_dark" />
+
+        <CheckBox
+            android:id="@+id/file_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheck" />
+    </TableRow>
+
 </TableLayout>
