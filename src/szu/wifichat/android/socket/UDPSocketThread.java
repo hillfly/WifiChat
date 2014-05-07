@@ -195,23 +195,15 @@ public class UDPSocketThread implements Runnable {
                     }
                     mApplication.addLastMsgCache(senderIMEI, msg); // 添加到消息缓存
                     BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_SENDMSG);
-
                 }
                     break;
-
-                case IPMSGConst.IPMSG_RECIEVE_IMAGE_DATA: {
-                    Log.d(TAG, "收到图片发送请求确认");
-                    BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVE_IMAGE_DATA);
-                }
+                
+                default:
+                    BaseActivity.sendEmptyMessage(commandNo);
                     break;
-                case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: {
-                    Log.d(TAG, "收到语音发送请求确认");
-                    BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_RECIEVE_VOICE_DATA);
-                }
-                    break;
-                case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS: {
+                    
+                case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS:
 
-                }
                     break;
                 } // End of switch
 

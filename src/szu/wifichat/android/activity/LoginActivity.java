@@ -44,6 +44,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener, OnDateChangedListener {
 
     private static final String TAG = "SZU_loginActivity";
+    private static final String BIRTHDAY = "19920101";
     // 登陆年龄限制
     private static final int MAX_AGE = 80;
     private static final int MIN_AGE = 12;
@@ -251,7 +252,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
     private void initData() {
         if (android.text.TextUtils.isEmpty(mBirthday)) {
-            mSelectDate = DateUtils.getDate("19920101");
+            mSelectDate = DateUtils.getDate(BIRTHDAY);
+            mBirthday = BIRTHDAY;
         } else {
             mSelectDate = DateUtils.getDate(mBirthday);
         }

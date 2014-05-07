@@ -18,7 +18,6 @@ import szu.wifichat.android.file.explore.Constant;
 import szu.wifichat.android.file.explore.FileState;
 import szu.wifichat.android.file.explore.FileStyle;
 import szu.wifichat.android.util.SessionUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;

@@ -60,7 +60,6 @@ public class ImageMessageItem extends MessageItem implements
 
     @Override
     protected void onFillMessage() {
-        // mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getMsgContent());
         mHandler.sendEmptyMessage(0);
     }
 
@@ -155,16 +154,7 @@ public class ImageMessageItem extends MessageItem implements
     }
 
     private void updateLoadingProgress() {
-        // if (mProgress < 100) {
-        // mProgress++;
-        // mHtvLoadingText.setText(mProgress + "%");
-        // mHandler.sendEmptyMessageDelayed(1, 100);
-        // } else {
-        // mProgress = 0;
-        // mHandler.sendEmptyMessage(2);
-        // }
         mHtvLoadingText.setText(mProgress + "%");
-        // mHandler.sendEmptyMessageDelayed(1, 100);
     }
 
     // 广播接收器注册
@@ -180,14 +170,11 @@ public class ImageMessageItem extends MessageItem implements
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Log.d(TAG, "nimei");
-            // Log.d(TAG, intent.getAction());
-            // System.out.println(intent.getAction().equals(IMAGE_UPDATE_ACTION));
             // TODO Auto-generated method stub
             if (intent.getAction().equals(IMAGE_UPDATE_ACTION)) {
 
                 Log.d(TAG, "图像路径:" + filePath);
-                int i = intent.getExtras().getInt(filePath);
+                int i = intent.getIntExtra(filePath, -1);
                 Log.d(TAG, "收到图片更新广播" + "进度大小" + i);
                 if (i < 100 && i > 0)
                     setProgress(i);
