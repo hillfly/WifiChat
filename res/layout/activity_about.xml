@@ -2,21 +2,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_normal"
+   android:background="@color/background_normal"
     android:orientation="vertical" >
 
     <include
         android:id="@+id/aboutus_header"
         layout="@layout/include_header" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="130dip"
+    <LinearLayout
+        android:id="@+id/about_us_body"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/aboutus_header"
-        android:layout_marginTop="10dp"
-        android:scaleType="fitStart"
-        android:src="@drawable/pic_about_logo"
-        android:visibility="gone" />
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/pic_about_us" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/about_us_body"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:text="@string/aboutus_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:text="@string/aboutus_text2" />
+    </LinearLayout>
 
     <szu.wifichat.android.view.HandyTextView
         android:layout_width="wrap_content"

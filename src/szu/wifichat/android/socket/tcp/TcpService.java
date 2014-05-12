@@ -1,4 +1,4 @@
-﻿package szu.wifichat.android.tcp.socket;
+﻿package szu.wifichat.android.socket.tcp;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import szu.wifichat.android.BaseApplication;
+import szu.wifichat.android.activity.message.FileMessageItem;
 import szu.wifichat.android.activity.message.ImageMessageItem;
 import szu.wifichat.android.activity.message.VoiceMessageItem;
 import szu.wifichat.android.entity.Message;
@@ -22,7 +23,7 @@ import android.content.Intent;
 import android.util.Log;
 
 public class TcpService implements Runnable {
-    private static final String TAG = "SZU_TcpService";
+    private static final String TAG = "SZU_TcpService_1.0";
 
     private ServerSocket serviceSocket;
     private boolean SCAN_FLAG = false; // 接收扫描标识
@@ -34,6 +35,7 @@ public class TcpService implements Runnable {
 
     private static Context mContext;
     private static TcpService instance; // 唯一实例
+     
 
     private boolean IS_THREAD_STOP = false; // 是否线程开始标志
 
@@ -197,7 +199,7 @@ public class TcpService implements Runnable {
                 // FileState
                 // fs=getFileStateByName(filePath+strData[0],receivedFileNames);
 
-                Log.d(TAG, "传输文件类型:" + strData[3]);
+                Log.d(TAG, "接收文件类型:" + strData[3]);
                 fileSavePath = savePath + File.separator + strData[2] + File.separator + strData[0];
                 fileOutputStream = new FileOutputStream(new File(fileSavePath));// 创建文件流
                 Log.d(TAG, "文件存储路径:" + fileSavePath);
@@ -234,18 +236,20 @@ public class TcpService implements Runnable {
                         switch (fs.type) {
                             case IMAGE:
                                 intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                                Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" + fs.percent);
+                                Log.d(TAG, "更新图片路径:" + fs.fileName + " 进度" + fs.percent);
                                 intent.putExtra(fs.fileName, fs.percent);
                                 break;
 
                             case VOICE:
                                 intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
-                                Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" + fs.percent);
+                                Log.d(TAG, "更新语音路径:" + fs.fileName + " 进度" + fs.percent);
                                 intent.putExtra(fs.fileName, fs.percent);
                                 break;
 
                             case FILE:
-                                intent.setAction(Constant.fileSendStateUpdateAction);
+                            	intent.setAction(FileMessageItem.FILE_UPDATE_ACTION);
+                                Log.d(TAG, "更新文件路径:" + fs.fileName + " 进度" + fs.percent);
+                                intent.putExtra(fs.fileName, fs.percent);
                                 break;
 
                             default:
@@ -307,11 +311,14 @@ public class TcpService implements Runnable {
                         intent.setAction(VoiceMessageItem.VOICE_FINISH_UPDATE_ATCTION);
                         intent.putExtra(fs.fileName, 100);
                         // intent.setAction(Constant.fileSendStateUpdateAction);
-                        Log.d(TAG, "图片接收完毕");
+                        Log.d(TAG, "语音接收完毕");
                         break;
 
                     case FILE:
-                        intent.setAction(Constant.fileSendStateUpdateAction);
+                    	 intent.setAction(FileMessageItem.FILE_FINISH_UPDATE_ATCTION);
+                         intent.putExtra(fs.fileName, 100);
+                         // intent.setAction(Constant.fileSendStateUpdateAction);
+                         Log.d(TAG, "图片接收完毕");
                         break;
 
                     default:

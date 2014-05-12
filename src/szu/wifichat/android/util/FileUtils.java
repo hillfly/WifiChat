@@ -172,6 +172,17 @@ public class FileUtils
 	 * @param path
 	 * @return
 	 */
+	public static String getPathByFullPath(String fullpath)
+	{
+		return fullpath.substring(0,fullpath.lastIndexOf(File.separator));
+	}
+	
+	/**
+	 * 通过路径获得文件名字
+	 * 
+	 * @param path
+	 * @return
+	 */
 	public static String getNameByPath(String path)
 	{
 		return path.substring(path.lastIndexOf(File.separator) + 1);

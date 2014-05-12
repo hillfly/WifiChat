@@ -1,7 +1,8 @@
 package szu.wifichat.android.activity.message;
 
-import szu.wifichat.android.activity.ImageBrowserActivity;
+
 import szu.wifichat.android.entity.Message;
+import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.util.ImageUtils;
 import szu.wifichat.android.view.HandyTextView;
 import android.content.BroadcastReceiver;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +22,11 @@ import android.widget.LinearLayout;
 
 import szu.wifichat.android.R;
 
-public class ImageMessageItem extends MessageItem implements
+public class FileMessageItem extends MessageItem implements
         OnLongClickListener, OnClickListener {
 
-    public static final String IMAGE_UPDATE_ACTION = "szu.wifichat.android.image.message.update";
-    public static final String IMAGE_FINISH_UPDATE_ATCTION = "szu.wifichat.android.image.message.finishupdate";
+    public static final String FILE_UPDATE_ACTION = "szu.wifichat.android.message.file.update";
+    public static final String FILE_FINISH_UPDATE_ATCTION = "szu.wifichat.android.message.file.finishupdate";
     private static final String TAG = "SZU_ImageMessageItem";
     private ImageView mIvImage;
     private LinearLayout mLayoutLoading;
@@ -40,7 +42,7 @@ public class ImageMessageItem extends MessageItem implements
     private ImageItemBroadcastReceiver imageItemBroadcastReceiver;
     private IntentFilter intentFilter;
 
-    public ImageMessageItem(Message msg, Context context) {
+    public FileMessageItem(Message msg, Context context) {
         super(msg, context);
         this.filePath = new String(msg.getMsgContent());
         regBroadcastRecv();
@@ -48,12 +50,12 @@ public class ImageMessageItem extends MessageItem implements
 
     @Override
     protected void onInitViews() {
-        View view = mInflater.inflate(R.layout.message_image, null);
+        View view = mInflater.inflate(R.layout.message_file, null);
         mLayoutMessageContainer.addView(view);
-        mIvImage = (ImageView) view.findViewById(R.id.message_iv_msgimage);
-        mLayoutLoading = (LinearLayout) view.findViewById(R.id.message_layout_loading);
-        mIvLoading = (ImageView) view.findViewById(R.id.message_iv_loading);
-        mHtvLoadingText = (HandyTextView) view.findViewById(R.id.message_htv_loading_text);
+        mIvImage = (ImageView) view.findViewById(R.id.message_file_iv_msgimage);
+        mLayoutLoading = (LinearLayout) view.findViewById(R.id.message_file_layout_loading);
+        mIvLoading = (ImageView) view.findViewById(R.id.message_file_iv_loading);
+        mHtvLoadingText = (HandyTextView) view.findViewById(R.id.message_file_htv_loading_text);
         mIvImage.setOnClickListener(this);
         mIvImage.setOnLongClickListener(this);
     }
@@ -65,13 +67,10 @@ public class ImageMessageItem extends MessageItem implements
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(mContext, ImageBrowserActivity.class);
-        intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
-                ImageBrowserActivity.TYPE_PHOTO);
-        intent.putExtra(ImageBrowserActivity.PATH, mMsg.getMsgContent());
-        mContext.startActivity(intent);
-        ((ChatActivity) mContext).overridePendingTransition(R.anim.zoom_enter,
-                0);
+    	Intent intent = new Intent();
+    	intent.setType("*/*");
+		intent.setData(Uri.parse("file://"+FileUtils.getPathByFullPath(filePath)));
+		mContext.startActivity(intent);
     }
 
     @Override
@@ -104,13 +103,13 @@ public class ImageMessageItem extends MessageItem implements
     private void startLoadingAnimation() {
         mAnimation = new AnimationDrawable();
         mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_01), 300);
+                mContext.getResources(), R.drawable.ic_loading_msgplus_01), 100);
         mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_02), 300);
+                mContext.getResources(), R.drawable.ic_loading_msgplus_02), 100);
         mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_03), 300);
+                mContext.getResources(), R.drawable.ic_loading_msgplus_03), 100);
         mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_04), 300);
+                mContext.getResources(), R.drawable.ic_loading_msgplus_04), 100);
         mAnimation.setOneShot(false);
         mIvImage.setVisibility(View.GONE);
         mLayoutLoading.setVisibility(View.VISIBLE);
@@ -134,12 +133,13 @@ public class ImageMessageItem extends MessageItem implements
                 mAnimation = null;
             }
         }
-        mBitmap = ImageUtils.createBitmap(mMsg.getMsgContent(), 100, 100);
+//        mBitmap = ImageUtils.createBitmap(mMsg.getMsgContent(), 100, 100);
         mLayoutLoading.setVisibility(View.GONE);
         mHtvLoadingText.setVisibility(View.GONE);
         mIvImage.setVisibility(View.VISIBLE);
         if (mBitmap != null) {
-            mIvImage.setImageBitmap(mBitmap);
+//            mIvImage.setImageBitmap(mBitmap);
+        	mIvImage.setImageResource(R.drawable.file_icon_default);
         }
     }
 
@@ -161,8 +161,8 @@ public class ImageMessageItem extends MessageItem implements
     private void regBroadcastRecv() {
         imageItemBroadcastReceiver = new ImageItemBroadcastReceiver();
         intentFilter = new IntentFilter();
-        intentFilter.addAction(IMAGE_UPDATE_ACTION);
-        intentFilter.addAction(IMAGE_FINISH_UPDATE_ATCTION);
+        intentFilter.addAction(FILE_UPDATE_ACTION);
+        intentFilter.addAction(FILE_FINISH_UPDATE_ATCTION);
         mContext.registerReceiver(imageItemBroadcastReceiver, intentFilter);
     }
 
@@ -171,19 +171,18 @@ public class ImageMessageItem extends MessageItem implements
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            if (intent.getAction().equals(IMAGE_UPDATE_ACTION)) {
+            if (intent.getAction().equals(FILE_UPDATE_ACTION)) {
 
-                Log.d(TAG, "图像路径:" + filePath);
+                Log.d(TAG, "文件路径:" + filePath);
                 int i = intent.getIntExtra(filePath, -1);
-                Log.d(TAG, "收到图片更新广播" + "进度大小" + i);
+                Log.d(TAG, "收到文件更新广播，" + "进度大小：" + i);
                 if (i < 100 && i > 0)
                     setProgress(i);
-            } else if (intent.getAction().equals(IMAGE_FINISH_UPDATE_ATCTION)) {
-                Log.d(TAG, "图片更新完毕");
+            } else if (intent.getAction().equals(FILE_FINISH_UPDATE_ATCTION)) {
+                Log.d(TAG, "文件更新完毕");
                 int i = intent.getIntExtra(filePath, -1);
                 if (i == 100)
                     mHandler.sendEmptyMessage(2);
-
             }
 
         }

@@ -3,7 +3,7 @@
     package="szu.wifichat.android"
     android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0.140501" >
+    android:versionName="1.0.140512" >
 
     <uses-sdk
         android:minSdkVersion="12"

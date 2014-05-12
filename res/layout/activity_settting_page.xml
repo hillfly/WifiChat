@@ -32,13 +32,12 @@
                     android:id="@+id/setting_my_info_layout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
+              
                     android:background="@drawable/btn_default"
                     android:clickable="true"
                     android:orientation="horizontal"
                     android:paddingTop="8.0dip" >
-
+				
                     <ImageView
                         android:id="@+id/myavater"
                         android:layout_width="wrap_content"
@@ -47,16 +46,17 @@
                         android:layout_centerVertical="true"
                         android:maxHeight="10dp"
                         android:maxWidth="10dp"
-                        android:paddingLeft="18.0dip"
+                        android:visibility="gone"
+                        android:paddingLeft="18.0dip"            
                         android:src="@drawable/mylike" />
-
+                   
                     <TextView
                         android:id="@+id/mynickname"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/myavater"
-                        android:paddingLeft="11.0dip"
+                        android:paddingLeft="17.0dip"
                         android:text="@string/setting_text_myprofile"
                         android:textColor="@color/black"
                         android:textSize="16.0sp" />
@@ -68,6 +68,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_gravity="right"
+                        
                         android:clickable="true"
                         android:paddingRight="20.0dip"
                         android:src="@drawable/ic_arrow" />

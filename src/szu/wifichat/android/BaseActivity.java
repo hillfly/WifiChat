@@ -7,8 +7,8 @@ import java.util.List;
 
 import szu.wifichat.android.activity.maintabs.MainTabActivity;
 import szu.wifichat.android.dialog.FlippingLoadingDialog;
-import szu.wifichat.android.socket.OnActiveChatActivityListenner;
-import szu.wifichat.android.socket.UDPSocketThread;
+import szu.wifichat.android.socket.udp.OnActiveChatActivityListenner;
+import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HandyTextView;
 import android.app.AlertDialog;
@@ -51,8 +51,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected int mScreenWidth;
     protected int mScreenHeight;
     protected float mDensity;
-
-    protected Long exitTime = (long) 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,43 +79,16 @@ public abstract class BaseActivity extends FragmentActivity {
 
     }
 
-    // @Override
-    // public void onBackPressed() { // 返回桌面
-    // if (MainTabActivity.getIsTabActive()) {
-    // Intent intent = new Intent(Intent.ACTION_MAIN);
-    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    // intent.addCategory(Intent.CATEGORY_HOME);
-    // startActivity(intent);
-    // }
-    // else {
-    // super.onBackPressed();
-    // }
-    // }
-
-    @Override
-    public void onBackPressed() { // 返回桌面
-        if (MainTabActivity.getIsTabActive()) {
-            System.out.println(System.currentTimeMillis() - exitTime);
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                showShortToast("再按一次退出程序");
-                exitTime = System.currentTimeMillis();
-            } else {
-                finish();
-            }
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     @Override
     protected void onDestroy() {
+        Log.i("SZU_Baseactivity","onDestroy()");
         clearAsyncTask();
         super.onDestroy();
     }
 
     @Override
     public void finish() {
-        super.finish();
+        super.finish();        
         queue.removeLast();
     }
 

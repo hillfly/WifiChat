@@ -2,8 +2,12 @@
 <resources>
     <string name="app_name">WifiChat</string> 
     
-    <string name="aboutus_copyright">Copyright © 2014 WiFiChat By _Hill3、Zhuang</string> 
+    <string name="aboutus_copyright">Copyright © 2014 WiFiChat By _Hill3、Zhuanglb</string> 
     
+    <string name="aboutus_text">\u0020\u0020这款软件是我们两个人的毕设，完成这款软件我们也就毕业了，
+        从完全不懂安卓一路摸索直到短短几个月，遇到挺多问题，也参照很多前人的方法，然后不断进行代码
+        改进和优化，作品很多待改进的地方，希望大家给予雅正。</string> 
+    <string name="aboutus_text2">仅以此品献给基情燃烧的岁月\nBy  _Hill3、Zhuanglb</string>
     <string name="btn_return">返    回</string>    
     <string name="btn_next">下一步</string>   
     <string name="dialog_tips">提 示</string>   

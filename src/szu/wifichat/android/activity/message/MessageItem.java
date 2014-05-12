@@ -71,6 +71,7 @@ public abstract class MessageItem {
             messageItem = new VoiceMessageItem(msg, context);
             break;
         case FILE:
+        	messageItem = new FileMessageItem(msg, context);
             break;
 
         }

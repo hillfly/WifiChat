@@ -1,4 +1,4 @@
-package szu.wifichat.android.socket;
+package szu.wifichat.android.socket.udp;
 
 public class IPMSGConst {
 	public static final int VERSION = 0x001;		// 版本号
@@ -40,9 +40,12 @@ public class IPMSGConst {
 	public static final int IPMSG_GET_IMAGE_DATA       = 0x00000063;  //图片发送请求
 	public static final int IPMSG_RECIEVE_IMAGE_DATA   = 0x00000064;  //图片接收确认
 	public static final int IPMSG_GET_IMAGE_SUCCESS    = 0x00000065;  //图片接收成功
-	public static final int IPMSG_GET_VOICE_DATA       = 0x00000066;  //图片发送请求
-	public static final int IPMSG_RECIEVE_VOICE_DATA   = 0x00000067;  //图片接收确认
-	public static final int IPMSG_GET_VOICE_SUCCESS    = 0x00000068;  //图片接收成功
+	public static final int IPMSG_GET_VOICE_DATA       = 0x00000066;  //语音发送请求
+	public static final int IPMSG_RECIEVE_VOICE_DATA   = 0x00000067;  //语音接收确认
+	public static final int IPMSG_GET_VOICE_SUCCESS    = 0x00000068;  //语音接收成功
+	public static final int IPMSG_GET_FILE_DATA        = 0x00000069;  //文件发送请求
+	public static final int IPMSG_RECIEVE_FILE_DATA    = 0x00000070;  //文件接收确认
+	public static final int IPMSG_GET_FILE_SUCCESS     = 0x00000071;  //文件接收成功
 	/*zhuangliebin新增*/
 	
 	public static final int IPMSG_GETPUBKEY			 = 0x00000072;	//获得RSA公钥

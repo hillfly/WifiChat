@@ -37,6 +37,7 @@ public class FileManager extends ListActivity
 	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//		FEATURE_NO_TITLE：无标题
 		setContentView(R.layout.file_select);
 

@@ -1,4 +1,4 @@
-package szu.wifichat.android.socket;
+package szu.wifichat.android.socket.udp;
 
 import java.util.Date;
 

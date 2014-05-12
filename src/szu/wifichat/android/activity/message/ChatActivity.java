@@ -4,15 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import szu.wifichat.android.BaseApplication;
+import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.ChatAdapter;
-import szu.wifichat.android.adapter.CheckListDialogAdapter;
-import szu.wifichat.android.dialog.SimpleListDialog;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.entity.Message.CONTENT_TYPE;
-import szu.wifichat.android.socket.IPMSGConst;
-import szu.wifichat.android.socket.OnActiveChatActivityListenner;
-import szu.wifichat.android.tcp.socket.TcpClient;
+import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.socket.tcp.TcpClient;
+import szu.wifichat.android.socket.udp.IPMSGConst;
+import szu.wifichat.android.socket.udp.OnActiveChatActivityListenner;
 import szu.wifichat.android.util.AudioRecorderUtils;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.FileUtils;
@@ -22,10 +21,8 @@ import szu.wifichat.android.view.ChatListView;
 import szu.wifichat.android.view.EmoteInputView;
 import szu.wifichat.android.view.EmoticonsEditText;
 import szu.wifichat.android.view.HeaderLayout;
-import szu.wifichat.android.view.ScrollLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
-
-import android.app.Dialog;
+import szu.wifichat.android.view.ScrollLayout;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -40,7 +37,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -49,15 +45,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import szu.wifichat.android.R;
+public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
 
-public class ChatActivity extends BaseMessageActivity implements
-        OnActiveChatActivityListenner {
-
-    private static final String TAG = "SZU_ChatActivity";
+    private static final String TAG = "SZU_ChatActivity_old";
     public static String IMAG_PATH;
     public static String VOICE_PATH;
     public static String FILE_PATH;
+    private static final int FILE_SELECT_CODE = 4;// ImageUtils已经使用0、1、2、3
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +71,27 @@ public class ChatActivity extends BaseMessageActivity implements
     public void onBackPressed() {
         if (mLayoutMessagePlusBar.isShown()) {
             hidePlusBar();
-        } else if (mInputView.isShown()) {
+        }
+        else if (mInputView.isShown()) {
             mIbTextDitorKeyBoard.setVisibility(View.GONE);
             mIbTextDitorEmote.setVisibility(View.VISIBLE);
             mInputView.setVisibility(View.GONE);
-        } else if (getWindow().getAttributes().softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) {
+        }
+        else if (getWindow().getAttributes().softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) {
             mIbTextDitorKeyBoard.setVisibility(View.VISIBLE);
             mIbTextDitorEmote.setVisibility(View.GONE);
             hideKeyBoard();
-        } else if (mLayoutScroll.getCurScreen() == 1) {
+        }
+        else if (mLayoutScroll.getCurScreen() == 1) {
             mLayoutScroll.snapToScreen(0);
-        } else {
+        }
+        else {
             finish();
         }
     }
 
     @Override
     protected void onDestroy() {
-        // PhotoUtils.deleteImageFile();
         super.onDestroy();
     }
 
@@ -135,8 +132,7 @@ public class ChatActivity extends BaseMessageActivity implements
         mLayoutMessagePlusBar = (LinearLayout) findViewById(R.id.message_plus_layout_bar);
         mLayoutMessagePlusPicture = (LinearLayout) findViewById(R.id.message_plus_layout_picture);
         mLayoutMessagePlusCamera = (LinearLayout) findViewById(R.id.message_plus_layout_camera);
-        mLayoutMessagePlusLocation = (LinearLayout) findViewById(R.id.message_plus_layout_location);
-        mLayoutMessagePlusGift = (LinearLayout) findViewById(R.id.message_plus_layout_gift);
+        mLayoutMessagePlusFile = (LinearLayout) findViewById(R.id.message_plus_layout_file);
 
     }
 
@@ -158,58 +154,50 @@ public class ChatActivity extends BaseMessageActivity implements
         mLayoutFullScreenMask.setOnTouchListener(this);
         mLayoutMessagePlusPicture.setOnClickListener(this);
         mLayoutMessagePlusCamera.setOnClickListener(this);
-        mLayoutMessagePlusLocation.setOnClickListener(this);
-        mLayoutMessagePlusGift.setOnClickListener(this);
+        mLayoutMessagePlusFile.setOnClickListener(this);
 
     }
 
     private void init() {
-        mMessagesList = mDBOperate.getScrollMessageOfChattingInfo(0, 5);
-        sendFileStates = BaseApplication.sendFileStates;// 存储文件收发状态
-        reciveFileStates = BaseApplication.recieveFileStates;
+        // sendFileStates = BaseApplication.sendFileStates;// 存储文件收发状态
+        // reciveFileStates = BaseApplication.recieveFileStates;
         mID = SessionUtils.getLocalUserID();
         mNickName = SessionUtils.getNickname();
         mIMEI = SessionUtils.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
         createSavePath();// 创建保存的文件夹目录
         mSenderID = mDBOperate.getIDByIMEI(mPeople.getIMEI());// 获取聊天对象IMEI
+        mMessagesList = mDBOperate.getScrollMessageOfChattingInfo(0, 5, mID, mSenderID);
         mHeaderLayout.setTitleChat(
-                ImageUtils.getIDfromDrawable(this, NearByPeople.AVATAR
-                        + mPeople.getAvatar()), R.drawable.bg_chat_dis_active,
-                mPeople.getNickname(), mPeople.getLogintime(),
-                R.drawable.ic_topbar_profile,
-                new OnMiddleImageButtonClickListener(),
-                R.drawable.ic_topbar_more,
-                new OnRightImageButtonClickListener());
+                ImageUtils.getIDfromDrawable(this, NearByPeople.AVATAR + mPeople.getAvatar()),
+                R.drawable.bg_chat_dis_active, mPeople.getNickname(), mPeople.getLogintime(),
+                R.drawable.ic_topbar_profile, new OnRightImageButtonClickListener());
         mInputView.setEditText(mEetTextDitorEditer);
         initRounds();
-        initPopupWindow();
-        initSynchronousDialog();
+        initRecordDialog();
 
-        mAdapter = new ChatAdapter(mApplication, ChatActivity.this,
-                mMessagesList);
+        mAdapter = new ChatAdapter(mApplication, ChatActivity.this, mMessagesList);
         mClvList.setAdapter(mAdapter);
-        // refreshAdapter();
     }
 
     @Override
     public void doAction(int whichScreen) {
         switch (whichScreen) {
-        case 0:
-            ((ImageView) mLayoutRounds.getChildAt(0)).setImageBitmap(mRoundsSelected);
-            ((ImageView) mLayoutRounds.getChildAt(1)).setImageBitmap(mRoundsNormal);
-            break;
+            case 0:
+                ((ImageView) mLayoutRounds.getChildAt(0)).setImageBitmap(mRoundsSelected);
+                ((ImageView) mLayoutRounds.getChildAt(1)).setImageBitmap(mRoundsNormal);
+                break;
 
-        case 1:
-            ((ImageView) mLayoutRounds.getChildAt(1)).setImageBitmap(mRoundsSelected);
-            ((ImageView) mLayoutRounds.getChildAt(0)).setImageBitmap(mRoundsNormal);
-            mIbTextDitorKeyBoard.setVisibility(View.GONE);
-            mIbTextDitorEmote.setVisibility(View.VISIBLE);
-            if (mInputView.isShown()) {
-                mInputView.setVisibility(View.GONE);
-            }
-            hideKeyBoard();
-            break;
+            case 1:
+                ((ImageView) mLayoutRounds.getChildAt(1)).setImageBitmap(mRoundsSelected);
+                ((ImageView) mLayoutRounds.getChildAt(0)).setImageBitmap(mRoundsNormal);
+                mIbTextDitorKeyBoard.setVisibility(View.GONE);
+                mIbTextDitorEmote.setVisibility(View.VISIBLE);
+                if (mInputView.isShown()) {
+                    mInputView.setVisibility(View.GONE);
+                }
+                hideKeyBoard();
+                break;
         }
     }
 
@@ -226,166 +214,159 @@ public class ChatActivity extends BaseMessageActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.chat_textditor_ib_plus:
-            if (!mLayoutMessagePlusBar.isShown()) {
-                showPlusBar();
-            }
-            break;
+            case R.id.chat_textditor_ib_plus:
+                if (!mLayoutMessagePlusBar.isShown()) {
+                    showPlusBar();
+                }
+                break;
 
-        case R.id.chat_textditor_ib_emote:
-            mIbTextDitorKeyBoard.setVisibility(View.VISIBLE);
-            mIbTextDitorEmote.setVisibility(View.GONE);
-            mEetTextDitorEditer.requestFocus();
-            if (mInputView.isShown()) {
-                hideKeyBoard();
-            } else {
-                hideKeyBoard();
-                mInputView.setVisibility(View.VISIBLE);
-            }
-            break;
+            case R.id.chat_textditor_ib_emote:
+                mIbTextDitorKeyBoard.setVisibility(View.VISIBLE);
+                mIbTextDitorEmote.setVisibility(View.GONE);
+                mEetTextDitorEditer.requestFocus();
+                if (mInputView.isShown()) {
+                    hideKeyBoard();
+                }
+                else {
+                    hideKeyBoard();
+                    mInputView.setVisibility(View.VISIBLE);
+                }
+                break;
 
-        case R.id.chat_textditor_ib_keyboard:
-            mIbTextDitorKeyBoard.setVisibility(View.GONE);
-            mIbTextDitorEmote.setVisibility(View.VISIBLE);
-            showKeyBoard();
-            break;
+            case R.id.chat_textditor_ib_keyboard:
+                mIbTextDitorKeyBoard.setVisibility(View.GONE);
+                mIbTextDitorEmote.setVisibility(View.VISIBLE);
+                showKeyBoard();
+                break;
 
-        case R.id.chat_textditor_btn_send:
-            String content = mEetTextDitorEditer.getText().toString().trim();
-            if (!TextUtils.isEmpty(content)) {
-                mEetTextDitorEditer.setText(null);
-                sendMessage(content, CONTENT_TYPE.TEXT);
-                refreshAdapter();
-            }
-            break;
+            case R.id.chat_textditor_btn_send:
+                String content = mEetTextDitorEditer.getText().toString().trim();
+                if (!TextUtils.isEmpty(content)) {
+                    mEetTextDitorEditer.setText(null);
+                    sendMessage(content, CONTENT_TYPE.TEXT);
+                    refreshAdapter();
+                }
+                break;
 
-        case R.id.chat_textditor_iv_audio:
-            mLayoutScroll.snapToScreen(1);
-            break;
+            case R.id.chat_textditor_iv_audio:
+                mLayoutScroll.snapToScreen(1);
+                break;
 
-        case R.id.chat_audioditor_ib_plus:
-            if (!mLayoutMessagePlusBar.isShown()) {
-                showPlusBar();
-            }
-            break;
+            case R.id.chat_audioditor_ib_plus:
+                if (!mLayoutMessagePlusBar.isShown()) {
+                    showPlusBar();
+                }
+                break;
 
-        case R.id.chat_audioditor_ib_keyboard:
-            mLayoutScroll.snapToScreen(0);
-            break;
+            case R.id.chat_audioditor_ib_keyboard:
+                mLayoutScroll.snapToScreen(0);
+                break;
 
-        case R.id.message_plus_layout_picture:
-            ImageUtils.selectPhoto(ChatActivity.this);
-            hidePlusBar();
-            break;
+            case R.id.message_plus_layout_picture:
+                ImageUtils.selectPhoto(ChatActivity.this);
+                hidePlusBar();
+                break;
 
-        case R.id.message_plus_layout_camera:
-            mCameraImagePath = ImageUtils.takePicture(ChatActivity.this);
-            hidePlusBar();
-            break;
+            case R.id.message_plus_layout_camera:
+                mCameraImagePath = ImageUtils.takePicture(ChatActivity.this);
+                hidePlusBar();
+                break;
 
-        // case R.id.message_plus_layout_location:
-        // mMessages.add(new Message("nearby_people_other", System
-        // .currentTimeMillis(), "0.12km", null, CONTENT_TYPE.MAP,
-        // MESSAGE_TYPE.SEND));
-        // mAdapter.notifyDataSetChanged();
-        // mClvList.setSelection(mMessages.size());
-        // hidePlusBar();
-        // break;
-
-        case R.id.message_plus_layout_gift:
-            hidePlusBar();
-            break;
+            case R.id.message_plus_layout_file:
+                showFileChooser();
+                hidePlusBar();
+                break;
         }
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN: // 按下按钮
-            Log.i(TAG, "ACTION DOWN");
 
-            if (recordState == RECORD_OFF) {
-                if (v.getId() == R.id.chat_textditor_eet_editer) {
-                    mIbTextDitorKeyBoard.setVisibility(View.GONE);
-                    mIbTextDitorEmote.setVisibility(View.VISIBLE);
-                    showKeyBoard();
+            case MotionEvent.ACTION_DOWN: // 按下按钮
+                Log.i(TAG, "ACTION DOWN");
+
+                if (recordState == RECORD_OFF) {
+                    switch (v.getId()) {
+                        case R.id.chat_textditor_eet_editer:
+                            mIbTextDitorKeyBoard.setVisibility(View.GONE);
+                            mIbTextDitorEmote.setVisibility(View.VISIBLE);
+                            showKeyBoard();
+                            break;
+
+                        case R.id.fullscreen_mask:
+                            hidePlusBar();
+                            break;
+
+                        case R.id.chat_audioditor_iv_audiobtn:
+                            downY = event.getY();
+
+                            mAudioRecorder = new AudioRecorderUtils();
+
+                            RECORD_FILENAME = System.currentTimeMillis()
+                                    + szu.wifichat.android.util.TextUtils.getRandomNumStr(3);
+                            mAudioRecorder.setVoicePath(VOICE_PATH, RECORD_FILENAME);
+                            recordState = RECORD_ON;
+                            try {
+                                mAudioRecorder.start();
+                                recordTimethread();
+                                showVoiceDialog(0);
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+
+                            }
+                            break;
+                    }
                 }
+                break;
 
-                if (v.getId() == R.id.fullscreen_mask) {
-                    hidePlusBar();
+            case MotionEvent.ACTION_MOVE: // 滑动手指
+                float moveY = event.getY();
+                if (moveY - downY < -50) {
+                    isMove = true;
+                    showVoiceDialog(1);
                 }
+                else if (moveY - downY < -20) {
+                    isMove = false;
+                    showVoiceDialog(0);
+                }
+                break;
 
-                if (v.getId() == R.id.chat_audioditor_iv_audiobtn) {
-                    Log.i(TAG, "start Record");
-                    downY = event.getY();
+            case MotionEvent.ACTION_UP: // 松开手指
+                Log.i(TAG, "ACTION UP");
+                if (recordState == RECORD_ON) {
+                    recordState = RECORD_OFF;
 
-                    mAudioRecorder = new AudioRecorderUtils();
-
-                    RECORD_FILENAME = System.currentTimeMillis()
-                            + szu.wifichat.android.util.TextUtils.getRandomNumStr(3);
-                    mAudioRecorder.setVoicePath(VOICE_PATH, RECORD_FILENAME);
-                    recordState = RECORD_ON;
                     try {
-                        mAudioRecorder.start();
-                        recordTimethread();
-                        showVoiceDialog(0);
-                    } catch (IOException e) {
+                        mRecordThread.interrupt();
+                        mRecordThread = null;
+                        mAudioRecorder.stop();
+                        voiceValue = 0.0;
+                    }
+                    catch (IOException e) {
+                        // TODO Auto-generated catch block
                         e.printStackTrace();
-
                     }
-                }
-            }
-            break;
 
-        case MotionEvent.ACTION_MOVE: // 滑动手指
-            float moveY = event.getY();
-            if (moveY - downY < -50) {
-                isMove = true;
-                showVoiceDialog(1);
-            } else if (moveY - downY < -20) {
-                isMove = false;
-                showVoiceDialog(0);
-            }
-            break;
-
-        case MotionEvent.ACTION_UP: // 松开手指
-            Log.i(TAG, "ACTION UP");
-            if (recordState == RECORD_ON) {
-                recordState = RECORD_OFF;
-                if (mRecordDialog.isShowing()) {
-                    mRecordDialog.dismiss();
-                }
-                // try {
-                // mRecordThread.interrupt();
-                // mAudioRecorder.stop();
-                // voiceValue = 0.0;
-                // }
-                // catch (IOException e) {
-                // e.printStackTrace();
-                // }
-
-                if (!isMove) {
-                    if (recodeTime < MIN_RECORD_TIME) {
-                        showWarnToast("时间太短  录音失败");
-                    } else {
-                        // mTvRecordTxt.setText("录音时间：" + ((int)
-                        // recodeTime));
-                        // mTvRecordPath.setText("文件路径：" + getAmrPath());
+                    if (mRecordDialog.isShowing()) {
+                        mRecordDialog.dismiss();
                     }
-                }
 
-                isMove = false;
-                try {
-                    mAudioRecorder.stop();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    if (!isMove) {
+                        if (recodeTime < MIN_RECORD_TIME) {
+                            showWarnToast("时间太短  录音失败");
+                        }
+                        else {
+                            mVoicePath = mAudioRecorder.getVoicePath();
+                            sendMessage(mVoicePath, CONTENT_TYPE.VOICE);
+                            refreshAdapter();
+                        }
+                    }
+
+                    isMove = false;
                 }
-                mVoicePath = mAudioRecorder.getVoicePath();
-                sendMessage(mVoicePath, CONTENT_TYPE.VOICE);
-                refreshAdapter();
-            }
-            break;
+                break;
 
         }
 
@@ -407,31 +388,11 @@ public class ChatActivity extends BaseMessageActivity implements
         if (TextUtils.isEmpty(s)) {
             mIvTextDitorAudio.setVisibility(View.VISIBLE);
             mBtnTextDitorSend.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             mIvTextDitorAudio.setVisibility(View.GONE);
             mBtnTextDitorSend.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onVoiceModeClick() {
-        String[] modes = getResources().getStringArray(R.array.chat_audio_type);
-        mDialog = new SimpleListDialog(this);
-        mDialog.setTitle("语音收听方式");
-        mDialog.setTitleLineVisibility(View.GONE);
-        mDialog.setAdapter(new CheckListDialogAdapter(mCheckId, this, modes));
-        mDialog.setOnSimpleListItemClickListener(new OnVoiceModeDialogItemClickListener());
-        mDialog.show();
-    }
-
-    @Override
-    public void onCreateClick() {
-
-    }
-
-    @Override
-    public void onSynchronousClick() {
-        mSynchronousDialog.show();
     }
 
     @SuppressWarnings("deprecation")
@@ -439,74 +400,90 @@ public class ChatActivity extends BaseMessageActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-        case ImageUtils.INTENT_REQUEST_CODE_ALBUM:
-            if (data == null) {
-                return;
-            }
-            if (resultCode == RESULT_OK) {
-                if (data.getData() == null) {
+            case ImageUtils.INTENT_REQUEST_CODE_ALBUM:
+                if (data == null) {
                     return;
                 }
-                if (!FileUtils.isSdcardExist()) {
-                    showShortToast("SD卡不可用,请检查");
-                    return;
-                }
-                Uri uri = data.getData();
-                String[] proj = { MediaStore.Images.Media.DATA };
-                Cursor cursor = managedQuery(uri, proj, null, null, null);
-                if (cursor != null) {
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-                        String path = cursor.getString(column_index);
-                        mCameraImagePath = path;
-                        Bitmap bitmap = ImageUtils.getBitmapFromFile(path);
-                        if (ImageUtils.bitmapIsLarge(bitmap)) {
-                            ImageUtils.cropPhoto(this, this, path);
-                        } else {
-                            if (path != null) {
-                                sendMessage(path, CONTENT_TYPE.IMAGE);
-                                refreshAdapter();
+                if (resultCode == RESULT_OK) {
+                    if (data.getData() == null) {
+                        return;
+                    }
+                    if (!FileUtils.isSdcardExist()) {
+                        showShortToast("SD卡不可用,请检查");
+                        return;
+                    }
+                    Uri uri = data.getData();
+                    String[] proj = { MediaStore.Images.Media.DATA };
+                    Cursor cursor = managedQuery(uri, proj, null, null, null);
+                    if (cursor != null) {
+                        int column_index = cursor
+                                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                            String path = cursor.getString(column_index);
+                            mCameraImagePath = path;
+                            Bitmap bitmap = ImageUtils.getBitmapFromFile(path);
+                            if (ImageUtils.bitmapIsLarge(bitmap)) {
+                                ImageUtils.cropPhoto(this, this, path);
+                            }
+                            else {
+                                if (path != null) {
+                                    sendMessage(path, CONTENT_TYPE.IMAGE);
+                                    refreshAdapter();
+                                }
                             }
                         }
                     }
                 }
-            }
-            break;
+                break;
 
-        case ImageUtils.INTENT_REQUEST_CODE_CAMERA:
-            if (resultCode == RESULT_OK) {
-                if (mCameraImagePath != null) {
-                    mCameraImagePath = ImageUtils.savePhotoToSDCard(ImageUtils.CompressionPhoto(
-                            mScreenWidth, mCameraImagePath, 2));
-                    ImageUtils.fliterPhoto(this, this, mCameraImagePath);
+            case ImageUtils.INTENT_REQUEST_CODE_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    if (mCameraImagePath != null) {
+                        mCameraImagePath = ImageUtils.savePhotoToSDCard(ImageUtils
+                                .CompressionPhoto(mScreenWidth, mCameraImagePath, 2));
+                        ImageUtils.fliterPhoto(this, this, mCameraImagePath);
+                    }
+                }
+                // mCameraImagePath = null;
+                break;
+
+            case ImageUtils.INTENT_REQUEST_CODE_CROP:
+                if (resultCode == RESULT_OK) {
+                    String path = data.getStringExtra("path");
+                    mCameraImagePath = path;
+                    if (path != null) {
+                        sendMessage(path, CONTENT_TYPE.IMAGE);
+                        refreshAdapter();
+                    }
+                }
+                break;
+
+            case ImageUtils.INTENT_REQUEST_CODE_FLITER:
+                if (resultCode == RESULT_OK) {
+                    String path = data.getStringExtra("path");
+                    if (path != null) {
+                        sendMessage(path, CONTENT_TYPE.IMAGE);
+                        refreshAdapter();
+                    }
+                }
+                break;
+
+            case FILE_SELECT_CODE: {
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    String path = uri.getPath();
+                    Log.i("接收文件路径：", path);
+
+                    if (path != null) {
+                        sendFilePath = path;
+                        sendMessage(sendFilePath, CONTENT_TYPE.FILE);
+                        refreshAdapter();
+                    }
                 }
             }
-            // mCameraImagePath = null;
-            break;
-
-        case ImageUtils.INTENT_REQUEST_CODE_CROP:
-            if (resultCode == RESULT_OK) {
-                String path = data.getStringExtra("path");
-                mCameraImagePath = path;
-                if (path != null) {
-                    sendMessage(path, CONTENT_TYPE.IMAGE);
-                    refreshAdapter();
-                    setLvSelection(mMessagesList.size());
-                }
-            }
-            break;
-
-        case ImageUtils.INTENT_REQUEST_CODE_FLITER:
-            if (resultCode == RESULT_OK) {
-                String path = data.getStringExtra("path");
-                if (path != null) {
-                    sendMessage(path, CONTENT_TYPE.IMAGE);
-                    refreshAdapter();
-                    setLvSelection(mMessagesList.size());
-                }
-            }
-            break;
+                break;
         }
+
     }
 
     // 程序在开始运行的时候,调用以下函数创建存储图片语音文件目录
@@ -527,8 +504,6 @@ public class ChatActivity extends BaseMessageActivity implements
 
     @Override
     public boolean isThisActivityMsg(Message msg) {
-        Log.i("SZU_ChatActivity", "进入isThisActivityMsg(), msg:" + (msg != null));
-        // TODO 待完成
         if (mPeople.getIMEI().equals(msg.getSenderIMEI())) { // 若消息与本activity有关，则接收
             mMessagesList.add(msg); // 将此消息添加到显示聊天list中
             return true;
@@ -538,45 +513,50 @@ public class ChatActivity extends BaseMessageActivity implements
 
     @Override
     public void processMessage(android.os.Message msg) {
-        Log.i("SZU_ChatActivity", "进入processMessage()");
-        // TODO 待完成
         switch (msg.what) {
-        case IPMSGConst.IPMSG_SENDMSG:
-            refreshAdapter(); // 刷新ListView
-            // super.processMessage(null); // 调用父类方法进行响铃提醒
-            break;
+            case IPMSGConst.IPMSG_SENDMSG:
+                refreshAdapter(); // 刷新ListView
+                break;
 
-        case IPMSGConst.IPMSG_RELEASEFILES: { // 拒绝接受文件,停止发送文件线程
-        }
-            break;
+            case IPMSGConst.IPMSG_RELEASEFILES: { // 拒绝接受文件,停止发送文件线程
+            }
+                break;
 
-        case IPMSGConst.FILESENDSUCCESS: { // 文件发送成功
-        }
+            case IPMSGConst.IPMSG_RECIEVE_IMAGE_DATA: {// 图片开始发送
+                Log.d(TAG, "接收方确认文件请求,发送文件为" + mCameraImagePath);
+                tcpClient = TcpClient.getInstance(ChatActivity.this);
+                tcpClient.startSend();
+                tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress(),
+                        Message.CONTENT_TYPE.IMAGE);
+            }
+                break;
+            case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: {// 语音开始发送
+                Log.d(TAG, "接收方确认文件语音请求,发送文件为" + mVoicePath);
+                tcpClient = TcpClient.getInstance(ChatActivity.this);
+                tcpClient.startSend();
 
-            break;
-        case IPMSGConst.IPMSG_RECIEVE_IMAGE_DATA: {// 图片开始发送
-            Log.d(TAG, "接收方确认文件请求,发送文件为" + mCameraImagePath);
-            tcpClient = TcpClient.getInstance(ChatActivity.this);
-            tcpClient.startSend();
-            tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress(),
-                    Message.CONTENT_TYPE.IMAGE);
-        }
-            break;
-        case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: {// 语音开始发送
-            Log.d(TAG, "接收方确认文件语音请求,发送文件为" + mVoicePath);
-            tcpClient = TcpClient.getInstance(ChatActivity.this);
-            tcpClient.startSend();
+                if (FileUtils.isFileExists(mVoicePath))
+                    tcpClient.sendFile(mVoicePath, mPeople.getIpaddress(),
+                            Message.CONTENT_TYPE.VOICE);
+            }
+                break;
+            case IPMSGConst.IPMSG_RECIEVE_FILE_DATA: {// 文件开始发送
+                Log.d(TAG, "接收方确认文件语音请求,发送文件为" + sendFilePath);
+                tcpClient = TcpClient.getInstance(ChatActivity.this);
+                tcpClient.startSend();
 
-            if (FileUtils.isFileExists(mVoicePath))
-                tcpClient.sendFile(mVoicePath, mPeople.getIpaddress(),
-                        Message.CONTENT_TYPE.VOICE);
-        }
-            break;
-        case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS: { // 图片发送成功
-            Log.d("SZU_ChatActivity", "接收成功");
-            refreshAdapter(); // 刷新ListView
-        }
-            break;
+                if (FileUtils.isFileExists(sendFilePath))
+                    tcpClient.sendFile(sendFilePath, mPeople.getIpaddress(),
+                            Message.CONTENT_TYPE.FILE);
+                refreshAdapter();
+            }
+                break;
+
+            case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS: { // 图片发送成功
+                Log.d("SZU_ChatActivity", "接收成功");
+                refreshAdapter(); // 刷新ListView
+            }
+                break;
         } // end of switch
     }
 
@@ -585,30 +565,32 @@ public class ChatActivity extends BaseMessageActivity implements
         Message msg = new Message(mIMEI, nowtime, content, type);
         mMessagesList.add(msg);
         switch (type) {
-        case TEXT:
-            mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG,
-                    mPeople.getIpaddress(), msg);
-            break;
+            case TEXT:
+                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
+                break;
 
-        case IMAGE:
-            Message imageMsg = msg.clone();
-            imageMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
-            mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG,
-                    mPeople.getIpaddress(), imageMsg);
-            break;
+            case IMAGE:
+                Message imageMsg = msg.clone();
+                imageMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
+                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
+                        imageMsg);
+                break;
 
-        case VOICE:
-            Message voiceMsg = msg.clone();
-            voiceMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
-            mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG,
-                    mPeople.getIpaddress(), voiceMsg);
-            break;
+            case VOICE:
+                Message voiceMsg = msg.clone();
+                voiceMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
+                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
+                        voiceMsg);
+                break;
 
-        case FILE:
-            break;
+            case FILE:
+                Message fileMsg = msg.clone();
+                fileMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
+                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
+                        fileMsg);
+                break;
 
         }
-
         mDBOperate.addChattingInfo(mID, mSenderID, nowtime, content, type);// 新增方法
         mApplication.addLastMsgCache(mPeople.getIMEI(), msg); // 更新消息缓存
     }
@@ -622,25 +604,18 @@ public class ChatActivity extends BaseMessageActivity implements
     // 录音时显示Dialog
     private void showVoiceDialog(int flag) {
         if (mRecordDialog == null) {
-            mRecordDialog = new Dialog(ChatActivity.this, R.style.DialogStyle);
-            mRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mRecordDialog.getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            mRecordDialog.setContentView(R.layout.record_dialog);
-            mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.record_dialog_img);
-            mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.record_dialog_txt);
+            initRecordDialog();
         }
         switch (flag) {
-        case 1:
-            mIvRecVolume.setImageResource(R.drawable.record_cancel);
-            mTvRecordDialogTxt.setText("松开手指可取消录音");
-            break;
+            case 1:
+                mIvRecVolume.setImageResource(R.drawable.record_cancel);
+                mTvRecordDialogTxt.setText("松开手指可取消录音");
+                break;
 
-        default:
-            mIvRecVolume.setImageResource(R.drawable.record_animate_01);
-            mTvRecordDialogTxt.setText("向上滑动可取消录音");
-            break;
+            default:
+                mIvRecVolume.setImageResource(R.drawable.record_animate_01);
+                mTvRecordDialogTxt.setText("向上滑动可取消录音");
+                break;
         }
         mTvRecordDialogTxt.setTextSize(14);
         mRecordDialog.show();
@@ -666,13 +641,12 @@ public class ChatActivity extends BaseMessageActivity implements
                             voiceValue = mAudioRecorder.getAmplitude();
                             recordHandler.sendEmptyMessage(1);
                         }
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            mRecordThread.interrupt();
-            mRecordThread = null;
 
         }
     };
@@ -688,31 +662,44 @@ public class ChatActivity extends BaseMessageActivity implements
     void setDialogImage() {
         if (voiceValue < 800.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_01);
-        } else if (voiceValue > 800.0 && voiceValue < 1200.0) {
+        }
+        else if (voiceValue > 800.0 && voiceValue < 1200.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_02);
-        } else if (voiceValue > 1200.0 && voiceValue < 1400.0) {
+        }
+        else if (voiceValue > 1200.0 && voiceValue < 1400.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_03);
-        } else if (voiceValue > 1400.0 && voiceValue < 1600.0) {
+        }
+        else if (voiceValue > 1400.0 && voiceValue < 1600.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_04);
-        } else if (voiceValue > 1600.0 && voiceValue < 1800.0) {
+        }
+        else if (voiceValue > 1600.0 && voiceValue < 1800.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_05);
-        } else if (voiceValue > 1800.0 && voiceValue < 2000.0) {
+        }
+        else if (voiceValue > 1800.0 && voiceValue < 2000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_06);
-        } else if (voiceValue > 2000.0 && voiceValue < 3000.0) {
+        }
+        else if (voiceValue > 2000.0 && voiceValue < 3000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_07);
-        } else if (voiceValue > 3000.0 && voiceValue < 4000.0) {
+        }
+        else if (voiceValue > 3000.0 && voiceValue < 4000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_08);
-        } else if (voiceValue > 4000.0 && voiceValue < 5000.0) {
+        }
+        else if (voiceValue > 4000.0 && voiceValue < 5000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_09);
-        } else if (voiceValue > 5000.0 && voiceValue < 6000.0) {
+        }
+        else if (voiceValue > 5000.0 && voiceValue < 6000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_10);
-        } else if (voiceValue > 6000.0 && voiceValue < 8000.0) {
+        }
+        else if (voiceValue > 6000.0 && voiceValue < 8000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_11);
-        } else if (voiceValue > 8000.0 && voiceValue < 10000.0) {
+        }
+        else if (voiceValue > 8000.0 && voiceValue < 10000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_12);
-        } else if (voiceValue > 10000.0 && voiceValue < 12000.0) {
+        }
+        else if (voiceValue > 10000.0 && voiceValue < 12000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_13);
-        } else if (voiceValue > 12000.0) {
+        }
+        else if (voiceValue > 12000.0) {
             mIvRecVolume.setImageResource(R.drawable.record_animate_14);
         }
     }
@@ -744,4 +731,16 @@ public class ChatActivity extends BaseMessageActivity implements
         toast.show();
     }
 
+    /** 调用文件选择软件来选择文件 **/
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(Intent.createChooser(intent, "请选择一个要发送的文件"), FILE_SELECT_CODE);
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ChatActivity.this, "请安装文件管理器", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

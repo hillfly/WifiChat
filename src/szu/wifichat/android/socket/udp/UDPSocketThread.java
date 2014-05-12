@@ -1,4 +1,4 @@
-package szu.wifichat.android.socket;
+package szu.wifichat.android.socket.udp;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.socket.tcp.TcpService;
 import szu.wifichat.android.sql.SqlDBOperate;
-import szu.wifichat.android.tcp.socket.TcpService;
 import szu.wifichat.android.util.SessionUtils;
 import android.content.Context;
 import android.util.Log;
@@ -108,13 +108,11 @@ public class UDPSocketThread implements Runnable {
 
                 // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
                 case IPMSGConst.IPMSG_BR_ENTRY: {
-                    Log.i(TAG, "收到上线通知");
                     addUser(ipmsgRes); // 增加用户至在线列表
                     // BaseActivity.sendEmptyMessage(IpMessageConst.IPMSG_BR_ENTRY);
 
                     sendUDPdata(IPMSGConst.IPMSG_ANSENTRY,
                             receiveDatagramPacket.getAddress(), mNearByPeople);
-                    Log.i(TAG, "成功发送上线应答");
                 }
                     break;
 
@@ -182,6 +180,16 @@ public class UDPSocketThread implements Runnable {
                         break;
 
                     case FILE:
+                    	 Log.d(TAG, "收到文件 发送请求");
+                    	 tcpService = TcpService.getInstance(mContext);
+                         tcpService.setSavePath(BaseApplication.FILE_PATH);
+                         tcpService.startReceive();
+                         sendUDPdata(IPMSGConst.IPMSG_RECIEVE_FILE_DATA,
+                                 senderIp);
+                         msg.setMsgContent(BaseApplication.FILE_PATH
+                                 + File.separator + msg.getSenderIMEI()
+                                 + File.separator + msg.getMsgContent());
+                         Log.d(TAG, "接收路径:" + msg.getMsgContent());
                         break;
                     }
                     mDBOperate.addChattingInfo(senderIMEI, mIMEI,
@@ -200,10 +208,6 @@ public class UDPSocketThread implements Runnable {
                 
                 default:
                     BaseActivity.sendEmptyMessage(commandNo);
-                    break;
-                    
-                case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS:
-
                     break;
                 } // End of switch
 
@@ -229,13 +233,11 @@ public class UDPSocketThread implements Runnable {
             // 绑定端口
             if (UDPSocket == null)
                 UDPSocket = new DatagramSocket(IPMSGConst.PORT);
-            Log.i(TAG, "connectUDPSocket() 绑定端口成功");
 
             // 创建数据接受包
             if (receiveDatagramPacket == null)
                 receiveDatagramPacket = new DatagramPacket(receiveBuffer,
                         BUFFERLENGTH);
-            Log.i(TAG, "connectUDPSocket() 创建数据接收包成功");
 
             startUDPSocketThread();
         } catch (SocketException e) {
@@ -281,7 +283,6 @@ public class UDPSocketThread implements Runnable {
     /** 用户下线通知 **/
     public void notifyOffline() {
         sendUDPdata(IPMSGConst.IPMSG_BR_EXIT, BROADCASTIP);
-        Log.e(TAG, "notifyOffline() 下线通知成功");
     }
 
     /**
@@ -367,9 +368,7 @@ public class UDPSocketThread implements Runnable {
             sendBuffer = ipmsgProtocol.getProtocolJSON().getBytes("gbk");
             sendDatagramPacket = new DatagramPacket(sendBuffer,
                     sendBuffer.length, targetAddr, IPMSGConst.PORT);
-            Log.i(TAG, "sendDatagramPacket 创建成功");
             UDPSocket.send(sendDatagramPacket);
-            Log.i(TAG, "sendUDPdata() 数据发送成功");
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "sendUDPdata() 发送UDP数据包失败");

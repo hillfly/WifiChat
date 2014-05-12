@@ -5,12 +5,13 @@ import java.util.List;
 
 import szu.wifichat.android.BaseActivity;
 import szu.wifichat.android.BaseDialog;
+import szu.wifichat.android.R;
 import szu.wifichat.android.activity.maintabs.MainTabActivity;
 import szu.wifichat.android.activity.wifiap.WifiApConst;
 import szu.wifichat.android.activity.wifiap.WifiapBroadcast;
 import szu.wifichat.android.adapter.WifiapAdapter;
 import szu.wifichat.android.entity.NearByPeople;
-import szu.wifichat.android.socket.UDPSocketThread;
+import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.sql.SqlDBOperate;
 import szu.wifichat.android.sql.UserInfo;
 import szu.wifichat.android.util.DateUtils;
@@ -18,10 +19,9 @@ import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.util.TextUtils;
 import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HeaderLayout;
-import szu.wifichat.android.view.WifiapSearchAnimationFrameLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
 import szu.wifichat.android.view.HeaderLayout.onRightImageButtonClickListener;
-
+import szu.wifichat.android.view.WifiapSearchAnimationFrameLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -42,8 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import szu.wifichat.android.R;
 
 /**
  * @fileName WifiapActivity.java
@@ -270,13 +268,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
         String ServerIPstart = "192.168.43";
         String nullIP = "0.0.0.0";
 
-        // if (localIPaddress == null || serverIPaddres == null ||
-        // !localIPaddress.startsWith(NullIP)
-        // || !"192.168.43.1".equals(serverIPaddres)) {
-        // showShortToast("请创建热点或者连接一个热点");
-        // return false;
-        // }
-
         if (isClient) {
             if (nullIP.equals(localIPaddress) || nullIP.equals(serverIPaddres)) {
                 showShortToast("请创建热点或者连接一个热点");
@@ -325,7 +316,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
                     // 录入数据库
                     // 若数据库中有IMEI对应的用户记录，则更新此记录; 无则创建新用户
-                    // if ((mUserInfo = mUserDAO.findUserInfo(IMEI)) != null) {
                     if ((mUserInfo = mSqlDBOperate.getUserInfoByIMEI(IMEI)) != null) {
                         mUserInfo.setIPAddr(localIPaddress);
                         mUserInfo.setAvater(avatar);
@@ -336,7 +326,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setDevice(mDevice);
                         mUserInfo.setConstellation(constellation);
                         mUserInfo.setLastDate(logintime);
-                        // mUserDAO.update(mUserInfo);
                         mSqlDBOperate.updateUserInfo(mUserInfo);
                     }
                     else {
@@ -345,7 +334,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mUserInfo.setLastDate(logintime);
                         mUserInfo.setDevice(mDevice);
                         mUserInfo.setConstellation(constellation);
-                        // mUserDAO.add(mUserInfo);
                         mSqlDBOperate.addUserInfo(mUserInfo);
                     }
 

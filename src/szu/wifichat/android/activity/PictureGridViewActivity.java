@@ -1,6 +1,7 @@
 package szu.wifichat.android.activity;
 
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.PictureAdapter;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
@@ -13,9 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
-
-import szu.wifichat.android.R;
 
 public class PictureGridViewActivity extends BaseActivity implements
         OnItemClickListener {
@@ -52,8 +50,8 @@ public class PictureGridViewActivity extends BaseActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO Auto-generated method stub
-        Toast.makeText(PictureGridViewActivity.this, "pic" + (position + 1),
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(PictureGridViewActivity.this, "pic" + (position + 1),
+//                Toast.LENGTH_SHORT).show();
         // 数据是使用Intent返回
         Intent intent = new Intent();
         // 把返回数据存入Intent

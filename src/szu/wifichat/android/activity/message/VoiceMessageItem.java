@@ -58,7 +58,8 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
 
         if (SessionUtils.isItself(mMessage.getSenderIMEI())) {
             mIvImage.setImageResource(R.drawable.voicerecord_right);
-        } else {
+        }
+        else {
             mIvImage.setImageResource(R.drawable.voicerecord_left);
         }
 
@@ -93,7 +94,12 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         if (isPlay) {
-                            mIvImage.setImageResource(R.drawable.voicerecord_right);
+                            if (SessionUtils.isItself(mMessage.getSenderIMEI())) {
+                                mIvImage.setImageResource(R.drawable.voicerecord_right);
+                            }
+                            else {
+                                mIvImage.setImageResource(R.drawable.voicerecord_left);
+                            }
                             isPlay = false;
                             mMediaPlayer.stop();
                             mMediaPlayer.release();
@@ -101,19 +107,23 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
                         }
                     }
                 });
-            } catch (IllegalStateException e) {
+            }
+            catch (IllegalStateException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
-        } else {
+        }
+        else {
             Log.i(TAG, "else");
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
                 isPlay = false;
-            } else {
+            }
+            else {
                 isPlay = false;
                 mMediaPlayer.release();
             }
@@ -128,16 +138,16 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-            case 0:
-                startLoadingAnimation();
-                break;
+                case 0:
+                    startLoadingAnimation();
+                    break;
 
-            case 1:
-                break;
+                case 1:
+                    break;
 
-            case 2:
-                stopLoadingAnimation();
-                break;
+                case 2:
+                    stopLoadingAnimation();
+                    break;
             }
         }
 
@@ -145,14 +155,14 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
 
     private void startLoadingAnimation() {
         mAnimation = new AnimationDrawable();
-        mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_01), 300);
-        mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_02), 300);
-        mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_03), 300);
-        mAnimation.addFrame(ImageUtils.getDrawableFromId(
-                mContext.getResources(), R.drawable.ic_loading_msgplus_04), 300);
+        mAnimation.addFrame(ImageUtils.getDrawableFromId(mContext.getResources(),
+                R.drawable.ic_loading_msgplus_01), 300);
+        mAnimation.addFrame(ImageUtils.getDrawableFromId(mContext.getResources(),
+                R.drawable.ic_loading_msgplus_02), 300);
+        mAnimation.addFrame(ImageUtils.getDrawableFromId(mContext.getResources(),
+                R.drawable.ic_loading_msgplus_03), 300);
+        mAnimation.addFrame(ImageUtils.getDrawableFromId(mContext.getResources(),
+                R.drawable.ic_loading_msgplus_04), 300);
         mAnimation.setOneShot(false);
         mIvImage.setVisibility(View.GONE);
         mIvLoading.setVisibility(View.VISIBLE);
@@ -204,7 +214,8 @@ public class VoiceMessageItem extends MessageItem implements OnClickListener {
                 Log.d(TAG, "收到录音更新广播" + "进度大小" + i);
                 if (i < 100 && i > 0)
                     setProgress(i);
-            } else if (intent.getAction().equals(VOICE_FINISH_UPDATE_ATCTION)) {
+            }
+            else if (intent.getAction().equals(VOICE_FINISH_UPDATE_ATCTION)) {
                 Log.d(TAG, "录音更新完毕");
                 int i = intent.getIntExtra(filePath, -1);
                 if (i == 100)

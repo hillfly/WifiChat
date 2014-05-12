@@ -1,4 +1,4 @@
-﻿package szu.wifichat.android.tcp.socket;
+﻿package szu.wifichat.android.socket.tcp;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import szu.wifichat.android.BaseApplication;
+import szu.wifichat.android.activity.message.FileMessageItem;
 import szu.wifichat.android.activity.message.ImageMessageItem;
 import szu.wifichat.android.activity.message.VoiceMessageItem;
 import szu.wifichat.android.entity.Message;
@@ -197,18 +198,20 @@ public class TcpClient implements Runnable {
                     switch (type) {
                         case IMAGE:
                             intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                            Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" + fs.percent);
+                            Log.d(TAG, "更新图片路径:" + fs.fileName + " 进度" + fs.percent);
                             intent.putExtra(fs.fileName, fs.percent);
                             break;
 
                         case VOICE:
-                            intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                            Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" + fs.percent);
+                            intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
+                            Log.d(TAG, "更新语音路径:" + fs.fileName + " 进度" + fs.percent);
                             intent.putExtra(fs.fileName, fs.percent);
                             break;
 
                         case FILE:
-                            intent.setAction(Constant.fileSendStateUpdateAction);
+                        	intent.setAction(FileMessageItem.FILE_UPDATE_ACTION);
+                            Log.d(TAG, "更文件路径:" + fs.fileName + " 进度" + fs.percent);
+                            intent.putExtra(fs.fileName, fs.percent);
                             break;
 
                         default:
@@ -261,7 +264,10 @@ public class TcpClient implements Runnable {
                     Log.d(TAG, "语音发送完毕");
                 }
                 else if (type == CONTENT_TYPE.FILE) {
-                    intent.setAction(Constant.fileSendStateUpdateAction);
+                	 intent.setAction(FileMessageItem.FILE_FINISH_UPDATE_ATCTION);
+                     intent.putExtra(fs.fileName, 100);
+                     // intent.setAction(Constant.fileSendStateUpdateAction);
+                     Log.d(TAG, "文件发送完毕");
 
                 }
                 mContext.sendBroadcast(intent);

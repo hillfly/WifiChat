@@ -8,10 +8,8 @@ import org.json.JSONException;
 import org.json.JSONStringer;
 
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.entity.Message.CONTENT_TYPE;
-
-
+import szu.wifichat.android.entity.NearByPeople;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -480,10 +478,11 @@ public class SqlDBOperate
     /*
      * 用来获取近期的一系列聊天记录 参数:start为开始位置，count为最大记录数，(倒序排列) 放回List<chattingInfo>
      */
-    public List<Message> getScrollMessageOfChattingInfo(int start, int count) {
+    public List<Message> getScrollMessageOfChattingInfo(int start, int count,int senderID,int recieverID) {
         List<Message> messages = new ArrayList<Message>();
         Cursor cursor = chatInfoDataBase.query(chatInfoSQLHelper.getTableName(), new String[] { "id", "sendID",
-                "receiverID", "chatting", "date" ,"style"}, null, null, null, null, "id desc", start + ","
+                "receiverID", "chatting", "date" ,"style"},  "(sendID=? and receiverID=?) or (receiverID=? and sendID=?)",
+                new String[] { String.valueOf(senderID), String.valueOf(recieverID),String.valueOf(senderID), String.valueOf(recieverID) }, null, null, "id desc", start + ","
                 + count);
         while (cursor.moveToNext()) {
         	Message message=chattingInfoToMessage(new ChattingInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor

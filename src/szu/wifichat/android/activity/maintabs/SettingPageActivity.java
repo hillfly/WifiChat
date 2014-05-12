@@ -2,14 +2,15 @@ package szu.wifichat.android.activity.maintabs;
 
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseDialog;
+import szu.wifichat.android.R;
 import szu.wifichat.android.activity.AboutActivity;
 import szu.wifichat.android.activity.SettingMyInfoPageActivity;
-import szu.wifichat.android.socket.UDPSocketThread;
+import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.sql.SqlDBOperate;
 import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.view.HeaderLayout;
-import szu.wifichat.android.view.SettingSwitchButton;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
+import szu.wifichat.android.view.SettingSwitchButton;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -23,12 +24,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import szu.wifichat.android.R;
-
 public class SettingPageActivity extends TabItemActivity implements
         OnClickListener, OnCheckedChangeListener,
         DialogInterface.OnClickListener {
-    private final static String TAG = "SZU_SettingPageActivity";
 
     private HeaderLayout mHeaderLayout;
 
