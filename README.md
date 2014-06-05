@@ -7,7 +7,7 @@ Android WifiChat
 
 项目刚刚创建，代码还在编写，持续更新ing
 
-2.0 coming soon 更新预告：
+2.0 coming soon 更新预告：  
 1.全新的连接界面。  
 2.彻底重构ChatAdapter，解决view复用的问题。  
 3.优化缓存模块  
