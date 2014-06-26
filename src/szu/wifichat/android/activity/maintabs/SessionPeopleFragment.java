@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import szu.wifichat.android.R;
@@ -27,6 +28,7 @@ public class SessionPeopleFragment extends BaseFragment implements OnItemClickLi
 
     private MoMoRefreshListView mMmrlvList;
     private NearByPeopleAdapter mAdapter;
+    private TextView mTvListEmpty;
 
     public SessionPeopleFragment() {
         super();
@@ -37,7 +39,8 @@ public class SessionPeopleFragment extends BaseFragment implements OnItemClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View
+            onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_nearbypeople, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -45,11 +48,13 @@ public class SessionPeopleFragment extends BaseFragment implements OnItemClickLi
     @Override
     protected void initViews() {
         mMmrlvList = (MoMoRefreshListView) findViewById(R.id.nearby_people_mmrlv_list);
+        mTvListEmpty = (TextView) findViewById(R.id.nearby_people_mmrlv_empty);
     }
 
     @Override
     protected void initEvents() {
         mMmrlvList.setOnItemClickListener(this);
+        mMmrlvList.setEmptyView(mTvListEmpty);
     }
 
     @Override

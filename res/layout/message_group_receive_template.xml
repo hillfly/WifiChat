@@ -11,45 +11,40 @@
 	<include layout="@layout/message_timestamp" />
 
 	<LinearLayout
-		android:id="@+id/message_layout_contentcontainer"
+		android:id="@+id/left_message_layout_contentcontainer"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" >
+		android:layout_height="wrap_content"
+		android:baselineAligned="false" >
 
-		<LinearLayout
-			android:id="@+id/message_layout_rightcontainer"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+		<ImageView
+			android:id="@+id/left_message_iv_userphoto"
+			android:layout_width="40dip"
+			android:layout_height="40dip"
 			android:layout_marginRight="4dip"
-			android:gravity="center" >
-
-			<ImageView
-				android:id="@+id/message_iv_userphoto"
-				android:layout_width="40dip"
-				android:layout_height="40dip"
-				android:scaleType="fitXY" />
-		</LinearLayout>
+			android:scaleType="fitXY" />
 
 		<RelativeLayout
-			android:id="@+id/message_layout_leftcontainer"
+			android:id="@+id/left_message_layout_leftcontainer"
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:gravity="left" >
 
 			<LinearLayout
-				android:id="@+id/message_layout_messagecontainer"
+				android:id="@+id/left_message_layout_messagecontainer"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:background="@drawable/bg_message_box_receive"
 				android:clickable="true"
 				android:focusable="true"
-				android:gravity="center_vertical"
-				android:padding="10dip" />
+				android:gravity="center"
+				android:orientation="horizontal" />
 
 			<View
 				android:id="@+id/left_margin_view"
 				android:layout_width="52dip"
 				android:layout_height="1dip"
-				android:layout_toRightOf="@id/message_layout_messagecontainer" />
+				android:layout_toRightOf="@id/left_message_layout_messagecontainer" />
 		</RelativeLayout>
 	</LinearLayout>
 

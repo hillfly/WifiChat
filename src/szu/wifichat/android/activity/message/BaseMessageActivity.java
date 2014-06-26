@@ -13,7 +13,6 @@ import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.file.explore.FileState;
 import szu.wifichat.android.socket.tcp.TcpClient;
 import szu.wifichat.android.socket.tcp.TcpService;
-import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.sql.SqlDBOperate;
 import szu.wifichat.android.util.AudioRecorderUtils;
 import szu.wifichat.android.util.ImageUtils;
@@ -31,8 +30,6 @@ import android.os.Bundle;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
@@ -71,20 +68,17 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
     protected LinearLayout mLayoutMessagePlusCamera;
     protected LinearLayout mLayoutMessagePlusFile;
 
+    protected Bitmap mRoundsSelected;
+    protected Bitmap mRoundsNormal;
+
     protected List<Message> mMessagesList = new ArrayList<Message>(); // 消息列表
     protected ChatAdapter mAdapter;
     protected NearByPeople mPeople; // 聊天的对象
     protected SqlDBOperate mDBOperate;// 新增数据库类可以操作用户数据库和聊天信息数据库
-
-    protected Bitmap mRoundsSelected;
-    protected Bitmap mRoundsNormal;
-
     protected String mCameraImagePath;
 
     // 录音变量
     protected String mVoicePath;
-    // 文件路径
-    protected String sendFilePath;
     // private static final int MAX_RECORD_TIME = 30; // 最长录制时间，单位秒，0为无时间限制
     protected static final int MIN_RECORD_TIME = 1; // 最短录制时间，单位秒，0为无时间限制
     protected static final int RECORD_OFF = 0; // 不在录音
@@ -104,7 +98,8 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
     protected boolean isMove = false; // 手指是否移动
     protected float downY;
 
-    // 文件传输变量
+    // 文件传输变量   
+    protected String sendFilePath;   //文件路径
     protected TcpClient tcpClient = null;
     protected TcpService tcpService = null;
     protected HashMap<String, FileState> sendFileStates;
@@ -121,11 +116,9 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
         setContentView(R.layout.activity_chat);
         initViews();
         initEvents();
-        mUDPSocketThread = UDPSocketThread.getInstance(mApplication, this); // 获取对象
         mDBOperate = new SqlDBOperate(this); // 新增数据库操作类，可以操作用户表和聊天信息表
-
     }
-
+   
     protected class OnRightImageButtonClickListener implements onRightImageButtonClickListener {
 
         @Override
@@ -134,18 +127,6 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
             intent.putExtra(NearByPeople.ENTITY_PEOPLE, mPeople);
             startActivity(intent);
             finish();
-        }
-    }
-
-    protected void initRecordDialog() {
-        if (mRecordDialog == null) {
-            mRecordDialog = new Dialog(this, R.style.DialogStyle);
-            mRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mRecordDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            mRecordDialog.setContentView(R.layout.record_dialog);
-            mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.record_dialog_img);
-            mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.record_dialog_txt);
         }
     }
 
@@ -206,4 +187,5 @@ public abstract class BaseMessageActivity extends BaseActivity implements OnScro
         }
         ((ImageView) mLayoutRounds.getChildAt(0)).setImageBitmap(mRoundsSelected);
     }
+
 }

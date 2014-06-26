@@ -27,7 +27,8 @@ public class DateUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         try {
             date = format.parse(time);
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
         return date;
@@ -41,10 +42,8 @@ public class DateUtils {
                 | android.text.format.DateUtils.FORMAT_SHOW_DATE
                 | android.text.format.DateUtils.FORMAT_SHOW_DATE
                 | android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        return android.text.format.DateUtils.formatDateTime(context, date,
-                format_flags);
+        return android.text.format.DateUtils.formatDateTime(context, date, format_flags);
     }
-    
 
     /**
      * 返回此时时间
@@ -71,17 +70,23 @@ public class DateUtils {
             long betweenForSec = Math.abs(mDate.getTime() - nowData.getTime()) / 1000; // 秒
             if (betweenForSec < 60) {
                 returnStr = betweenForSec + "秒前";
-            } else if (betweenForSec < (60 * 60)) {
+            }
+            else if (betweenForSec < (60 * 60)) {
                 returnStr = betweenForSec / 60 + "分钟前";
-            } else if (betweenForSec < (60 * 60 * 24)) {
+            }
+            else if (betweenForSec < (60 * 60 * 24)) {
                 returnStr = betweenForSec / (60 * 60) + "小时前";
-            } else if (betweenForSec < (60 * 60 * 24 * 30)) {
+            }
+            else if (betweenForSec < (60 * 60 * 24 * 30)) {
                 returnStr = betweenForSec / (60 * 60 * 24) + "天前";
-            } else if (betweenForSec < (60 * 60 * 24 * 30 * 12)) {
+            }
+            else if (betweenForSec < (60 * 60 * 24 * 30 * 12)) {
                 returnStr = betweenForSec / (60 * 60 * 24 * 30) + "个月前";
-            } else
+            }
+            else
                 returnStr = betweenForSec / (60 * 60 * 24 * 30 * 12) + "年前";
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             returnStr = "TimeError"; // 错误提示
         }
         return returnStr;

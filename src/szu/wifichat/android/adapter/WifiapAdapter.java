@@ -1,11 +1,11 @@
-﻿package szu.wifichat.android.adapter;
+package szu.wifichat.android.adapter;
 
 import java.util.List;
 
+import szu.wifichat.android.R;
 import szu.wifichat.android.activity.WifiapActivity;
 import szu.wifichat.android.activity.wifiap.WifiApConst;
 import szu.wifichat.android.util.WifiUtils;
-
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.os.Handler;
@@ -18,8 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import szu.wifichat.android.R;
 
 public class WifiapAdapter extends BaseAdapter {
     private LayoutInflater mInflater;

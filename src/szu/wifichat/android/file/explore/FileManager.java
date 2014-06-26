@@ -37,7 +37,6 @@ public class FileManager extends ListActivity
 	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//		FEATURE_NO_TITLE：无标题
 		setContentView(R.layout.file_select);
 
@@ -59,11 +58,8 @@ public class FileManager extends ListActivity
 					}
 				}
 				for(FileStyle file:selectedFilePath)
-					Log.d(TAG, file.getFullPath());
 				setResult(RESULT_OK, intent);
-//				Log.d(TAG, "setResult");
 				finish();
-//				Log.d(TAG, "finish");
 			}
 		});
 		

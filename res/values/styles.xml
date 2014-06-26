@@ -174,8 +174,8 @@
 
     <style name="loading_small" parent="@android:style/Widget.ProgressBar.Small">
         <item name="android:indeterminateDrawable">@anim/wifiap_loading_anim</item>
-        <item name="android:layout_width">32dip</item>
-        <item name="android:layout_height">32dip</item>
+        <item name="android:layout_width">28dip</item>
+        <item name="android:layout_height">28dip</item>
         <item name="android:layout_gravity">center</item>
     </style>
 

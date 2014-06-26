@@ -21,7 +21,6 @@ public class AudioRecorderUtils {
 
     public void setVoicePath(String path, String filename) {
         this.mVoicePath = path + File.separator + filename + ".amr";
-        Log.i(TAG, "mVoicePath:" + mVoicePath);
     }
 
     public String getVoicePath() {

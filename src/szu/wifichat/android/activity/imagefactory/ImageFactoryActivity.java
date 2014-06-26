@@ -81,14 +81,14 @@ public class ImageFactoryActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (mIndex == 1) {
 					mNewPath = ImageUtils.savePhotoToSDCard(mImageFactoryFliter
-							.getBitmap());
+							.getBitmap(),ImageUtils.SD_IMAGE_PATH,null);
 					Intent intent = new Intent();
 					intent.putExtra("path", mNewPath);
 					setResult(RESULT_OK, intent);
 					finish();
 				} else {
 					mNewPath = ImageUtils.savePhotoToSDCard(mImageFactoryCrop
-							.cropAndSave());
+							.cropAndSave(),ImageUtils.SD_IMAGE_PATH,null);
 					mIndex = 1;
 					initImageFactory();
 					mVfFlipper.setInAnimation(ImageFactoryActivity.this,

@@ -35,15 +35,16 @@ public class BaseApplication extends Application {
     private HashMap<String, String> mLocalUserSession; // 本机用户Session信息
     private HashMap<String, NearByPeople> mOnlineUsers; // 在线用户集合，以IMEI为KEY
 
-    public static HashMap<String, FileState> sendFileStates;// 存放文件状态
-    public static HashMap<String, FileState> recieveFileStates;// 存放文件状态
+    public static HashMap<String, FileState> sendFileStates; // 存放文件状态
+    public static HashMap<String, FileState> recieveFileStates; // 存放文件状态
 
     /** 屏幕长宽 **/
     public double mLongitude;
     public double mLatitude;
 
-    // 本地图像、声音、文件存储路径
+    // 本地图像、缩略图、声音、文件存储路径
     public static String IMAG_PATH;
+    public static String THUMBNAIL_PATH;
     public static String VOICE_PATH;
     public static String FILE_PATH;
     public static String SAVE_PATH;
@@ -146,10 +147,13 @@ public class BaseApplication extends Application {
             String appName = instance.getString(R.string.app_name);
             SAVE_PATH += File.separator + appName;
             IMAG_PATH = SAVE_PATH + File.separator + "image";
+            THUMBNAIL_PATH = SAVE_PATH + File.separator + "thumbnail";
             VOICE_PATH = SAVE_PATH + File.separator + "voice";
             FILE_PATH = SAVE_PATH + File.separator + "file";
             if (!FileUtils.isFileExists(IMAG_PATH))
                 FileUtils.createDirFile(BaseApplication.IMAG_PATH);// 如果目录不存在则创建目录
+            if (!FileUtils.isFileExists(THUMBNAIL_PATH))
+                FileUtils.createDirFile(BaseApplication.THUMBNAIL_PATH);
             if (!FileUtils.isFileExists(VOICE_PATH))
                 FileUtils.createDirFile(BaseApplication.VOICE_PATH);
             if (!FileUtils.isFileExists(FILE_PATH))
@@ -260,10 +264,18 @@ public class BaseApplication extends Application {
         mLastMsgCache.remove(paramIMEI);
     }
 
+    public void clearMsgCache() {
+        mLastMsgCache.clear();
+    }
+
     // mUnReadMessags setter getter
     /** 初始化未读消息队列 */
     public void initUnReadMessages() {
         mUnReadPeople = new ArrayList<NearByPeople>();
+    }
+
+    public void clearUnReadMessages() {
+        mUnReadPeople.clear();
     }
 
     /**
@@ -272,7 +284,6 @@ public class BaseApplication extends Application {
      * @param people
      */
     public void addUnReadPeople(NearByPeople people) {
-        Log.i("BaseActivity", "进入到 UnReadMessages()");
         if (!mUnReadPeople.contains(people))
             mUnReadPeople.add(people);
     }

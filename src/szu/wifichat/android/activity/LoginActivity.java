@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.SimpleListDialogAdapter;
 import szu.wifichat.android.dialog.SimpleListDialog;
 import szu.wifichat.android.dialog.SimpleListDialog.onSimpleListItemClickListener;
@@ -15,14 +16,13 @@ import szu.wifichat.android.util.TextUtils;
 import szu.wifichat.android.view.HandyTextView;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
-
+import szu.wifichat.android.view.PagerScrollView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -34,8 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import szu.wifichat.android.R;
-
 /**
  * @fileName LoginActivity.java
  * @description 用户登陆类
@@ -44,13 +42,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         onSimpleListItemClickListener, OnDateChangedListener {
 
     private static final String TAG = "SZU_loginActivity";
-    private static final String BIRTHDAY = "19920101";
     // 登陆年龄限制
     private static final int MAX_AGE = 80;
     private static final int MIN_AGE = 12;
+    private static final String DEFAULT_DATA = "19920101";
 
     private HeaderLayout mHeaderLayout;
-    private LinearLayout mLlayoutMain; // 首次登陆主界面
+    private PagerScrollView mLlayoutMain; // 首次登陆主界面
     private HandyTextView mHtvSelectOnlineState;
     private EditText mEtNickname;
 
@@ -117,8 +115,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         mBtnNext = (Button) findViewById(R.id.login_btn_next);
         mBtnChangeUser = (Button) findViewById(R.id.login_btn_changeUser);
 
-        SharedPreferences mSharedPreferences = getSharedPreferences(
-                GlobalSharedName, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
+                Context.MODE_PRIVATE);
         mNickname = mSharedPreferences.getString(NearByPeople.NICKNAME, "");
 
         // 若mNickname有内容，则读取本地存储的用户信息
@@ -131,25 +129,21 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mTvExConstellation = (TextView) findViewById(R.id.login_tv_constellation);
             mTvExLogintime = (TextView) findViewById(R.id.login_tv_lastlogintime);
             mLlayoutExMain = (LinearLayout) findViewById(R.id.login_linearlayout_existmain);
-            mLlayoutMain = (LinearLayout) findViewById(R.id.login_linearlayout_main);
+            mLlayoutMain = (PagerScrollView) findViewById(R.id.login_linearlayout_main);
             mLlayoutMain.setVisibility(View.GONE);
             mLlayoutExMain.setVisibility(View.VISIBLE);
 
             mAvatar = mSharedPreferences.getInt(NearByPeople.AVATAR, 0);
-            mBirthday = mSharedPreferences.getString(NearByPeople.BIRTHDAY,
-                    "000000");
-            mOnlineStateInt = mSharedPreferences.getInt(
-                    NearByPeople.ONLINESTATEINT, 0);
+            mBirthday = mSharedPreferences.getString(NearByPeople.BIRTHDAY, "000000");
+            mOnlineStateInt = mSharedPreferences.getInt(NearByPeople.ONLINESTATEINT, 0);
             mGender = mSharedPreferences.getString(NearByPeople.GENDER, "获取失败");
             mAge = mSharedPreferences.getInt(NearByPeople.AGE, -1);
 
-            mConstellation = mSharedPreferences.getString(
-                    NearByPeople.CONSTELLATION, "获取失败");
-            mLastLogintime = mSharedPreferences.getString(
-                    NearByPeople.LOGINTIME, "获取失败");
+            mConstellation = mSharedPreferences.getString(NearByPeople.CONSTELLATION, "获取失败");
+            mLastLogintime = mSharedPreferences.getString(NearByPeople.LOGINTIME, "获取失败");
 
-            mImgExAvatar.setImageBitmap(ImageUtils.getAvatar(mApplication,
-                    this, NearByPeople.AVATAR + mAvatar));
+            mImgExAvatar.setImageBitmap(ImageUtils.getAvatar(mApplication, this,
+                    NearByPeople.AVATAR + mAvatar));
             mTvExNickmame.setText(mNickname);
             mTvExConstellation.setText(mConstellation);
             mHtvExAge.setText(mAge + "");
@@ -157,7 +151,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             if ("女".equals(mGender)) {
                 mIvExGender.setBackgroundResource(R.drawable.ic_user_famale);
                 mLayoutExGender.setBackgroundResource(R.drawable.bg_gender_famal);
-            } else {
+            }
+            else {
                 mIvExGender.setBackgroundResource(R.drawable.ic_user_male);
                 mLayoutExGender.setBackgroundResource(R.drawable.bg_gender_male);
             }
@@ -175,40 +170,39 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.login_htv_onlinestate:
-            mOnlineStateType = getResources().getStringArray(
-                    R.array.onlinestate_type);
-            mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
-            mSimpleListDialog.setTitle("选择在线状态");
-            mSimpleListDialog.setTitleLineVisibility(View.GONE);
-            mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(
-                    LoginActivity.this, mOnlineStateType));
-            mSimpleListDialog.setOnSimpleListItemClickListener(LoginActivity.this);
-            mSimpleListDialog.show();
-            break;
+            case R.id.login_htv_onlinestate:
+                mOnlineStateType = getResources().getStringArray(R.array.onlinestate_type);
+                mSimpleListDialog = new SimpleListDialog(LoginActivity.this);
+                mSimpleListDialog.setTitle("选择在线状态");
+                mSimpleListDialog.setTitleLineVisibility(View.GONE);
+                mSimpleListDialog.setAdapter(new SimpleListDialogAdapter(LoginActivity.this,
+                        mOnlineStateType));
+                mSimpleListDialog.setOnSimpleListItemClickListener(LoginActivity.this);
+                mSimpleListDialog.show();
+                break;
 
-        // 更换用户,清空数据
-        case R.id.login_btn_changeUser:
-            mNickname = "";
-            mAge = -1;
-            mGender = null;
-            mIMEI = null;
-            mOnlineStateStr = "在线"; // 默认登录状态
-            mAvatar = 0;
-            mConstellation = null;
-            mOnlineStateInt = 0; // 默认登录状态编号
-            SessionUtils.clearSession(); // 清空Session数据
-            mLlayoutMain.setVisibility(View.VISIBLE);
-            mLlayoutExMain.setVisibility(View.GONE);
-            break;
+            // 更换用户,清空数据
+            case R.id.login_btn_changeUser:
+                mNickname = "";
+                mAge = -1;
+                mGender = null;
+                mIMEI = null;
+                mOnlineStateStr = "在线"; // 默认登录状态
+                mAvatar = 0;
+                mConstellation = null;
+                mOnlineStateInt = 0; // 默认登录状态编号
+                SessionUtils.clearSession(); // 清空Session数据
+                mLlayoutMain.setVisibility(View.VISIBLE);
+                mLlayoutExMain.setVisibility(View.GONE);
+                break;
 
-        case R.id.login_btn_back:
-            finish();
-            break;
+            case R.id.login_btn_back:
+                finish();
+                break;
 
-        case R.id.login_btn_next:
-            doLoginNext();
-            break;
+            case R.id.login_btn_next:
+                doLoginNext();
+                break;
         }
     }
 
@@ -224,55 +218,49 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         mBirthday = String.valueOf(year) + String.format("%02d", monthOfYear)
                 + String.format("%02d", dayOfMonth);
-        Log.d(TAG, mBirthday);
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, monthOfYear, dayOfMonth);
-        if (mCalendar.getTime().after(mMinDate)
-                || mCalendar.getTime().before(mMaxDate)) {
+        if (mCalendar.getTime().after(mMinDate) || mCalendar.getTime().before(mMaxDate)) {
             mCalendar.setTime(mSelectDate);
-            mDpBirthday.init(mCalendar.get(Calendar.YEAR),
-                    mCalendar.get(Calendar.MONTH),
+            mDpBirthday.init(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                     mCalendar.get(Calendar.DAY_OF_MONTH), this);
-        } else {
+        }
+        else {
             flushBirthday(mCalendar);
         }
     }
 
     private void flushBirthday(Calendar calendar) {
-        String constellation = TextUtils.getConstellation(
-                calendar.get(Calendar.MONTH),
+        String constellation = TextUtils.getConstellation(calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
         mSelectDate = calendar.getTime();
         mHtvConstellation.setText(constellation);
-        int age = TextUtils.getAge(calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
+        int age = TextUtils.getAge(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
         mHtvAge.setText(age + "");
     }
 
     private void initData() {
         if (android.text.TextUtils.isEmpty(mBirthday)) {
-            mSelectDate = DateUtils.getDate(BIRTHDAY);
-            mBirthday = BIRTHDAY;
-        } else {
+            mSelectDate = DateUtils.getDate(DEFAULT_DATA);
+            mBirthday = DEFAULT_DATA;
+        }
+        else {
             mSelectDate = DateUtils.getDate(mBirthday);
         }
 
         Calendar mMinCalendar = Calendar.getInstance();
         Calendar mMaxCalendar = Calendar.getInstance();
 
-        mMinCalendar.set(Calendar.YEAR, mMinCalendar.get(Calendar.YEAR)
-                - MIN_AGE);
+        mMinCalendar.set(Calendar.YEAR, mMinCalendar.get(Calendar.YEAR) - MIN_AGE);
         mMinDate = mMinCalendar.getTime();
-        mMaxCalendar.set(Calendar.YEAR, mMaxCalendar.get(Calendar.YEAR)
-                - MAX_AGE);
+        mMaxCalendar.set(Calendar.YEAR, mMaxCalendar.get(Calendar.YEAR) - MAX_AGE);
         mMaxDate = mMaxCalendar.getTime();
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTime(mSelectDate);
         flushBirthday(mCalendar);
-        mDpBirthday.init(mCalendar.get(Calendar.YEAR),
-                mCalendar.get(Calendar.MONTH),
+        mDpBirthday.init(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                 mCalendar.get(Calendar.DAY_OF_MONTH), this);
     }
 
@@ -291,15 +279,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         }
 
         switch (mRgGender.getCheckedRadioButtonId()) {
-        case R.id.login_baseinfo_rb_female:
-            mGender = "女";
-            break;
-        case R.id.login_baseinfo_rb_male:
-            mGender = "男";
-            break;
-        default:
-            showShortToast("请选择性别");
-            return false;
+            case R.id.login_baseinfo_rb_female:
+                mGender = "女";
+                break;
+            case R.id.login_baseinfo_rb_male:
+                mGender = "男";
+                break;
+            default:
+                showShortToast("请选择性别");
+                return false;
         }
 
         mNickname = mEtNickname.getText().toString().trim(); // 获取昵称
@@ -331,11 +319,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             protected Boolean doInBackground(Void... params) {
                 try {
                     mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge
-                            + " mGender:" + mGender + " mOnlineState:"
-                            + mOnlineStateStr + "|" + mOnlineStateInt
-                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI
-                            + " mBirthday:" + mBirthday);
+                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge + " mGender:"
+                            + mGender + " mOnlineState:" + mOnlineStateStr + "|" + mOnlineStateInt
+                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI + " mBirthday:" + mBirthday);
 
                     // 设置用户Session信息
                     SessionUtils.setIMEI(mIMEI);
@@ -347,7 +333,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                     SessionUtils.setOnlineStateInt(mOnlineStateInt);
                     SessionUtils.setConstellation(mConstellation);
                     return true;
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
                 return false;
@@ -360,7 +347,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 if (result) {
                     startActivity(WifiapActivity.class);
                     finish();
-                } else {
+                }
+                else {
                     showShortToast("操作失败,请尝试重启程序。");
                 }
             }

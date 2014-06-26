@@ -1,18 +1,21 @@
 package szu.wifichat.android.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 消息实体类
  * 
  * @author _Hill3
  */
 public class Message extends Entity {
-    
+
     private String senderIMEI;
     private String sendTime;
     private String MsgContent;
     private CONTENT_TYPE contentType;
-    
-    public Message(){
+    private int percent;
+
+    public Message() {
     }
 
     public Message(String paramSenderIMEI, String paramSendTime, String paramMsgContent,
@@ -104,15 +107,24 @@ public class Message extends Entity {
     public void setMsgContent(String paramMsgContent) {
         this.MsgContent = paramMsgContent;
     }
+
     /**
      * 克隆对象
      * 
-     * @param 
+     * @param
      */
-    
-    public Message clone()
-    {
-    	return new Message(senderIMEI,sendTime,MsgContent,contentType);
+
+    public Message clone() {
+        return new Message(senderIMEI, sendTime, MsgContent, contentType);
     }
-    
+
+    @JSONField(serialize = false)
+    public int getPercent() {
+        return percent;
+    }
+
+    public void setPercent(int percent) {
+        this.percent = percent;
+    }
+
 }

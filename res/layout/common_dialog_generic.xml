@@ -106,7 +106,6 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="Button" 
                 android:visibility="gone"/>
 
             <Button
@@ -115,7 +114,6 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" 
                 android:visibility="gone"/>
 
             <Button
@@ -124,7 +122,6 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

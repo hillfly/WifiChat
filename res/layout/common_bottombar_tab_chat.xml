@@ -16,7 +16,7 @@
         android:shadowDx="0.0"
         android:shadowDy="-1.0"
         android:shadowRadius="1.0"
-        android:text="消息"
+        android:text="@string/maintab_text_message"
         android:textColor="@color/maintab_text_color"
         android:textSize="11sp" />
 

@@ -12,6 +12,7 @@ import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.socket.tcp.TcpClient;
 import szu.wifichat.android.socket.udp.IPMSGConst;
 import szu.wifichat.android.socket.udp.OnActiveChatActivityListenner;
+import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.util.AudioRecorderUtils;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.FileUtils;
@@ -23,6 +24,8 @@ import szu.wifichat.android.view.EmoticonsEditText;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
 import szu.wifichat.android.view.ScrollLayout;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -37,6 +40,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -47,16 +51,18 @@ import android.widget.Toast;
 
 public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
 
-    private static final String TAG = "SZU_ChatActivity_old";
+    private static final String TAG = "SZU_ChatActivity";
+
+    private static final int FILE_SELECT_CODE = 4;
     public static String IMAG_PATH;
+    public static String THUMBNAIL_PATH;
     public static String VOICE_PATH;
     public static String FILE_PATH;
-    private static final int FILE_SELECT_CODE = 4;// ImageUtils已经使用0、1、2、3
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
+        init();        
         changeActiveChatActivity(this); // 注册到changeActiveChatActivity
 
     }
@@ -133,7 +139,6 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         mLayoutMessagePlusPicture = (LinearLayout) findViewById(R.id.message_plus_layout_picture);
         mLayoutMessagePlusCamera = (LinearLayout) findViewById(R.id.message_plus_layout_camera);
         mLayoutMessagePlusFile = (LinearLayout) findViewById(R.id.message_plus_layout_file);
-
     }
 
     @Override
@@ -165,18 +170,18 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         mNickName = SessionUtils.getNickname();
         mIMEI = SessionUtils.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
-        createSavePath();// 创建保存的文件夹目录
         mSenderID = mDBOperate.getIDByIMEI(mPeople.getIMEI());// 获取聊天对象IMEI
-        mMessagesList = mDBOperate.getScrollMessageOfChattingInfo(0, 5, mID, mSenderID);
+        createSavePath();// 创建保存的文件夹目录
+        mMessagesList = mDBOperate.getScrollMessageOfChattingInfo(0, 5, mSenderID, mID);
         mHeaderLayout.setTitleChat(
                 ImageUtils.getIDfromDrawable(this, NearByPeople.AVATAR + mPeople.getAvatar()),
                 R.drawable.bg_chat_dis_active, mPeople.getNickname(), mPeople.getLogintime(),
                 R.drawable.ic_topbar_profile, new OnRightImageButtonClickListener());
         mInputView.setEditText(mEetTextDitorEditer);
         initRounds();
-        initRecordDialog();
-
+        
         mAdapter = new ChatAdapter(mApplication, ChatActivity.this, mMessagesList);
+        mAdapter.setListView(mClvList);
         mClvList.setAdapter(mAdapter);
     }
 
@@ -282,7 +287,6 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
-
             case MotionEvent.ACTION_DOWN: // 按下按钮
                 Log.i(TAG, "ACTION DOWN");
 
@@ -421,12 +425,14 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                             String path = cursor.getString(column_index);
                             mCameraImagePath = path;
-                            Bitmap bitmap = ImageUtils.getBitmapFromFile(path);
+                            Bitmap bitmap = ImageUtils.getBitmapFromPath(path);
                             if (ImageUtils.bitmapIsLarge(bitmap)) {
                                 ImageUtils.cropPhoto(this, this, path);
                             }
                             else {
                                 if (path != null) {
+                                    ImageUtils.createThumbnail(this, path, THUMBNAIL_PATH
+                                            + File.separator);
                                     sendMessage(path, CONTENT_TYPE.IMAGE);
                                     refreshAdapter();
                                 }
@@ -439,8 +445,9 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             case ImageUtils.INTENT_REQUEST_CODE_CAMERA:
                 if (resultCode == RESULT_OK) {
                     if (mCameraImagePath != null) {
-                        mCameraImagePath = ImageUtils.savePhotoToSDCard(ImageUtils
-                                .CompressionPhoto(mScreenWidth, mCameraImagePath, 2));
+                        mCameraImagePath = ImageUtils.savePhotoToSDCard(
+                                ImageUtils.CompressionPhoto(mScreenWidth, mCameraImagePath, 2),
+                                ImageUtils.SD_IMAGE_PATH, null);
                         ImageUtils.fliterPhoto(this, this, mCameraImagePath);
                     }
                 }
@@ -452,6 +459,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                     String path = data.getStringExtra("path");
                     mCameraImagePath = path;
                     if (path != null) {
+                        ImageUtils.createThumbnail(this, path, THUMBNAIL_PATH + File.separator); // 生成缩略图
                         sendMessage(path, CONTENT_TYPE.IMAGE);
                         refreshAdapter();
                     }
@@ -462,6 +470,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 if (resultCode == RESULT_OK) {
                     String path = data.getStringExtra("path");
                     if (path != null) {
+                        ImageUtils.createThumbnail(this, path, THUMBNAIL_PATH + File.separator);
                         sendMessage(path, CONTENT_TYPE.IMAGE);
                         refreshAdapter();
                     }
@@ -483,7 +492,6 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             }
                 break;
         }
-
     }
 
     // 程序在开始运行的时候,调用以下函数创建存储图片语音文件目录
@@ -491,10 +499,13 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         if (null != BaseApplication.IMAG_PATH) {
             String imei = mPeople.getIMEI();
             IMAG_PATH = BaseApplication.IMAG_PATH + File.separator + imei;
+            THUMBNAIL_PATH = BaseApplication.THUMBNAIL_PATH + File.separator + imei;
             VOICE_PATH = BaseApplication.VOICE_PATH + File.separator + imei;
             FILE_PATH = BaseApplication.FILE_PATH + File.separator + imei;
             if (!FileUtils.isFileExists(IMAG_PATH))
                 FileUtils.createDirFile(IMAG_PATH);// 如果目录不存在则创建目录
+            if (!FileUtils.isFileExists(THUMBNAIL_PATH))
+                FileUtils.createDirFile(THUMBNAIL_PATH);// 如果目录不存在则创建目录
             if (!FileUtils.isFileExists(VOICE_PATH))
                 FileUtils.createDirFile(VOICE_PATH);
             if (!FileUtils.isFileExists(FILE_PATH))
@@ -504,6 +515,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
     @Override
     public boolean isThisActivityMsg(Message msg) {
+        // TODO 待完成
         if (mPeople.getIMEI().equals(msg.getSenderIMEI())) { // 若消息与本activity有关，则接收
             mMessagesList.add(msg); // 将此消息添加到显示聊天list中
             return true;
@@ -518,45 +530,35 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 refreshAdapter(); // 刷新ListView
                 break;
 
-            case IPMSGConst.IPMSG_RELEASEFILES: { // 拒绝接受文件,停止发送文件线程
-            }
-                break;
-
-            case IPMSGConst.IPMSG_RECIEVE_IMAGE_DATA: {// 图片开始发送
-                Log.d(TAG, "接收方确认文件请求,发送文件为" + mCameraImagePath);
+            case IPMSGConst.IPMSG_RECEIVE_IMAGE_DATA: { // 图片开始发送
+                Log.d(TAG, "接收方确认图片请求,发送文件为" + mCameraImagePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress(),
                         Message.CONTENT_TYPE.IMAGE);
             }
                 break;
-            case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: {// 语音开始发送
-                Log.d(TAG, "接收方确认文件语音请求,发送文件为" + mVoicePath);
+
+            case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: { // 语音开始发送
+                Log.d(TAG, "接收方确认语音请求,发送文件为" + mVoicePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
-
                 if (FileUtils.isFileExists(mVoicePath))
                     tcpClient.sendFile(mVoicePath, mPeople.getIpaddress(),
                             Message.CONTENT_TYPE.VOICE);
             }
                 break;
-            case IPMSGConst.IPMSG_RECIEVE_FILE_DATA: {// 文件开始发送
-                Log.d(TAG, "接收方确认文件语音请求,发送文件为" + sendFilePath);
+
+            case IPMSGConst.IPMSG_RECIEVE_FILE_DATA: { // 文件开始发送
+                Log.d(TAG, "接收方确认文件请求,发送文件为" + sendFilePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
-
                 if (FileUtils.isFileExists(sendFilePath))
                     tcpClient.sendFile(sendFilePath, mPeople.getIpaddress(),
                             Message.CONTENT_TYPE.FILE);
-                refreshAdapter();
             }
                 break;
 
-            case IPMSGConst.IPMSG_GET_IMAGE_SUCCESS: { // 图片发送成功
-                Log.d("SZU_ChatActivity", "接收成功");
-                refreshAdapter(); // 刷新ListView
-            }
-                break;
         } // end of switch
     }
 
@@ -564,35 +566,33 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         String nowtime = DateUtils.getNowtime();
         Message msg = new Message(mIMEI, nowtime, content, type);
         mMessagesList.add(msg);
+        mApplication.addLastMsgCache(mPeople.getIMEI(), msg); // 更新消息缓存
+
         switch (type) {
             case TEXT:
-                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
+                UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(), msg);
                 break;
 
             case IMAGE:
-                Message imageMsg = msg.clone();
-                imageMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
-                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
-                        imageMsg);
+                UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SEND_IMAGE_DATA,
+                        mPeople.getIpaddress());
                 break;
 
             case VOICE:
-                Message voiceMsg = msg.clone();
-                voiceMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
-                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
-                        voiceMsg);
+                UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SEND_VOICE_DATA,
+                        mPeople.getIpaddress());
                 break;
 
             case FILE:
                 Message fileMsg = msg.clone();
                 fileMsg.setMsgContent(FileUtils.getNameByPath(msg.getMsgContent()));
-                mUDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
+                UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, mPeople.getIpaddress(),
                         fileMsg);
                 break;
 
         }
+
         mDBOperate.addChattingInfo(mID, mSenderID, nowtime, content, type);// 新增方法
-        mApplication.addLastMsgCache(mPeople.getIMEI(), msg); // 更新消息缓存
     }
 
     // 录音计时线程
@@ -604,7 +604,13 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     // 录音时显示Dialog
     private void showVoiceDialog(int flag) {
         if (mRecordDialog == null) {
-            initRecordDialog();
+            mRecordDialog = new Dialog(ChatActivity.this, R.style.DialogStyle);
+            mRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mRecordDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            mRecordDialog.setContentView(R.layout.record_dialog);
+            mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.record_dialog_img);
+            mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.record_dialog_txt);
         }
         switch (flag) {
             case 1:
@@ -739,8 +745,9 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
         try {
             startActivityForResult(Intent.createChooser(intent, "请选择一个要发送的文件"), FILE_SELECT_CODE);
         }
-        catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(ChatActivity.this, "请安装文件管理器", Toast.LENGTH_SHORT).show();
+        catch (ActivityNotFoundException ex) {
+            Toast.makeText(ChatActivity.this, "缺少文件管理器", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

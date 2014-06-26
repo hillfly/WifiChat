@@ -72,10 +72,10 @@ public class MainTabActivity extends TabActivity implements OnTabChangeListener 
 		View userSettingView = inflater.inflate(
 				R.layout.common_bottombar_tab_profile, null);
 		TabHost.TabSpec userSettingTabSpec = mTabHost.newTabSpec(
-				SettingPageActivity.class.getName()).setIndicator(
+				SettingActivity.class.getName()).setIndicator(
 				userSettingView);
 		userSettingTabSpec.setContent(new Intent(MainTabActivity.this,
-				SettingPageActivity.class));
+				SettingActivity.class));
 		mTabHost.addTab(userSettingTabSpec);
 	}
 

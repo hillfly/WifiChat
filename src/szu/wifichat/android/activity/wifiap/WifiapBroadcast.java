@@ -1,4 +1,4 @@
-﻿package szu.wifichat.android.activity.wifiap;
+package szu.wifichat.android.activity.wifiap;
 
 import java.util.ArrayList;
 

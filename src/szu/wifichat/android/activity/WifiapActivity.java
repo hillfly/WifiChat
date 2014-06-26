@@ -21,7 +21,7 @@ import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
 import szu.wifichat.android.view.HeaderLayout.onRightImageButtonClickListener;
-import szu.wifichat.android.view.WifiapSearchAnimationFrameLayout;
+import szu.wifichat.android.view.WifiSearchView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -61,7 +61,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     private boolean isClient = true; // 客户端标识,默认为true
     private ArrayList<String> mWifiApList; // 符合条件的热点列表
 
-    private WifiapSearchAnimationFrameLayout m_FrameLWTSearchAnimation;
+    private WifiSearchView m_FrameLWTSearchAnimation;
     private HeaderLayout mHeaderLayout;
     private BaseDialog mDialog; // 提示窗口
     private Button mBtnBack;
@@ -133,7 +133,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
         mPBCreatingAP = ((ProgressBar) findViewById(R.id.creating_progressBar_wt_main));// 创建热点的进度条
         mTvWifiApInfo = ((TextView) findViewById(R.id.prompt_ap_text_wt_main));
         mBtnCreateAp = ((Button) findViewById(R.id.create_btn_wt_main)); // 创建热点的按钮
-        m_FrameLWTSearchAnimation = ((WifiapSearchAnimationFrameLayout) findViewById(R.id.search_animation_wt_main));// 搜索时的动画
+        m_FrameLWTSearchAnimation = ((WifiSearchView) findViewById(R.id.search_animation_wt_main));// 搜索时的动画
         mLvWifiList = ((ListView) findViewById(R.id.wt_list_wt_main));// 搜索到的热点
         mTvWifiApTips = (TextView) findViewById(R.id.wt_prompt_wt_main);
         mIvWifiApIcon = (ImageView) findViewById(R.id.radar_gif_wt_main);
@@ -222,8 +222,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     public String getPhoneModel() {
         String str1 = Build.BRAND;
         String str2 = Build.MODEL;
-        if (-1 == str2.toUpperCase().indexOf(str1.toUpperCase()))
-            str2 = str1 + "_" + str2;
+        str2 = str1 + "_" + str2;
         return str2;
     }
 
@@ -253,7 +252,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
      * @param list
      */
     public void refreshAdapter(List<String> list) {
-        Log.i(TAG, "refreshAdapter()");
         mWifiApAdapter.setData(list);
         mWifiApAdapter.notifyDataSetChanged();
     }
@@ -302,7 +300,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    // mUserDAO = new UserDAO(mContext); // 实例化数据库操作类，旧
                     mSqlDBOperate = new SqlDBOperate(mContext);// 实例化数据库操作类,新
                     String IMEI = SessionUtils.getIMEI();
                     String nickname = SessionUtils.getNickname();
@@ -762,7 +759,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     mTvWifiApTips.setVisibility(View.GONE);
                     break;
                 case WifiApConst.ApConnected:
-                    Log.i(TAG, "Apconnected");
                     refreshAdapter(mWifiApList);
                     break;
                 default:

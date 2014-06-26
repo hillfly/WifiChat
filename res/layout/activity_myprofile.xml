@@ -58,7 +58,7 @@
                     android:layout_marginRight="10dip"
                     android:layout_weight="2"
                     android:background="@drawable/edittext_default"
-                    android:hint="输入您的昵称"
+                    android:hint="@string/login_hint_nickname"
                     android:maxLength="8"
                     android:singleLine="true" />
             </LinearLayout>
@@ -80,7 +80,7 @@
                     <szu.wifichat.android.view.HandyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="出生日期"
+                        android:text="@string/login_text_birthday"
                         android:textColor="@color/text_color"
                         android:textSize="17sp" />
 
@@ -112,7 +112,7 @@
                         <szu.wifichat.android.view.HandyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="岁"
+                            android:text="@string/login_text_age"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
                     </LinearLayout>
@@ -147,7 +147,7 @@
                 android:layout_marginLeft="8dip"
                 android:layout_marginRight="8dip"
                 android:layout_marginTop="8dip"
-                android:text="提醒：您的出生日期不会出现在个人资料中。"
+                android:text="@string/login_text_birthdaytips"
                 android:textColor="@color/notes_color"
                 android:textSize="14sp" />
 
@@ -174,13 +174,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:gravity="center"
-                        android:text="选择性别"
+                        android:text="@string/login_text_selectsex"
                         android:textColor="@color/text_color"
                         android:textSize="17sp" />
 
                     <RadioGroup
                         android:id="@+id/setting_baseinfo_rg_gender"
-                        android:layout_width="fill_parent"
+                        android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
                         android:layout_weight="1"
@@ -196,7 +196,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="3.0dip"
-                            android:text="男"
+                            android:text="@string/login_text_male"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
 
@@ -208,7 +208,7 @@
                         <szu.wifichat.android.view.HandyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="女"
+                            android:text="@string/login_text_female"
                             android:textColor="@color/text_color"
                             android:textSize="17sp" />
                     </RadioGroup>
@@ -235,7 +235,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_bottombar"
                 android:gravity="center"
-                android:text="返    回"
+                android:text="@string/btn_return"
                 android:textColor="@color/profile_bottom_text_color"
                 android:textSize="14sp" />
 
@@ -247,7 +247,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_bottombar"
                 android:gravity="center"
-                android:text="完成"
+                android:text="@string/btn_finish"
                 android:textColor="@color/profile_bottom_text_color"
                 android:textSize="14sp" />
         </LinearLayout>

@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_normal"
     android:orientation="vertical" >
 
-    <szu.wifichat.android.view.WifiapSearchAnimationFrameLayout
+    <szu.wifichat.android.view.WifiSearchView
         android:id="@+id/search_animation_wt_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

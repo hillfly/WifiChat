@@ -9,6 +9,7 @@ import szu.wifichat.android.activity.maintabs.MainTabActivity;
 import szu.wifichat.android.dialog.FlippingLoadingDialog;
 import szu.wifichat.android.socket.udp.OnActiveChatActivityListenner;
 import szu.wifichat.android.socket.udp.UDPSocketThread;
+import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HandyTextView;
 import android.app.AlertDialog;
@@ -79,9 +80,21 @@ public abstract class BaseActivity extends FragmentActivity {
 
     }
 
+    // @Override
+    // public void onBackPressed() { // 返回桌面
+    // if (MainTabActivity.getIsTabActive()) {
+    // Intent intent = new Intent(Intent.ACTION_MAIN);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    // intent.addCategory(Intent.CATEGORY_HOME);
+    // startActivity(intent);
+    // }
+    // else {
+    // super.onBackPressed();
+    // }
+    // }
+
     @Override
     protected void onDestroy() {
-        Log.i("SZU_Baseactivity","onDestroy()");
         clearAsyncTask();
         super.onDestroy();
     }
@@ -130,7 +143,6 @@ public abstract class BaseActivity extends FragmentActivity {
      * @return
      */
     public static OnActiveChatActivityListenner getActiveChatActivityListenner() {
-        Log.i("SZU_BaseActivity", "进入getActiveChatActivityListenner()");
         return activeChatActivityListenner;
     }
 
@@ -140,7 +152,6 @@ public abstract class BaseActivity extends FragmentActivity {
      * @return
      */
     public static boolean isExistActiveChatActivity() {
-        Log.i("SZU_BaseActivity", "进入isExistActiveChatActivity()");
         return (activeChatActivityListenner == null) ? false : true;
     }
 
@@ -325,7 +336,6 @@ public abstract class BaseActivity extends FragmentActivity {
             MainTabActivity.sendEmptyMessage(); // 更新Tab信息
             if (queue.size() > 0)
                 queue.getLast().processMessage(msg);
-
             playNotification(); // 新消息响提醒
 
         }

@@ -12,7 +12,7 @@
         android:layout_centerInParent="true"
         android:drawableTop="@drawable/ic_tab_nearby"
         android:gravity="center_horizontal"
-        android:text="附近"
+        android:text="@string/maintab_text_nearby"
         android:textColor="@color/maintab_text_color"
         android:textSize="11sp" 
         android:shadowDx="0.0"

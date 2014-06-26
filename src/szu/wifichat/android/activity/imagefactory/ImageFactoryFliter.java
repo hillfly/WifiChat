@@ -51,7 +51,7 @@ public class ImageFactoryFliter extends ImageFactory {
 
 	public void init(String path) {
 		mPath = path;
-		mBitmap = ImageUtils.getBitmapFromFile(mPath);
+		mBitmap = ImageUtils.getBitmapFromPath(mPath);
 		if (mBitmap != null) {
 			mSelectBitmap = mBitmap;
 			mRivImage.setImageBitmap(mBitmap);
@@ -64,33 +64,15 @@ public class ImageFactoryFliter extends ImageFactory {
 	private void initFilterList() {
 		mFilterItems = new ArrayList<ImageFactoryFliter.FilterItem>();
 		FilterItem filterItem_1 = new FilterItem(FilterType.默认, "默认");
-		FilterItem filterItem_2 = new FilterItem(FilterType.LOMO, "LOMO");
-		FilterItem filterItem_3 = new FilterItem(FilterType.纯真, "纯真");
-		FilterItem filterItem_4 = new FilterItem(FilterType.重彩, "重彩");
-		FilterItem filterItem_5 = new FilterItem(FilterType.维也纳, "维也纳");
-		FilterItem filterItem_6 = new FilterItem(FilterType.淡雅, "淡雅");
-		FilterItem filterItem_7 = new FilterItem(FilterType.酷, "酷");
-		FilterItem filterItem_8 = new FilterItem(FilterType.浓厚, "浓厚");
+		FilterItem filterItem_2 = new FilterItem(FilterType.LOMO, "LOMO");		
 		mFilterItems.add(filterItem_1);
-		mFilterItems.add(filterItem_2);
-		mFilterItems.add(filterItem_3);
-		mFilterItems.add(filterItem_4);
-		mFilterItems.add(filterItem_5);
-		mFilterItems.add(filterItem_6);
-		mFilterItems.add(filterItem_7);
-		mFilterItems.add(filterItem_8);
+		mFilterItems.add(filterItem_2);		
 	}
 
 	private void initFilterBlocks() {
-		mFliterBlocks = new View[8];
+		mFliterBlocks = new View[2];
 		mFliterBlocks[0] = findViewById(R.id.imagefactory_fliter_item_1);
-		mFliterBlocks[1] = findViewById(R.id.imagefactory_fliter_item_2);
-		mFliterBlocks[2] = findViewById(R.id.imagefactory_fliter_item_3);
-		mFliterBlocks[3] = findViewById(R.id.imagefactory_fliter_item_4);
-		mFliterBlocks[4] = findViewById(R.id.imagefactory_fliter_item_5);
-		mFliterBlocks[5] = findViewById(R.id.imagefactory_fliter_item_6);
-		mFliterBlocks[6] = findViewById(R.id.imagefactory_fliter_item_7);
-		mFliterBlocks[7] = findViewById(R.id.imagefactory_fliter_item_8);
+		mFliterBlocks[1] = findViewById(R.id.imagefactory_fliter_item_2);	
 		int mLength = mFilterItems.size();
 		for (int i = 0; i < mLength; i++) {
 			View cover = mFliterBlocks[i].findViewById(R.id.filter_item_cover);
@@ -146,6 +128,6 @@ public class ImageFactoryFliter extends ImageFactory {
 	}
 
 	public enum FilterType {
-		默认, LOMO, 纯真, 重彩, 维也纳, 淡雅, 酷, 浓厚;
+		默认, LOMO;
 	}
 }

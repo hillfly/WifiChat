@@ -55,7 +55,7 @@
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="默认"
+                android:text="@string/emotionbar_text_default"
                 android:textColor="@color/radiobutton_text_color"
                 android:textSize="15sp" />
 
@@ -69,7 +69,7 @@
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Emoji"
+                android:text="@string/maintab_text_emoji"
                 android:textColor="@color/radiobutton_text_color"
                 android:textSize="15sp" />
 

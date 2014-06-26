@@ -11,9 +11,7 @@ import java.util.UUID;
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.activity.imagefactory.ImageFactoryActivity;
 import szu.wifichat.android.activity.imagefactory.ImageFactoryFliter.FilterType;
-
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -25,18 +23,16 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
-
-import szu.wifichat.android.R;
 
 /**
  * @fileName PhotoUtils.java
@@ -44,8 +40,7 @@ import szu.wifichat.android.R;
  */
 public class ImageUtils {
     // 图片在SD卡中的缓存路径
-    private final static String IMAGE_PATH = BaseApplication.IMAG_PATH
-            + File.separator;
+    public final static String SD_IMAGE_PATH = BaseApplication.IMAG_PATH + File.separator;
 
     // 相册的RequestCode
     public static final int INTENT_REQUEST_CODE_ALBUM = 0;
@@ -63,8 +58,7 @@ public class ImageUtils {
      */
     public static void selectPhoto(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         activity.startActivityForResult(intent, INTENT_REQUEST_CODE_ALBUM);
     }
 
@@ -75,21 +69,15 @@ public class ImageUtils {
      * @return 照相后图片的路径
      */
     public static String takePicture(Activity activity) {
-        FileUtils.createDirFile(IMAGE_PATH);
+        FileUtils.createDirFile(SD_IMAGE_PATH);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String path = IMAGE_PATH + UUID.randomUUID().toString() + "jpg";
+        String path = SD_IMAGE_PATH + UUID.randomUUID().toString() + "jpg";
         File file = FileUtils.createNewFile(path);
         if (file != null) {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
         }
         activity.startActivityForResult(intent, INTENT_REQUEST_CODE_CAMERA);
         return path;
-    }
-
-    @SuppressWarnings("deprecation")
-    public static Drawable getDrawableFromId(Resources res, int id) {
-        InputStream is = res.openRawResource(id);
-        return new BitmapDrawable(BitmapFactory.decodeStream(is));
     }
 
     /**
@@ -104,46 +92,9 @@ public class ImageUtils {
         Intent intent = new Intent(context, ImageFactoryActivity.class);
         if (path != null) {
             intent.putExtra("path", path);
-            intent.putExtra(ImageFactoryActivity.TYPE,
-                    ImageFactoryActivity.CROP);
+            intent.putExtra(ImageFactoryActivity.TYPE, ImageFactoryActivity.CROP);
         }
         activity.startActivityForResult(intent, INTENT_REQUEST_CODE_CROP);
-    }
-
-    /**
-     * 将drawable中的指定图片转为bitmap资源
-     * 
-     * @param paramAvatarName
-     *            需要转换的图片文件名
-     * @return
-     */
-    public static Bitmap getAvatarFromRes(BaseApplication application, Context context, String paramAvatarName) {
-        Bitmap returnBitmap = null;
-        InputStream is = null;
-        Bitmap bitmap = null;
-        try {
-            is = context.getResources().openRawResource(
-                    getIDfromDrawable(context, paramAvatarName));
-            bitmap = BitmapFactory.decodeStream(is);
-            if (bitmap == null) {
-                throw new FileNotFoundException(paramAvatarName + "is not find");
-            }
-            application.addAvatarCache(paramAvatarName, bitmap);
-            returnBitmap = bitmap;
-        } catch (Exception e) {
-            returnBitmap = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.ic_common_def_header);
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                    is = null;
-                }
-            } catch (IOException e) {
-
-            }
-        }
-        return returnBitmap;
     }
 
     /**
@@ -155,18 +106,58 @@ public class ImageUtils {
      *            头像文件名 "Avatar" + avatarID，例如 Avatar2
      * @return
      */
-    public static Bitmap getAvatar(BaseApplication application, Context context, String paramAvatarName) {
+    public static Bitmap getAvatar(BaseApplication application, Context context,
+            String paramAvatarName) {
         if (application.getAvatarCache().containsKey(paramAvatarName)) {
             Reference<Bitmap> reference = application.getAvatarCache(paramAvatarName);
             if (reference.get() == null || reference.get().isRecycled()) {
                 application.removeAvatarCache(paramAvatarName);
                 return getAvatarFromRes(application, context, paramAvatarName);
-            } else {
+            }
+            else {
                 return reference.get();
             }
-        } else {
+        }
+        else {
             return getAvatarFromRes(application, context, paramAvatarName);
         }
+    }
+
+    /**
+     * 将drawable中的指定图片转为bitmap资源
+     * 
+     * @param paramAvatarName
+     *            需要转换的图片文件名
+     * @return
+     */
+    public static Bitmap getAvatarFromRes(BaseApplication application, Context context,
+            String paramAvatarName) {
+        InputStream is = null;
+        Bitmap bitmap = null;
+        try {
+            is = context.getResources()
+                    .openRawResource(getIDfromDrawable(context, paramAvatarName));
+            bitmap = BitmapFactory.decodeStream(is);
+            if (bitmap == null) {
+                throw new FileNotFoundException(paramAvatarName + "is not find");
+            }
+            application.addAvatarCache(paramAvatarName, bitmap);
+        }
+        catch (Exception e) {
+
+        }
+        finally {
+            try {
+                if (is != null) {
+                    is.close();
+                    is = null;
+                }
+            }
+            catch (IOException e) {
+
+            }
+        }
+        return bitmap;
     }
 
     /**
@@ -177,8 +168,8 @@ public class ImageUtils {
      * @return
      */
     public static int getIDfromDrawable(Context context, String paramAvatarName) {
-        return context.getResources().getIdentifier(paramAvatarName,
-                "drawable", context.getPackageName());
+        return context.getResources().getIdentifier(paramAvatarName, "drawable",
+                context.getPackageName());
     }
 
     /**
@@ -193,20 +184,9 @@ public class ImageUtils {
         Intent intent = new Intent(context, ImageFactoryActivity.class);
         if (path != null) {
             intent.putExtra("path", path);
-            intent.putExtra(ImageFactoryActivity.TYPE,
-                    ImageFactoryActivity.FLITER);
+            intent.putExtra(ImageFactoryActivity.TYPE, ImageFactoryActivity.FLITER);
         }
         activity.startActivityForResult(intent, INTENT_REQUEST_CODE_FLITER);
-    }
-
-    /**
-     * 删除图片缓存目录
-     */
-    public static void deleteImageFile() {
-        File dir = new File(IMAGE_PATH);
-        if (dir.exists()) {
-            FileUtils.delFolder(IMAGE_PATH);
-        }
     }
 
     /**
@@ -216,36 +196,38 @@ public class ImageUtils {
      *            图片的路径
      * @return
      */
-    public static Bitmap getBitmapFromFile(String path) {
+    public static Bitmap getBitmapFromPath(String path) {
         return BitmapFactory.decodeFile(path);
     }
 
-    public static Bitmap getBitmapFromFile(String path, int height, int width) {
-        return BitmapFactory.decodeFile(path);
+    public static Bitmap getBitmapFromID(Context context, int resId) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.RGB_565;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        // 获取资源图片
+        InputStream is = context.getResources().openRawResource(resId);
+        return BitmapFactory.decodeStream(is, null, opt);
     }
-    
-    
 
     /**
-     * 从Uri中获取图片
+     * 创建图片缩略图
      * 
-     * @param cr
-     *            ContentResolver对象
-     * @param uri
-     *            图片的Uri
-     * @return
+     * @param path
+     *            图片路径
+     * @param w
+     *            宽度
+     * @param h
+     *            高度
      */
-    public static Bitmap getBitmapFromUri(ContentResolver cr, Uri uri) {
-        try {
-            return BitmapFactory.decodeStream(cr.openInputStream(uri));
-        } catch (FileNotFoundException e) {
-
-        }
-        return null;
+    public static void createThumbnail(Context context, String path, String dir) {
+        int imagePX = dp2px(context, 100);
+        savePhotoToSDCard(decodedBitmapFromPath(path, imagePX, imagePX), dir,
+                FileUtils.getNameByPath(path));
     }
 
     /**
-     * 根据宽度和长度进行缩放图片
+     * 缩放图片
      * 
      * @param path
      *            图片的路径
@@ -255,45 +237,50 @@ public class ImageUtils {
      *            长度
      * @return
      */
-    public static Bitmap createBitmap(String path, int w, int h) {
+    public static Bitmap decodedBitmapFromPath(String path, int reqWidth, int reqHeight) {
         try {
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inJustDecodeBounds = true;
-            // 这里是整个方法的关键，inJustDecodeBounds设为true时将不为图片分配内存。
-            BitmapFactory.decodeFile(path, opts);
-            int srcWidth = opts.outWidth;// 获取图片的原始宽度
-            int srcHeight = opts.outHeight;// 获取图片原始高度
-            int destWidth = 0;
-            int destHeight = 0;
-            // 缩放的比例
-            double ratio = 0.0;
-            if (srcWidth < w || srcHeight < h) {
-                ratio = 0.0;
-                destWidth = srcWidth;
-                destHeight = srcHeight;
-            } else if (srcWidth > srcHeight) {// 按比例计算缩放后的图片大小，maxLength是长或宽允许的最大长度
-                ratio = (double) srcWidth / w;
-                destWidth = w;
-                destHeight = (int) (srcHeight / ratio);
-            } else {
-                ratio = (double) srcHeight / h;
-                destHeight = h;
-                destWidth = (int) (srcWidth / ratio);
-            }
-            BitmapFactory.Options newOpts = new BitmapFactory.Options();
-            // 缩放的比例，通过inSampleSize来进行缩放，其值表明缩放的倍数，SDK中建议其值是2的指数值
-            newOpts.inSampleSize = (int) ratio + 1;
-            // inJustDecodeBounds设为false表示把图片读进内存中
-            newOpts.inJustDecodeBounds = false;
-            // 设置大小，这个一般是不准确的，是以inSampleSize的为准，但是如果不设置却不能缩放
-            newOpts.outHeight = destHeight;
-            newOpts.outWidth = destWidth;
-            // 获取缩放后图片
-            return BitmapFactory.decodeFile(path, newOpts);
-        } catch (Exception e) {
+
+            // 首先设置 inJustDecodeBounds=true 来获取图片尺寸
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
+
+            // 计算 inSampleSize 的值
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // 根据计算出的 inSampleSize 来解码图片生成Bitmap
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(path, options);
+        }
+        catch (Exception e) {
             // TODO: handle exception
             return null;
         }
+    }
+
+    /**
+     * 缩放图片
+     * 
+     * @param res
+     * @param resId
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap decodeBitmapFromResource(Resources res, int resId, int reqWidth,
+            int reqHeight) {
+
+        // 首先设置 inJustDecodeBounds=true 来获取图片尺寸
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // 计算 inSampleSize 的值
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // 根据计算出的 inSampleSize 来解码图片生成Bitmap
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
     }
 
     /**
@@ -306,7 +293,8 @@ public class ImageUtils {
      *            目标高度
      * @return
      */
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,
+            int reqHeight) {
         // 原始图片的宽高
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -318,37 +306,11 @@ public class ImageUtils {
             final int halfWidth = width / 2;
 
             // 在保证解析出的bitmap宽高分别大于目标尺寸宽高的前提下，取可能的inSampleSize的最大值
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
             }
         }
         return inSampleSize;
-    }
-
-    /**
-     * 缩放图片
-     * 
-     * @param res
-     * @param resId
-     * @param reqWidth
-     * @param reqHeight
-     * @return
-     */
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-
-        // 首先设置 inJustDecodeBounds=true 来获取图片尺寸
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
-        // 计算 inSampleSize 的值
-        options.inSampleSize = calculateInSampleSize(options, reqWidth,
-                reqHeight);
-
-        // 根据计算出的 inSampleSize 来解码图片生成Bitmap
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
     }
 
     /**
@@ -402,16 +364,17 @@ public class ImageUtils {
      * @return
      */
     public static Bitmap CompressionPhoto(float screenWidth, String filePath, int ratio) {
-        Bitmap bitmap = ImageUtils.getBitmapFromFile(filePath);
+        Bitmap bitmap = ImageUtils.getBitmapFromPath(filePath);
         Bitmap compressionBitmap = null;
         float scaleWidth = screenWidth / (bitmap.getWidth() * ratio);
         float scaleHeight = screenWidth / (bitmap.getHeight() * ratio);
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         try {
-            compressionBitmap = Bitmap.createBitmap(bitmap, 0, 0,
-                    bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } catch (Exception e) {
+            compressionBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                    bitmap.getHeight(), matrix, true);
+        }
+        catch (Exception e) {
             return bitmap;
         }
         return compressionBitmap;
@@ -424,31 +387,28 @@ public class ImageUtils {
      *            图片的bitmap对象
      * @return
      */
-    public static String savePhotoToSDCard(Bitmap bitmap) {
+    public static String savePhotoToSDCard(Bitmap bitmap, String filedir, String paramFilename) {        
         if (!FileUtils.isSdcardExist()) {
             return null;
         }
-        FileOutputStream fileOutputStream = null;
-        FileUtils.createDirFile(IMAGE_PATH);
+        FileUtils.createDirFile(filedir);
+        int quality = 60; // 缩略图没必要高质量
+        String filename = paramFilename;
 
-        String fileName = UUID.randomUUID().toString() + ".jpg";
-        String newFilePath = IMAGE_PATH + fileName;
-        File file = FileUtils.createNewFile(newFilePath);
-        if (file == null) {
-            return null;
+        if (TextUtils.isEmpty(paramFilename)) {
+            filename = UUID.randomUUID().toString() + ".jpg";
+            quality = 100;
         }
+
+        String newFilePath = filedir + filename;
         try {
-            fileOutputStream = new FileOutputStream(newFilePath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-        } catch (FileNotFoundException e1) {
+            FileOutputStream fileOutputStream = new FileOutputStream(newFilePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();           
+        }
+        catch (IOException e1) {
             return null;
-        } finally {
-            try {
-                fileOutputStream.flush();
-                fileOutputStream.close();
-            } catch (IOException e) {
-                return null;
-            }
         }
         return newFilePath;
     }
@@ -463,12 +423,17 @@ public class ImageUtils {
      * @return
      */
     public static Bitmap getFilter(FilterType filterType, Bitmap defaultBitmap) {
-        if (filterType.equals(FilterType.默认)) {
-            return defaultBitmap;
-        } else if (filterType.equals(FilterType.LOMO)) {
-            return lomoFilter(defaultBitmap);
+        Bitmap returnBitmap = null;
+        switch (filterType) {
+            case 默认:
+                returnBitmap = defaultBitmap;
+                break;
+
+            case LOMO:
+                returnBitmap = lomoFilter(defaultBitmap);
+                break;
         }
-        return defaultBitmap;
+        return returnBitmap;
     }
 
     /**
@@ -483,8 +448,7 @@ public class ImageUtils {
         int dst[] = new int[width * height];
         bitmap.getPixels(dst, 0, width, 0, 0, width, height);
 
-        int ratio = width > height ? height * 32768 / width : width * 32768
-                / height;
+        int ratio = width > height ? height * 32768 / width : width * 32768 / height;
         int cx = width >> 1;
         int cy = height >> 1;
         int max = cx * cx + cy * cy;
@@ -544,8 +508,7 @@ public class ImageUtils {
             }
         }
 
-        Bitmap acrossFlushBitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.RGB_565);
+        Bitmap acrossFlushBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         acrossFlushBitmap.setPixels(dst, 0, width, 0, 0, width, height);
         return acrossFlushBitmap;
     }
@@ -559,8 +522,8 @@ public class ImageUtils {
      */
     public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
 
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Config.ARGB_8888);
+        Bitmap output = Bitmap
+                .createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
@@ -589,20 +552,34 @@ public class ImageUtils {
      */
     public static Bitmap getRoundBitmap(Context context, int color) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        int width = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 12.0f, metrics));
-        int height = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 4.0f, metrics));
-        int round = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 2.0f, metrics));
-        Bitmap bitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.ARGB_8888);
+        int width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12.0f,
+                metrics));
+        int height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4.0f,
+                metrics));
+        int round = Math.round(TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2.0f, metrics));
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(color);
-        canvas.drawRoundRect(new RectF(0.0F, 0.0F, width, height), round,
-                round, paint);
+        canvas.drawRoundRect(new RectF(0.0F, 0.0F, width, height), round, round, paint);
         return bitmap;
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
+     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
     }
 }

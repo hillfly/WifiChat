@@ -10,19 +10,18 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import szu.wifichat.android.BaseApplication;
-import szu.wifichat.android.activity.message.FileMessageItem;
-import szu.wifichat.android.activity.message.ImageMessageItem;
-import szu.wifichat.android.activity.message.VoiceMessageItem;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.Message.CONTENT_TYPE;
 import szu.wifichat.android.file.explore.Constant;
 import szu.wifichat.android.file.explore.FileState;
 import szu.wifichat.android.file.explore.FileStyle;
+import szu.wifichat.android.socket.udp.IPMSGConst;
+import szu.wifichat.android.socket.udp.UDPSocketThread;
+import szu.wifichat.android.util.DateUtils;
+import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.util.SessionUtils;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
-
 
 public class TcpClient implements Runnable {
     private static final String TAG = "SZU_TcpClient"; // Log标识符
@@ -32,15 +31,21 @@ public class TcpClient implements Runnable {
     private boolean SEND_FLAG = false; // 是否发送广播标志
     private static Context mContext = null; // 用来存储控件指针
     private static TcpClient instance; // 唯一实例
-    private ArrayList<FileStyle> fileStyles;
-    private ArrayList<FileState> fileStates;
-    private ArrayList<SendFileThread> sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
+    // private ArrayList<FileStyle> fileStyles;
+    // private ArrayList<FileState> fileStates;
+    private ArrayList<SendFileThread> sendFileThreads;
     private SendFileThread sendFileThread;
+    private static Handler mHandler = null;
 
-    public TcpClient() {
+    private TcpClient() {
+        sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
         mThread = new Thread(this); // 新建一个线程
         Log.d(TAG, "建立线程成功");
 
+    }
+
+    public static void setHandler(Handler paramHandler) {
+        mHandler = paramHandler;
     }
 
     public Thread getThread() {
@@ -63,23 +68,20 @@ public class TcpClient implements Runnable {
 
     public void sendFile(ArrayList<FileStyle> fileStyles, ArrayList<FileState> fileStates,
             String target_IP) {
-        this.fileStyles = fileStyles;
-        this.fileStates = fileStates;
-        // sendFileThreads.clear();
+        // this.fileStyles = fileStyles;
+        // this.fileStates = fileStates;
         while (SEND_FLAG == true)
             ;
 
         for (FileStyle fileStyle : fileStyles) {
-            Log.d(TAG, fileStyle.fullPath);
             SendFileThread sendFileThread = new SendFileThread(target_IP, fileStyle.fullPath);
             sendFileThreads.add(sendFileThread);
         }
         SEND_FLAG = true;
     }
 
-    public TcpClient(Context context) {
+    private TcpClient(Context context) {
         this();
-        mContext = context;
         Log.d(TAG, "TCP_Client初始化完毕");
     }
 
@@ -98,7 +100,6 @@ public class TcpClient implements Runnable {
         SEND_FLAG = true;
     }
 
-    // 重写方法
     public void sendFile(String filePath, String target_IP, Message.CONTENT_TYPE type) {
         SendFileThread sendFileThread = new SendFileThread(target_IP, filePath, type);
         while (SEND_FLAG == true)
@@ -189,88 +190,59 @@ public class TcpClient implements Runnable {
                     count++;
                     fs.percent = (int) (length * 100 / fileSize);
 
-                    // if(count%10==0)
-                    // {
-                    // fs.currentSize=length;
-                    // fs.percent=(int)((float)length/(float)fs.fileSize*100);
-                    Intent intent = new Intent();
-
                     switch (type) {
                         case IMAGE:
-                            intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                            Log.d(TAG, "更新图片路径:" + fs.fileName + " 进度" + fs.percent);
-                            intent.putExtra(fs.fileName, fs.percent);
                             break;
 
                         case VOICE:
-                            intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
-                            Log.d(TAG, "更新语音路径:" + fs.fileName + " 进度" + fs.percent);
-                            intent.putExtra(fs.fileName, fs.percent);
                             break;
 
                         case FILE:
-                        	intent.setAction(FileMessageItem.FILE_UPDATE_ACTION);
-                            Log.d(TAG, "更文件路径:" + fs.fileName + " 进度" + fs.percent);
-                            intent.putExtra(fs.fileName, fs.percent);
+                            android.os.Message msg = mHandler.obtainMessage();
+                            msg.obj = fs;
+                            msg.sendToTarget();
+
                             break;
 
                         default:
                             break;
                     }
-
-                    // if (type == CONTENT_TYPE.IMAGE) {
-                    // intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                    // // intent.setAction(Constant.fileSendStateUpdateAction);
-                    // Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" +
-                    // fs.percent);
-                    // intent.putExtra(fs.fileName, fs.percent);
-                    // }
-                    // else if (type == CONTENT_TYPE.VOICE) {
-                    // intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
-                    // // intent.setAction(Constant.fileSendStateUpdateAction);
-                    // Log.d(TAG, "更新语音，路径:" + fs.fileName + " 进度" +
-                    // fs.percent);
-                    // intent.putExtra(fs.fileName, fs.percent);
-                    // }
-                    // else if (type == CONTENT_TYPE.FILE) {
-                    // intent.setAction(Constant.fileSendStateUpdateAction);
-                    // }
-
-                    // intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
-                    mContext.sendBroadcast(intent);
-                    // }
                     dataOutput.flush();
                 }
                 Log.d(TAG, fs.fileName + "发送完毕");
-                // fs.currentSize=length;
-                // fs.percent=100;
 
                 output.close();
                 dataOutput.close();
                 socket.close();
 
-                Intent intent = new Intent();
+                switch (type) {
+                    case IMAGE:
+                        Message imageMsg = new Message(SessionUtils.getIMEI(),
+                                DateUtils.getNowtime(), fs.fileName, type);
+                        imageMsg.setMsgContent(FileUtils.getNameByPath(imageMsg.getMsgContent()));
+                        UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, imageMsg);
+                        Log.d(TAG, "图片发送完毕");
+                        break;
 
-                if (type == CONTENT_TYPE.IMAGE) {
-                    intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
-                    intent.putExtra(fs.fileName, 100);
-                    // intent.setAction(Constant.fileSendStateUpdateAction);
-                    Log.d(TAG, "图片发送完毕");
-                }
-                else if (type == CONTENT_TYPE.VOICE) {
-                    intent.setAction(VoiceMessageItem.VOICE_FINISH_UPDATE_ATCTION);
-                    intent.putExtra(fs.fileName, 100);
-                    // intent.setAction(Constant.fileSendStateUpdateAction);
-                    Log.d(TAG, "语音发送完毕");
-                }
-                else if (type == CONTENT_TYPE.FILE) {
-                	 intent.setAction(FileMessageItem.FILE_FINISH_UPDATE_ATCTION);
-                     intent.putExtra(fs.fileName, 100);
-                     // intent.setAction(Constant.fileSendStateUpdateAction);
-                     Log.d(TAG, "文件发送完毕");
+                    case VOICE:
+                        Message voiceMsg = new Message(SessionUtils.getIMEI(),
+                                DateUtils.getNowtime(), fs.fileName, type);
+                        voiceMsg.setMsgContent(FileUtils.getNameByPath(voiceMsg.getMsgContent()));
+                        UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, voiceMsg);
+                        Log.d(TAG, "语音发送完毕");
+                        break;
 
+                    case FILE:
+                        android.os.Message msg = mHandler.obtainMessage();
+                        fs.percent = 100;
+                        msg.obj = fs;
+                        msg.sendToTarget();
+                        break;
+
+                    default:
+                        break;
                 }
-                mContext.sendBroadcast(intent);
+
                 BaseApplication.sendFileStates.remove(fs.fileName);
             }
             catch (UnknownHostException e) {

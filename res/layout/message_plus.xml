@@ -55,9 +55,7 @@
             android:text="拍照"
             android:textColor="@color/white"
             android:textSize="12sp" />
-    </LinearLayout>
-
-   
+    </LinearLayout>   
 
     <LinearLayout
         android:id="@+id/message_plus_layout_file"

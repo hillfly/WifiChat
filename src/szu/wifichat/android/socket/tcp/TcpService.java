@@ -11,36 +11,32 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import szu.wifichat.android.BaseApplication;
-import szu.wifichat.android.activity.message.FileMessageItem;
-import szu.wifichat.android.activity.message.ImageMessageItem;
-import szu.wifichat.android.activity.message.VoiceMessageItem;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.Message.CONTENT_TYPE;
 import szu.wifichat.android.file.explore.Constant;
 import szu.wifichat.android.file.explore.FileState;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 public class TcpService implements Runnable {
-    private static final String TAG = "SZU_TcpService_1.0";
+    private static final String TAG = "SZU_TcpService";
 
     private ServerSocket serviceSocket;
     private boolean SCAN_FLAG = false; // 接收扫描标识
-    private boolean REV_FLAG = false; // 接收标识
     private Thread mThread;
     ArrayList<FileState> receivedFileNames;
     ArrayList<SaveFileToDisk> saveFileToDisks;
+    private static Handler mHandler;
     private String filePath = null; // 存放接收文件的路径
 
     private static Context mContext;
     private static TcpService instance; // 唯一实例
-     
 
     private boolean IS_THREAD_STOP = false; // 是否线程开始标志
 
-    public TcpService() {
-        try {
+    private TcpService() {
+        try {            
             serviceSocket = new ServerSocket(Constant.TCP_SERVER_RECEIVE_PORT);
             saveFileToDisks = new ArrayList<TcpService.SaveFileToDisk>();
             Log.d(TAG, "建立监听服务器ServerSocket成功");
@@ -65,6 +61,10 @@ public class TcpService implements Runnable {
             instance = new TcpService();
         }
         return instance;
+    }
+    
+    public static void setHandler(Handler paramHandler){
+        mHandler = paramHandler;
     }
 
     public void setSavePath(String fileSavePath) {
@@ -112,7 +112,6 @@ public class TcpService implements Runnable {
             try {
                 serviceSocket.close();
                 serviceSocket = null;
-                Log.d(TAG, "关闭socket成功");
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -192,14 +191,8 @@ public class TcpService implements Runnable {
                 strFiledata = dataInput.readUTF().toString();
                 strData = strFiledata.split("!");
                 long length = Long.parseLong(strData[1]);// 文件大小
-                Log.d(TAG, "读取文件信息成功:" + strData[0] + " " + String.valueOf(length / 1048576) + "MB");
-                // FileState fileState=new
-                // FileState(length,0,filePath+strData[0]);
-                // receivedFileNames.add(fileState);
-                // FileState
-                // fs=getFileStateByName(filePath+strData[0],receivedFileNames);
 
-                Log.d(TAG, "接收文件类型:" + strData[3]);
+                Log.d(TAG, "传输文件类型:" + strData[3]);
                 fileSavePath = savePath + File.separator + strData[2] + File.separator + strData[0];
                 fileOutputStream = new FileOutputStream(new File(fileSavePath));// 创建文件流
                 Log.d(TAG, "文件存储路径:" + fileSavePath);
@@ -223,125 +216,54 @@ public class TcpService implements Runnable {
                         lastTime = currentTime;
                         long Length = currentLength - lastLength;
                         lastLength = currentLength;
-                        Log.d(TAG,
-                                "接收速度:"
-                                        + String.valueOf((float) Length / (float) 1048576
-                                                / ((float) time / (float) 1000)) + "MB/S" + "接收大小:"
-                                        + String.valueOf(currentLength / 1048576) + "MB/"
-                                        + String.valueOf(length / 1048576) + "MB");
                         fs.currentSize = currentLength;
                         fs.percent = (int) ((float) currentLength / (float) length * 100);
-                        Intent intent = new Intent();
 
                         switch (fs.type) {
                             case IMAGE:
-                                intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                                Log.d(TAG, "更新图片路径:" + fs.fileName + " 进度" + fs.percent);
-                                intent.putExtra(fs.fileName, fs.percent);
                                 break;
 
-                            case VOICE:
-                                intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
-                                Log.d(TAG, "更新语音路径:" + fs.fileName + " 进度" + fs.percent);
-                                intent.putExtra(fs.fileName, fs.percent);
+                            case VOICE:                             
                                 break;
 
                             case FILE:
-                            	intent.setAction(FileMessageItem.FILE_UPDATE_ACTION);
-                                Log.d(TAG, "更新文件路径:" + fs.fileName + " 进度" + fs.percent);
-                                intent.putExtra(fs.fileName, fs.percent);
+                                android.os.Message msg = mHandler.obtainMessage();
+                                msg.obj = fs;
+                                msg.sendToTarget();
                                 break;
 
                             default:
                                 break;
                         }
-
-                        // if (fs.type == CONTENT_TYPE.IMAGE) {
-                        // intent.setAction(ImageMessageItem.IMAGE_UPDATE_ACTION);
-                        // Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" +
-                        // fs.percent);
-                        // intent.putExtra(fs.fileName, fs.percent);
-                        // }
-                        // else if (fs.type == CONTENT_TYPE.VOICE) {
-                        // intent.setAction(VoiceMessageItem.VOICE_UPDATE_ACTION);
-                        // Log.d(TAG, "更新图片，路径:" + fs.fileName + " 进度" +
-                        // fs.percent);
-                        // intent.putExtra(fs.fileName, fs.percent);
-                        // }
-                        // else if (fs.type == CONTENT_TYPE.FILE) {
-                        // intent.setAction(Constant.fileSendStateUpdateAction);
-                        // }
-
-                        mContext.sendBroadcast(intent);
-
                     }
                 }
 
-                Log.d(TAG,
-                        "接收平均速度:"
-                                + String.valueOf(((float) length / (float) 1048576)
-                                        / (float) ((System.currentTimeMillis() - startTime) / 1000))
-                                + "MB/S" + " 接收时间："
-                                + String.valueOf((System.currentTimeMillis() - startTime) / 1000)
-                                + "s");
                 // 将byte数组的数据写进指定路径
                 bufferOutput.flush();
 
-                // BaseActivity.sendEmptyMessage(IPMSGConst.IPMSG_GETIMAGESUCCESS);
                 input.close();
-                Log.d(TAG, "关闭input成功");
                 dataInput.close();
-                Log.d(TAG, "关闭dataInput成功");
                 bufferOutput.close();
-                Log.d(TAG, "关闭bufferOutput成功");
                 fileOutputStream.close();
-                Log.d(TAG, "关闭fileOutputStream成功");
-
-                Intent intent = new Intent();
-
+                
                 switch (fs.type) {
                     case IMAGE:
-                        intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
-                        intent.putExtra(fs.fileName, 100);
-                        // intent.setAction(Constant.fileSendStateUpdateAction);
-                        Log.d(TAG, "图片接收完毕");
                         break;
 
-                    case VOICE:
-                        intent.setAction(VoiceMessageItem.VOICE_FINISH_UPDATE_ATCTION);
-                        intent.putExtra(fs.fileName, 100);
-                        // intent.setAction(Constant.fileSendStateUpdateAction);
-                        Log.d(TAG, "语音接收完毕");
+                    case VOICE:          
                         break;
 
                     case FILE:
-                    	 intent.setAction(FileMessageItem.FILE_FINISH_UPDATE_ATCTION);
-                         intent.putExtra(fs.fileName, 100);
-                         // intent.setAction(Constant.fileSendStateUpdateAction);
-                         Log.d(TAG, "图片接收完毕");
+                        android.os.Message msg = mHandler.obtainMessage();
+                        fs.percent = 100;
+                        msg.obj = fs;
+                        msg.sendToTarget();
                         break;
 
                     default:
                         break;
                 }
-
-                // if (fs.type == CONTENT_TYPE.IMAGE) {
-                // intent.setAction(ImageMessageItem.IMAGE_FINISH_UPDATE_ATCTION);
-                // intent.putExtra(fs.fileName, 100);
-                // // intent.setAction(Constant.fileSendStateUpdateAction);
-                // Log.d(TAG, "图片接收完毕");
-                // }
-                // else if (fs.type == CONTENT_TYPE.VOICE) {
-                // intent.setAction(VoiceMessageItem.VOICE_FINISH_UPDATE_ATCTION);
-                // intent.putExtra(fs.fileName, 100);
-                // // intent.setAction(Constant.fileSendStateUpdateAction);
-                // Log.d(TAG, "图片接收完毕");
-                // }
-                // else if (fs.type == CONTENT_TYPE.FILE) {
-                // intent.setAction(Constant.fileSendStateUpdateAction);
-                // }
-
-                mContext.sendBroadcast(intent);
+                
                 BaseApplication.recieveFileStates.remove(fs.fileName);
             }
             catch (IOException e) {

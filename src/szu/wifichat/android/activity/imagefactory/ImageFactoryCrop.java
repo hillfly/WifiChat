@@ -39,7 +39,7 @@ public class ImageFactoryCrop extends ImageFactory {
 
 	public void init(String path, int w, int h) {
 		mPath = path;
-		mBitmap = ImageUtils.createBitmap(mPath, w, h);
+		mBitmap = ImageUtils.decodedBitmapFromPath(mPath, w, h);
 		if (mBitmap != null) {
 			resetImageView(mBitmap);
 		}
