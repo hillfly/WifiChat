@@ -1,16 +1,32 @@
-Android WifiChat
-===========
+# Android WifiChat  
 
-# **项目简述** #
+This repository contains the source code for the WifiChat.
 
-本项目基于JDK1.7 、Android API17 (4.2.2) 编译环境<br>
+Please see the issues section to report any bugs or feature requests and to see the list of known issues.
 
-项目刚刚创建，代码还在编写，持续更新ing
+## License
 
-2.0 coming soon 更新预告：  
-1.全新的连接界面。  
-2.彻底重构ChatAdapter，解决view复用的问题。  
-3.优化缓存模块  
-4.优化布局文件，大大减小了安装包大小，目测减小到3M~5M = =!  
+* [GPL v2](http://www.gnu.org/licenses/gpl-2.0.html)
 
-国际化和sql模块问题好纠结..和我一起做的小伙伴居然旅游去了 ，哭，最近还要忙毕业的事情，更新就耽搁了挺久 *Y&^T7!
+## Acknowledgements
+
+requirements:
+
+* Eclipse
+* MinSdkVersion="14" (Android 4.0)
+
+This project uses many other open source libraries such as:
+
+* [fastjson](https://github.com/alibaba/fastjson)
+
+## Contributing
+
+Please fork this repository and contribute back using pull requests.
+
+Any contributions, large or small, major features, bug fixes, additional
+language translations, unit/integration tests are welcomed and appreciated
+but will be thoroughly reviewed and discussed.
+
+## About
+
+Email: hillfly00#gmail.com (# -> @)
