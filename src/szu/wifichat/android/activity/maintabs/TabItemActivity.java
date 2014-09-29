@@ -48,7 +48,7 @@ public class TabItemActivity extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        mUDPSocketThread.stopUDPSocketThread();
+        UDPSocketThread.getInstance(BaseApplication.getInstance(), this).stopUDPSocketThread();
     }
 
 }
