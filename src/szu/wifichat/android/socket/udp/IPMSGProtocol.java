@@ -9,8 +9,7 @@ import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.util.JsonUtils;
-
-import android.util.Log;
+import szu.wifichat.android.util.LogUtils;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
@@ -87,7 +86,7 @@ public class IPMSGProtocol {
         }
         catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "非标准JSON文本");
+            LogUtils.e(TAG, "非标准JSON文本");
         }
     }
 

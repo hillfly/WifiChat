@@ -2,12 +2,12 @@ package szu.wifichat.android.activity.wifiap;
 
 import java.util.ArrayList;
 
+import szu.wifichat.android.util.LogUtils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 public class WifiapBroadcast extends BroadcastReceiver {
 
@@ -20,14 +20,14 @@ public class WifiapBroadcast extends BroadcastReceiver {
       
         if (paramIntent.getAction().equals(    // 搜索到wifi热点
                 WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-            Log.d(TAG, WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+            LogUtils.d(TAG, WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
             for (int j = 0; j < ehList.size(); j++)
                 ((EventHandler) ehList.get(j)).scanResultsAvailable();
 
            
         } else if (paramIntent.getAction().equals(    // wifi打开或关闭
                 WifiManager.WIFI_STATE_CHANGED_ACTION)) {
-            Log.d(TAG, WifiManager.WIFI_STATE_CHANGED_ACTION + " | "
+            LogUtils.d(TAG, WifiManager.WIFI_STATE_CHANGED_ACTION + " | "
                     + paramIntent.getIntExtra("wifi_state", -1) + " | "
                     + paramIntent.getIntExtra("previous_wifi_state", -1));
             for (int j = 0; j < ehList.size(); j++)
@@ -37,7 +37,7 @@ public class WifiapBroadcast extends BroadcastReceiver {
         } else if (paramIntent.getAction().equals(   // 连接 SSID    		
                 WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
             mNetworkInfo = paramIntent.getParcelableExtra("networkInfo");
-            Log.d(TAG, WifiManager.NETWORK_STATE_CHANGED_ACTION + " | "
+            LogUtils.d(TAG, WifiManager.NETWORK_STATE_CHANGED_ACTION + " | "
                     + mNetworkInfo.getDetailedState());
 
             // 当 DetailedState 变化为 CONNECTED 时，说明已连接成功，则通知Handler更新

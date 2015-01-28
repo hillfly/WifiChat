@@ -2,8 +2,9 @@
 
 import java.lang.ref.SoftReference;
 
+import szu.wifichat.android.R;
 import szu.wifichat.android.util.ImageUtils;
-
+import szu.wifichat.android.util.LogUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,8 +19,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import szu.wifichat.android.R;
 
 public class WifiSearchView extends FrameLayout {
     private SoftReference<Bitmap> m_bitmapRipple;// 软引用
@@ -62,7 +61,7 @@ public class WifiSearchView extends FrameLayout {
                     ImageUtils.decodeBitmapFromResource(getResources(),
                             R.drawable.wifi_body_ripple, 150, 150));
         } catch (OutOfMemoryError localOutOfMemoryError) {
-            Log.e("SZU WifiApSearchAnim",
+            LogUtils.e("SZU WifiApSearchAnim",
                     Log.getStackTraceString(localOutOfMemoryError));
         }
     }

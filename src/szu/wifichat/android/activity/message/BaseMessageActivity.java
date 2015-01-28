@@ -10,7 +10,7 @@ import szu.wifichat.android.activity.OtherProfileActivity;
 import szu.wifichat.android.adapter.ChatAdapter;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.NearByPeople;
-import szu.wifichat.android.file.explore.FileState;
+import szu.wifichat.android.file.FileState;
 import szu.wifichat.android.socket.tcp.TcpClient;
 import szu.wifichat.android.socket.tcp.TcpService;
 import szu.wifichat.android.sql.SqlDBOperate;

@@ -6,7 +6,6 @@ import java.text.DecimalFormat;
 
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 /**
  * @fileName FileUtils.java
@@ -14,7 +13,6 @@ import android.util.Log;
  * @description 文件工具类
  */
 public class FileUtils {
-    private static final String TAG = "SZU_FileUtils";
 
     /**
      * 判断SD

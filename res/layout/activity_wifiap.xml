@@ -66,11 +66,6 @@
                 android:layout_marginTop="5.0dip"
                 android:orientation="horizontal" >
 
-                <ProgressBar
-                    android:id="@+id/creating_progressBar_wt_main"
-                    style="@style/loading_small"
-                    android:visibility="gone" />
-
                 <TextView
                     android:id="@+id/prompt_ap_text_wt_main"
                     android:layout_width="wrap_content"

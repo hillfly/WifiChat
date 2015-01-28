@@ -1,10 +1,13 @@
 ﻿package szu.wifichat.android.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
+import szu.wifichat.android.activity.wifiap.TimerCheck;
+import szu.wifichat.android.activity.wifiap.WifiApConst;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -13,6 +16,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Message;
 
 /**
  * Wifi 工具类
@@ -21,16 +26,19 @@ import android.net.wifi.WifiManager;
  */
 
 public class WifiUtils {
+    public static final String TAG = "SZU_WifiUtils";
+
     private static WifiUtils mWifiUtils = null;
-    private List<WifiConfiguration> mWifiConfiguration;
     private WifiInfo mWifiInfo;
     private DhcpInfo mDhcpInfo;
     private List<ScanResult> mWifiList;
     private WifiManager.WifiLock mWifiLock;
     public WifiManager mWifiManager;
     private NetworkInfo mNetworkInfo;
+    private Context mContext;
 
     private WifiUtils(Context paramContext) {
+        mContext = paramContext;
         mWifiManager = (WifiManager) paramContext.getSystemService(Context.WIFI_SERVICE);
         mDhcpInfo = mWifiManager.getDhcpInfo();
         mWifiInfo = mWifiManager.getConnectionInfo();
@@ -39,43 +47,155 @@ public class WifiUtils {
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     }
 
-    public void setNewWifiManagerInfo() {
-        mWifiInfo = mWifiManager.getConnectionInfo();
-        mDhcpInfo = mWifiManager.getDhcpInfo();
-    }
-
     public static WifiUtils getInstance(Context paramContext) {
         if (mWifiUtils == null)
             mWifiUtils = new WifiUtils(paramContext);
         return mWifiUtils;
     }
 
-    private WifiConfiguration isExsits(String paramString) {
-        Iterator<WifiConfiguration> localIterator = mWifiManager.getConfiguredNetworks().iterator();
-        WifiConfiguration localWifiConfiguration;
-        do {
-            if (!localIterator.hasNext())
-                return null;
-            localWifiConfiguration = (WifiConfiguration) localIterator.next();
-        }
-        while (!localWifiConfiguration.SSID.equals("\"" + paramString + "\""));
-        return localWifiConfiguration;
+    public void setNewWifiManagerInfo() {
+        WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        mWifiInfo = wifiManager.getConnectionInfo();
+        mDhcpInfo = wifiManager.getDhcpInfo();
     }
 
-    /**
-     * 获取热点状态
-     * 
-     * @return boolean值，对应热点的开启(true)和关闭(false)
-     */
-    public boolean getWifiApState() {
+    public void startWifiAp(String ssid, String passwd, final Handler handler) {
+
+        if (mWifiManager.isWifiEnabled()) {
+            mWifiManager.setWifiEnabled(false);
+        }
+
+        startAp(ssid, passwd);
+
+        TimerCheck timerCheck = new TimerCheck() {
+
+            @Override
+            public void doTimerCheckWork() {
+                // TODO Auto-generated method stub
+
+                if (isWifiApEnabled()) {
+                    LogUtils.v(TAG, "WifiAp enabled success!");
+                    Message msg = handler.obtainMessage(WifiApConst.ApCreateAPResult);
+                    handler.sendMessage(msg);
+                    this.exit();
+                }
+                else {
+                    LogUtils.v(TAG, "WifiAp enabled failed!");
+                }
+            }
+
+            @Override
+            public void doTimeOutWork() {
+                // TODO Auto-generated method stub
+                this.exit();
+            }
+        };
+        timerCheck.start(15, 1000);
+
+    }
+
+    public void startAp(String ssid, String passwd) {
+        Method method1 = null;
+        try {
+            method1 = mWifiManager.getClass().getMethod("setWifiApEnabled",
+                    WifiConfiguration.class, boolean.class);
+            WifiConfiguration netConfig = new WifiConfiguration();
+
+            netConfig.SSID = ssid;
+            netConfig.preSharedKey = passwd;
+
+            netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+            method1.invoke(mWifiManager, netConfig, true);
+
+        }
+        catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void closeWifiAp() {
+        if (isWifiApEnabled()) {
+            try {
+                Method method = mWifiManager.getClass().getMethod("getWifiApConfiguration");
+                method.setAccessible(true);
+
+                WifiConfiguration config = (WifiConfiguration) method.invoke(mWifiManager);
+
+                Method method2 = mWifiManager.getClass().getMethod("setWifiApEnabled",
+                        WifiConfiguration.class, boolean.class);
+                method2.invoke(mWifiManager, config, false);
+            }
+            catch (NoSuchMethodException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isWifiApEnabled() {
+        try {
+            Method method = mWifiManager.getClass().getMethod("isWifiApEnabled");
+            method.setAccessible(true);
+            return (Boolean) method.invoke(mWifiManager);
+
+        }
+        catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public int getWifiApStateInt() {
         try {
             int i = ((Integer) mWifiManager.getClass().getMethod("getWifiApState", new Class[0])
                     .invoke(mWifiManager, new Object[0])).intValue();
-            return (3 == i) || (13 == i);
+            return i;
         }
         catch (Exception localException) {
         }
-        return false;
+        return 4;
     }
 
     /**
@@ -114,35 +234,60 @@ public class WifiUtils {
         mWifiManager.setWifiEnabled(false);
     }
 
-    public void connectConfiguration(int paramInt) {
-        if (paramInt > mWifiConfiguration.size())
-            return;
-        mWifiManager.enableNetwork(
-                ((WifiConfiguration) mWifiConfiguration.get(paramInt)).networkId, true);
-    }
-
     public void removeNetwork(int netId) {
         if (mWifiManager != null) {
             mWifiManager.removeNetwork(netId);
         }
     }
 
-    public void createWiFiAP(WifiConfiguration paramWifiConfiguration, boolean paramBoolean) {
+    public void disconnectWifi(int paramInt) {
+        mWifiManager.disableNetwork(paramInt);
+    }
+
+    public String getApSSID() {
         try {
-            Class<? extends WifiManager> localClass = mWifiManager.getClass();
-            Class[] arrayOfClass = new Class[2];
-            arrayOfClass[0] = WifiConfiguration.class;
-            arrayOfClass[1] = Boolean.TYPE;
-            Method localMethod = localClass.getMethod("setWifiApEnabled", arrayOfClass);
-            WifiManager localWifiManager = mWifiManager;
-            Object[] arrayOfObject = new Object[2];
-            arrayOfObject[0] = paramWifiConfiguration;
-            arrayOfObject[1] = Boolean.valueOf(paramBoolean);
-            localMethod.invoke(localWifiManager, arrayOfObject);
-            return;
+            Method localMethod = mWifiManager.getClass().getDeclaredMethod(
+                    "getWifiApConfiguration", new Class[0]);
+            if (localMethod == null)
+                return null;
+            Object localObject1 = localMethod.invoke(mWifiManager, new Object[0]);
+            if (localObject1 == null)
+                return null;
+            WifiConfiguration localWifiConfiguration = (WifiConfiguration) localObject1;
+            if (localWifiConfiguration.SSID != null)
+                return localWifiConfiguration.SSID;
+            Field localField1 = WifiConfiguration.class.getDeclaredField("mWifiApProfile");
+            if (localField1 == null)
+                return null;
+            localField1.setAccessible(true);
+            Object localObject2 = localField1.get(localWifiConfiguration);
+            localField1.setAccessible(false);
+            if (localObject2 == null)
+                return null;
+            Field localField2 = localObject2.getClass().getDeclaredField("SSID");
+            localField2.setAccessible(true);
+            Object localObject3 = localField2.get(localObject2);
+            if (localObject3 == null)
+                return null;
+            localField2.setAccessible(false);
+            String str = (String) localObject3;
+            return str;
         }
         catch (Exception localException) {
         }
+        return null;
+    }
+
+    private WifiConfiguration isExsits(String paramString) {
+        Iterator<WifiConfiguration> localIterator = mWifiManager.getConfiguredNetworks().iterator();
+        WifiConfiguration localWifiConfiguration;
+        do {
+            if (!localIterator.hasNext())
+                return null;
+            localWifiConfiguration = (WifiConfiguration) localIterator.next();
+        }
+        while (!localWifiConfiguration.SSID.equals("\"" + paramString + "\""));
+        return localWifiConfiguration;
     }
 
     public WifiConfiguration createWifiInfo(String ssid, String paramString2, int paramInt,
@@ -209,44 +354,6 @@ public class WifiUtils {
         return localWifiConfiguration1;
     }
 
-    public void disconnectWifi(int paramInt) {
-        mWifiManager.disableNetwork(paramInt);
-    }
-
-    public String getApSSID() {
-        try {
-            Method localMethod = mWifiManager.getClass().getDeclaredMethod(
-                    "getWifiApConfiguration", new Class[0]);
-            if (localMethod == null)
-                return null;
-            Object localObject1 = localMethod.invoke(mWifiManager, new Object[0]);
-            if (localObject1 == null)
-                return null;
-            WifiConfiguration localWifiConfiguration = (WifiConfiguration) localObject1;
-            if (localWifiConfiguration.SSID != null)
-                return localWifiConfiguration.SSID;
-            Field localField1 = WifiConfiguration.class.getDeclaredField("mWifiApProfile");
-            if (localField1 == null)
-                return null;
-            localField1.setAccessible(true);
-            Object localObject2 = localField1.get(localWifiConfiguration);
-            localField1.setAccessible(false);
-            if (localObject2 == null)
-                return null;
-            Field localField2 = localObject2.getClass().getDeclaredField("SSID");
-            localField2.setAccessible(true);
-            Object localObject3 = localField2.get(localObject2);
-            if (localObject3 == null)
-                return null;
-            localField2.setAccessible(false);
-            String str = (String) localObject3;
-            return str;
-        }
-        catch (Exception localException) {
-        }
-        return null;
-    }
-
     public String getBSSID() {
         if (mWifiInfo == null)
             return "NULL";
@@ -259,20 +366,19 @@ public class WifiUtils {
         return mWifiInfo.getSSID();
     }
 
-    public List<WifiConfiguration> getConfiguration() {
-        return mWifiConfiguration;
-    }
-
     public String getLocalIPAddress() {
+        setNewWifiManagerInfo();
+
         if (mWifiInfo == null)
             return "NULL";
         return intToIp(mWifiInfo.getIpAddress());
     }
 
     public String getServerIPAddress() {
+        setNewWifiManagerInfo();
         if (mDhcpInfo == null)
             return "NULL";
-        return intToIp(mDhcpInfo.serverAddress);
+        return intToIp(mDhcpInfo.gateway);
     }
 
     public String getMacAddress() {
@@ -285,17 +391,6 @@ public class WifiUtils {
         if (mWifiInfo == null)
             return 0;
         return mWifiInfo.getNetworkId();
-    }
-
-    public int getWifiApStateInt() {
-        try {
-            int i = ((Integer) mWifiManager.getClass().getMethod("getWifiApState", new Class[0])
-                    .invoke(mWifiManager, new Object[0])).intValue();
-            return i;
-        }
-        catch (Exception localException) {
-        }
-        return 4;
     }
 
     public WifiInfo getWifiInfo() {

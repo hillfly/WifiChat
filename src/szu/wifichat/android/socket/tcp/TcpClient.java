@@ -11,26 +11,26 @@ import java.util.ArrayList;
 
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.file.explore.Constant;
-import szu.wifichat.android.file.explore.FileState;
-import szu.wifichat.android.file.explore.FileStyle;
+import szu.wifichat.android.file.Constant;
+import szu.wifichat.android.file.FileState;
+import szu.wifichat.android.file.FileStyle;
 import szu.wifichat.android.socket.udp.IPMSGConst;
 import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.FileUtils;
+import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.SessionUtils;
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 
 public class TcpClient implements Runnable {
-    private static final String TAG = "SZU_TcpClient"; // Log标识符
+    private static final String TAG = "SZU_TcpClient";
 
-    private Thread mThread; // 线程，对于一个网络连接，安卓系统要求必须新开一个线程
+    private Thread mThread;
     private boolean IS_THREAD_STOP = false; // 是否线程开始标志
     private boolean SEND_FLAG = false; // 是否发送广播标志
-    private static Context mContext = null; // 用来存储控件指针
-    private static TcpClient instance; // 唯一实例
+    private static Context mContext = null;
+    private static TcpClient instance;
     // private ArrayList<FileStyle> fileStyles;
     // private ArrayList<FileState> fileStates;
     private ArrayList<SendFileThread> sendFileThreads;
@@ -40,7 +40,7 @@ public class TcpClient implements Runnable {
     private TcpClient() {
         sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
         mThread = new Thread(this); // 新建一个线程
-        Log.d(TAG, "建立线程成功");
+        LogUtils.d(TAG, "建立线程成功");
 
     }
 
@@ -82,11 +82,11 @@ public class TcpClient implements Runnable {
 
     private TcpClient(Context context) {
         this();
-        Log.d(TAG, "TCP_Client初始化完毕");
+        LogUtils.d(TAG, "TCP_Client初始化完毕");
     }
 
     public void startSend() {
-        Log.d(TAG, "发送线程开启");
+        LogUtils.d(TAG, "发送线程开启");
         IS_THREAD_STOP = false; // 使能发送标识
         if (!mThread.isAlive())
             mThread.start(); // 启动线程
@@ -113,7 +113,7 @@ public class TcpClient implements Runnable {
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "TCP_Client初始化");
+        LogUtils.d(TAG, "TCP_Client初始化");
 
         while (!IS_THREAD_STOP) {
             if (SEND_FLAG) {
@@ -133,16 +133,6 @@ public class TcpClient implements Runnable {
         while (sendFileThread.isAlive())
             ;
         IS_THREAD_STOP = false;
-    }
-
-    // 根据文件名从文件状态列表中获得该文件状态
-    private FileState getFileStateByName(String fullPath, ArrayList<FileState> fileStates) {
-        for (FileState fileState : fileStates) {
-            if (fileState.fileName.equals(fullPath)) {
-                return fileState;
-            }
-        }
-        return null;
     }
 
     public class SendFileThread extends Thread {
@@ -209,7 +199,7 @@ public class TcpClient implements Runnable {
                     }
                     dataOutput.flush();
                 }
-                Log.d(TAG, fs.fileName + "发送完毕");
+                LogUtils.d(TAG, fs.fileName + "发送完毕");
 
                 output.close();
                 dataOutput.close();
@@ -221,7 +211,7 @@ public class TcpClient implements Runnable {
                                 DateUtils.getNowtime(), fs.fileName, type);
                         imageMsg.setMsgContent(FileUtils.getNameByPath(imageMsg.getMsgContent()));
                         UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, imageMsg);
-                        Log.d(TAG, "图片发送完毕");
+                        LogUtils.d(TAG, "图片发送完毕");
                         break;
 
                     case VOICE:
@@ -229,7 +219,7 @@ public class TcpClient implements Runnable {
                                 DateUtils.getNowtime(), fs.fileName, type);
                         voiceMsg.setMsgContent(FileUtils.getNameByPath(voiceMsg.getMsgContent()));
                         UDPSocketThread.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, voiceMsg);
-                        Log.d(TAG, "语音发送完毕");
+                        LogUtils.d(TAG, "语音发送完毕");
                         break;
 
                     case FILE:
@@ -247,13 +237,13 @@ public class TcpClient implements Runnable {
             }
             catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG, "建立客户端socket失败");
+                LogUtils.d(TAG, "建立客户端socket失败");
                 SEND_FLAG = false;
                 e.printStackTrace();
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG, "建立客户端socket失败");
+                LogUtils.d(TAG, "建立客户端socket失败");
                 SEND_FLAG = false;
                 e.printStackTrace();
             }
@@ -265,7 +255,7 @@ public class TcpClient implements Runnable {
         @Override
         public void run() {
             // TODO Auto-generated method stub
-            Log.d(TAG, "SendFileThread初始化");
+            LogUtils.d(TAG, "SendFileThread初始化");
             if (SEND_FLAG) {
                 sendFile();
             }

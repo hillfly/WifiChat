@@ -81,9 +81,10 @@ public class WifiapAdapter extends BaseAdapter {
                 viewHolder.textConnect.setVisibility(View.GONE);
                 viewHolder.progressBConnecting.setVisibility(View.VISIBLE);
                 viewHolder.linearLConnectOk.setVisibility(View.GONE);
-                
-//                Handler localHandler = ((WifiapActivity) mContext).handler;
-//                localHandler.sendEmptyMessageDelayed(WifiApConst.ApConnected, 3500L);
+
+                // Handler localHandler = ((WifiapActivity) mContext).handler;
+                // localHandler.sendEmptyMessageDelayed(WifiApConst.ApConnected,
+                // 3500L);
             }
         });
         // 点击断开处理事件

@@ -1,7 +1,8 @@
 package szu.wifichat.android.activity.maintabs;
 
-import android.os.Message;
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.util.ActivityCollectorUtils;
+import android.os.Message;
 
 public class TabItemActivity extends BaseActivity {
 
@@ -37,7 +38,7 @@ public class TabItemActivity extends BaseActivity {
                 exitTime = System.currentTimeMillis();
             }
             else {
-                finish();
+                ActivityCollectorUtils.finishAllActivities(mApplication, getApplicationContext());
             }
         }
         else {
@@ -48,7 +49,6 @@ public class TabItemActivity extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        UDPSocketThread.getInstance(BaseApplication.getInstance(), this).stopUDPSocketThread();
     }
 
 }

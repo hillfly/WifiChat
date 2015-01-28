@@ -7,26 +7,19 @@ Please see the issues section to report any bugs or feature requests and to see 
 
 #### Debug mode:
 ```java
-// src/szu/wifichat/android/socket/udp/UDPSocketThread.java
-// Line 111
-if (SessionUtils.isItself(senderIMEI)) {
-```
-```java
-// src/szu/wifichat/android/socket/udp/UDPSocketThread.java
-// Line 330
-if (SessionUtils.isItself(receiveIMEI)) {
+// src/szu/wifichat/android/BaseApplication.java
+// Line 22, 23
+public static boolean isDebugmode = true;
+public boolean isPrintLog = true;
 ```
 #### Nomal mode:
 ```java
-// src/szu/wifichat/android/socket/udp/UDPSocketThread.java
-// Line 111
-if (!SessionUtils.isItself(senderIMEI)) {
+// src/szu/wifichat/android/BaseApplication.java
+// Line 22, 23
+public static boolean isDebugmode = false;
+public boolean isPrintLog = false;
 ```
-```java
-// src/szu/wifichat/android/socket/udp/UDPSocketThread.java
-// Line 330
-if (!SessionUtils.isItself(receiveIMEI)) {
-```
+
 
 ## License
 

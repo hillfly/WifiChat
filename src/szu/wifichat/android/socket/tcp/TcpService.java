@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.Message.CONTENT_TYPE;
-import szu.wifichat.android.file.explore.Constant;
-import szu.wifichat.android.file.explore.FileState;
+import szu.wifichat.android.file.Constant;
+import szu.wifichat.android.file.FileState;
+import szu.wifichat.android.util.LogUtils;
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 
 public class TcpService implements Runnable {
     private static final String TAG = "SZU_TcpService";
@@ -39,11 +39,11 @@ public class TcpService implements Runnable {
         try {            
             serviceSocket = new ServerSocket(Constant.TCP_SERVER_RECEIVE_PORT);
             saveFileToDisks = new ArrayList<TcpService.SaveFileToDisk>();
-            Log.d(TAG, "建立监听服务器ServerSocket成功");
+            LogUtils.d(TAG, "建立监听服务器ServerSocket成功");
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
-            Log.d(TAG, "建立监听服务器ServerSocket失败");
+            LogUtils.d(TAG, "建立监听服务器ServerSocket失败");
             e.printStackTrace();
         }
         mThread = new Thread(this);
@@ -68,7 +68,7 @@ public class TcpService implements Runnable {
     }
 
     public void setSavePath(String fileSavePath) {
-        Log.d(TAG, "设置存储路径成功,路径为" + fileSavePath);
+        LogUtils.d(TAG, "设置存储路径成功,路径为" + fileSavePath);
         this.filePath = fileSavePath;
         // REV_FLAG=true;
     }
@@ -82,7 +82,7 @@ public class TcpService implements Runnable {
         try {
             Socket socket = serviceSocket.accept(); // 接收UDP数据报
             // socket.setSoTimeout(5000); // 设置掉线时间
-            Log.d(TAG, "客户端连接成功");
+            LogUtils.d(TAG, "客户端连接成功");
 
             SaveFileToDisk fileToDisk = new SaveFileToDisk(socket, filePath);
             fileToDisk.start();
@@ -90,7 +90,7 @@ public class TcpService implements Runnable {
         }
         catch (IOException e) {
             e.printStackTrace();
-            Log.d(TAG, "客户端连接失败");
+            LogUtils.d(TAG, "客户端连接失败");
             SCAN_FLAG = false;
         }
     }
@@ -98,7 +98,7 @@ public class TcpService implements Runnable {
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "TCP_Service线程开启");
+        LogUtils.d(TAG, "TCP_Service线程开启");
         while (!IS_THREAD_STOP) {
             if (SCAN_FLAG) {
                 scan_recv();
@@ -142,16 +142,6 @@ public class TcpService implements Runnable {
         SCAN_FLAG = false; // 失能扫描接收标识
     }
 
-    // 根据文件名从文件状态列表中获得该文件状态
-    private FileState getFileStateByName(String fullPath, ArrayList<FileState> fileStates) {
-        for (FileState fileState : fileStates) {
-            if (fileState.fileName.equals(fullPath)) {
-                return fileState;
-            }
-        }
-        return null;
-    }
-
     public class SaveFileToDisk extends Thread {
         private boolean SCAN_RECIEVE = true;
         private InputStream input = null;
@@ -164,11 +154,11 @@ public class TcpService implements Runnable {
             try {
                 input = socket.getInputStream();
                 dataInput = new DataInputStream(input);
-                Log.d(TAG, "获取网络输入流成功");
+                LogUtils.d(TAG, "获取网络输入流成功");
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG, "获取网络输入流失败");
+                LogUtils.d(TAG, "获取网络输入流失败");
                 SCAN_RECIEVE = false;
                 e.printStackTrace();
             }
@@ -192,10 +182,10 @@ public class TcpService implements Runnable {
                 strData = strFiledata.split("!");
                 long length = Long.parseLong(strData[1]);// 文件大小
 
-                Log.d(TAG, "传输文件类型:" + strData[3]);
+                LogUtils.d(TAG, "传输文件类型:" + strData[3]);
                 fileSavePath = savePath + File.separator + strData[2] + File.separator + strData[0];
                 fileOutputStream = new FileOutputStream(new File(fileSavePath));// 创建文件流
-                Log.d(TAG, "文件存储路径:" + fileSavePath);
+                LogUtils.d(TAG, "文件存储路径:" + fileSavePath);
                 FileState fileState = new FileState(length, 0, fileSavePath, getType(strData[3]));
                 BaseApplication.recieveFileStates.put(fileSavePath, fileState);
                 FileState fs = BaseApplication.recieveFileStates.get(fileSavePath);
@@ -268,7 +258,7 @@ public class TcpService implements Runnable {
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG, "写入文件失败");
+                LogUtils.d(TAG, "写入文件失败");
                 e.printStackTrace();
             }
         }
@@ -289,7 +279,7 @@ public class TcpService implements Runnable {
         @Override
         public void run() {
             super.run();
-            Log.d(TAG, "SaveFileToDisk线程开启");
+            LogUtils.d(TAG, "SaveFileToDisk线程开启");
             if (SCAN_RECIEVE)
                 recieveFile();
         }

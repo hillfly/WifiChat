@@ -11,16 +11,16 @@ import java.util.Map;
 
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.NearByPeople;
-import szu.wifichat.android.file.explore.FileState;
+import szu.wifichat.android.file.FileState;
 import szu.wifichat.android.util.FileUtils;
-
+import szu.wifichat.android.util.LogUtils;
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.util.Log;
-
-import szu.wifichat.android.R;
 
 public class BaseApplication extends Application {
+
+    public static boolean isDebugmode = true;
+    public boolean isPrintLog = true;
 
     /** mEmoticons 表情 **/
     public static Map<String, Integer> mEmoticonsId;
@@ -37,10 +37,6 @@ public class BaseApplication extends Application {
 
     public static HashMap<String, FileState> sendFileStates; // 存放文件状态
     public static HashMap<String, FileState> recieveFileStates; // 存放文件状态
-
-    /** 屏幕长宽 **/
-    public double mLongitude;
-    public double mLatitude;
 
     // 本地图像、缩略图、声音、文件存储路径
     public static String IMAG_PATH;
@@ -107,32 +103,32 @@ public class BaseApplication extends Application {
         // 默认启动响铃与振动提醒
         isSOUND = true;
         isVIBRATE = true;
+
+        LogUtils.setLogStatus(isPrintLog); // 设置是否显示日志
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        Log.e("BaseApplication", "onLowMemory");
+        LogUtils.e("BaseApplication", "onLowMemory");
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        Log.e("BaseApplication", "onTerminate");
+        LogUtils.e("BaseApplication", "onTerminate");
     }
 
     public HashMap<String, String> getUserSession() {
         return mLocalUserSession;
     }
 
-    /** 初始化相关基本参数 */
     public void initParam() {
         initOnlineUserMap(); // 初始化用户列表
         initUnReadMessages(); // 初始化未读消息
         initLastMsgCache(); // 初始化消息缓存
     }
 
-    // mOnlineUsers setter getter
     public void initOnlineUserMap() {
         mOnlineUsers = new LinkedHashMap<String, NearByPeople>();
     }

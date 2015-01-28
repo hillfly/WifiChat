@@ -23,9 +23,7 @@ public class NearByActivity extends TabItemActivity {
     }
 
     @Override
-    // 初始化顶栏
-            protected
-            void initViews() {
+    protected void initViews() {
         mHeaderLayout = (HeaderLayout) findViewById(R.id.nearby_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
         mHeaderLayout.setDefaultTitle("附近", null);
@@ -41,7 +39,7 @@ public class NearByActivity extends TabItemActivity {
         mPeopleFragment = new NearByPeopleFragment(mApplication, this, this);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.nearby_layout_content, mPeopleFragment).commit();
-    }  
+    }
 
     @Override
     public void processMessage(android.os.Message msg) {

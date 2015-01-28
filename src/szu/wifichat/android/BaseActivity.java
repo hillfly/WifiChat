@@ -2,14 +2,14 @@ package szu.wifichat.android;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import szu.wifichat.android.activity.maintabs.MainTabActivity;
 import szu.wifichat.android.dialog.FlippingLoadingDialog;
 import szu.wifichat.android.socket.udp.OnActiveChatActivityListenner;
 import szu.wifichat.android.socket.udp.UDPSocketThread;
-import szu.wifichat.android.util.SessionUtils;
+import szu.wifichat.android.util.ActivityCollectorUtils;
+import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HandyTextView;
 import android.app.AlertDialog;
@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 
 public abstract class BaseActivity extends FragmentActivity {
     protected static final String GlobalSharedName = "LocalUserInfo"; // SharedPreferences文件名
-    protected static LinkedList<BaseActivity> queue = new LinkedList<BaseActivity>();// 打开的activity队列
     protected static OnActiveChatActivityListenner activeChatActivityListenner = null; // 激活的聊天窗口
 
     protected BaseApplication mApplication;
@@ -52,7 +50,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected int mScreenWidth;
     protected int mScreenHeight;
     protected float mDensity;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +63,11 @@ public abstract class BaseActivity extends FragmentActivity {
         mScreenHeight = metric.heightPixels;
         mDensity = metric.density;
 
-        if (!queue.contains(this)) {
-            queue.add(this);
-        }
+        ActivityCollectorUtils.addActivity(this);
+
         if (notificationMediaplayer == null) {
-            notificationMediaplayer = new SoundPool(3,
-                    AudioManager.STREAM_SYSTEM, 5);
-            notificationMediaplayerID = notificationMediaplayer.load(this,
-                    R.raw.crystalring, 1);
+            notificationMediaplayer = new SoundPool(3, AudioManager.STREAM_SYSTEM, 5);
+            notificationMediaplayerID = notificationMediaplayer.load(this, R.raw.crystalring, 1);
         }
         if (notificationVibrator == null) {
             notificationVibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
@@ -80,29 +75,17 @@ public abstract class BaseActivity extends FragmentActivity {
 
     }
 
-    // @Override
-    // public void onBackPressed() { // 返回桌面
-    // if (MainTabActivity.getIsTabActive()) {
-    // Intent intent = new Intent(Intent.ACTION_MAIN);
-    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    // intent.addCategory(Intent.CATEGORY_HOME);
-    // startActivity(intent);
-    // }
-    // else {
-    // super.onBackPressed();
-    // }
-    // }
-
     @Override
     protected void onDestroy() {
-        clearAsyncTask();
         super.onDestroy();
+        clearAsyncTask();
+        ActivityCollectorUtils.removeActivity(this);
+
     }
 
     @Override
     public void finish() {
-        super.finish();        
-        queue.removeLast();
+        super.finish();
     }
 
     /** 初始化视图 **/
@@ -190,8 +173,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 显示自定义Toast提示(来自res) **/
     protected void showCustomToast(int resId) {
-        View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
-                R.layout.common_toast, null);
+        View toastRoot = LayoutInflater.from(BaseActivity.this)
+                .inflate(R.layout.common_toast, null);
         ((HandyTextView) toastRoot.findViewById(R.id.toast_text)).setText(getString(resId));
         Toast toast = new Toast(BaseActivity.this);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -202,8 +185,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 显示自定义Toast提示(来自String) **/
     protected void showCustomToast(String text) {
-        View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
-                R.layout.common_toast, null);
+        View toastRoot = LayoutInflater.from(BaseActivity.this)
+                .inflate(R.layout.common_toast, null);
         ((HandyTextView) toastRoot.findViewById(R.id.toast_text)).setText(text);
         Toast toast = new Toast(BaseActivity.this);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -214,17 +197,17 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** Debug输出Log日志 **/
     protected void showLogDebug(String tag, String msg) {
-        Log.d(tag, msg);
+        LogUtils.d(tag, msg);
     }
 
     /** Info输出Log日志 **/
     protected void showLogInfo(String tag, String msg) {
-        Log.i(tag, msg);
+        LogUtils.i(tag, msg);
     }
 
     /** Error输出Log日志 **/
     protected void showLogError(String tag, String msg) {
-        Log.e(tag, msg);
+        LogUtils.e(tag, msg);
     }
 
     /** 通过Class跳转界面 **/
@@ -259,41 +242,28 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /** 含有标题和内容的对话框 **/
     protected AlertDialog showAlertDialog(String title, String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
-                                                               .setMessage(
-                                                                       message)
-                                                               .show();
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+                .show();
         return alertDialog;
     }
 
     /** 含有标题、内容、两个按钮的对话框 **/
-    protected AlertDialog showAlertDialog(String title, String message, String positiveText, DialogInterface.OnClickListener onPositiveClickListener, String negativeText, DialogInterface.OnClickListener onNegativeClickListener) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
-                                                               .setMessage(
-                                                                       message)
-                                                               .setPositiveButton(
-                                                                       positiveText,
-                                                                       onPositiveClickListener)
-                                                               .setNegativeButton(
-                                                                       negativeText,
-                                                                       onNegativeClickListener)
-                                                               .show();
+    protected AlertDialog showAlertDialog(String title, String message, String positiveText,
+            DialogInterface.OnClickListener onPositiveClickListener, String negativeText,
+            DialogInterface.OnClickListener onNegativeClickListener) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+                .setPositiveButton(positiveText, onPositiveClickListener)
+                .setNegativeButton(negativeText, onNegativeClickListener).show();
         return alertDialog;
     }
 
     /** 含有标题、内容、图标、两个按钮的对话框 **/
-    protected AlertDialog showAlertDialog(String title, String message, int icon, String positiveText, DialogInterface.OnClickListener onPositiveClickListener, String negativeText, DialogInterface.OnClickListener onNegativeClickListener) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title)
-                                                               .setMessage(
-                                                                       message)
-                                                               .setIcon(icon)
-                                                               .setPositiveButton(
-                                                                       positiveText,
-                                                                       onPositiveClickListener)
-                                                               .setNegativeButton(
-                                                                       negativeText,
-                                                                       onNegativeClickListener)
-                                                               .show();
+    protected AlertDialog showAlertDialog(String title, String message, int icon,
+            String positiveText, DialogInterface.OnClickListener onPositiveClickListener,
+            String negativeText, DialogInterface.OnClickListener onNegativeClickListener) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+                .setIcon(icon).setPositiveButton(positiveText, onPositiveClickListener)
+                .setNegativeButton(negativeText, onNegativeClickListener).show();
         return alertDialog;
     }
 
@@ -313,8 +283,7 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     public static void playNotification() {
         if (BaseApplication.getSoundFlag()) {
-            notificationMediaplayer.play(notificationMediaplayerID, 1, 1, 0, 0,
-                    1);
+            notificationMediaplayer.play(notificationMediaplayerID, 1, 1, 0, 0, 1);
         }
         if (BaseApplication.getVibrateFlag()) {
             notificationVibrator.vibrate(200);
@@ -334,8 +303,8 @@ public abstract class BaseActivity extends FragmentActivity {
         @Override
         public void handleMessage(android.os.Message msg) {
             MainTabActivity.sendEmptyMessage(); // 更新Tab信息
-            if (queue.size() > 0)
-                queue.getLast().processMessage(msg);
+            if (ActivityCollectorUtils.getActivitiesNum() > 0)
+                ActivityCollectorUtils.getLastActivity().processMessage(msg);
             playNotification(); // 新消息响提醒
 
         }

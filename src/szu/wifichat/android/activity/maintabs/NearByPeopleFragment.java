@@ -7,27 +7,24 @@ import java.util.Map;
 
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseFragment;
+import szu.wifichat.android.R;
 import szu.wifichat.android.activity.OtherProfileActivity;
 import szu.wifichat.android.adapter.NearByPeopleAdapter;
 import szu.wifichat.android.entity.NearByPeople;
 import szu.wifichat.android.view.MoMoRefreshListView;
 import szu.wifichat.android.view.MoMoRefreshListView.OnCancelListener;
 import szu.wifichat.android.view.MoMoRefreshListView.OnRefreshListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-
-import szu.wifichat.android.R;
+import android.widget.TextView;
 
 public class NearByPeopleFragment extends BaseFragment implements OnItemClickListener,
         OnRefreshListener, OnCancelListener {

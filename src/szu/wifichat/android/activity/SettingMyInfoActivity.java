@@ -279,20 +279,13 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
         }
     }
 
-    /**
-     * 为了得到传回的数据，必须在前面的Activity中（指MainActivity类）重写onActivityResult方法
-     * 
-     * requestCode 请求码，即调用startActivityForResult()传递过去的值 resultCode
-     * 结果码，结果码用于标识返回数据来自哪个新Activity
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                int result = data.getExtras().getInt("result");// 得到新Activity
+                int result = data.getExtras().getInt("result");
 
-                // 更换使用缓存机制的头像。 by hill
                 mAvatar = result + 1;
                 mIvAvater.setImageBitmap(ImageUtils.getAvatar(mApplication, this,
                         NearByPeople.AVATAR + mAvatar));

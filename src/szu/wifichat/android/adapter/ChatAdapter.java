@@ -12,11 +12,12 @@ import szu.wifichat.android.activity.message.ChatActivity;
 import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.NearByPeople;
-import szu.wifichat.android.file.explore.FileState;
+import szu.wifichat.android.file.FileState;
 import szu.wifichat.android.socket.tcp.TcpClient;
 import szu.wifichat.android.socket.tcp.TcpService;
 import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.util.ImageUtils;
+import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.view.EmoticonsTextView;
 import szu.wifichat.android.view.HandyTextView;
@@ -27,7 +28,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -498,9 +498,9 @@ public class ChatAdapter extends BaseObjectListAdapter {
         String imagePath = BaseApplication.THUMBNAIL_PATH + File.separator + msg.getSenderIMEI()
                 + File.separator + FileUtils.getNameByPath(msg.getMsgContent());
         Bitmap bitmap = ImageUtils.getBitmapFromPath(imagePath);
-        
-        Log.i(TAG, "聊天图片：" + imagePath);
-        
+
+        LogUtils.i(TAG, "聊天图片：" + imagePath);
+
         if (mImageContentBitmap == null)
             mImageContentBitmap = ImageUtils.getBitmapFromPath(msg.getMsgContent());
         return bitmap;

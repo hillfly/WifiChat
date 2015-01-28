@@ -17,6 +17,7 @@ import szu.wifichat.android.util.AudioRecorderUtils;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.util.ImageUtils;
+import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.view.ChatListView;
 import szu.wifichat.android.view.EmoteInputView;
@@ -36,7 +37,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +62,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();        
+        init();
         changeActiveChatActivity(this); // 注册到changeActiveChatActivity
 
     }
@@ -164,14 +164,12 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     }
 
     private void init() {
-        // sendFileStates = BaseApplication.sendFileStates;// 存储文件收发状态
-        // reciveFileStates = BaseApplication.recieveFileStates;
         mID = SessionUtils.getLocalUserID();
         mNickName = SessionUtils.getNickname();
         mIMEI = SessionUtils.getIMEI();
         mPeople = getIntent().getParcelableExtra(NearByPeople.ENTITY_PEOPLE);
-        mSenderID = mDBOperate.getIDByIMEI(mPeople.getIMEI());// 获取聊天对象IMEI
-        createSavePath();// 创建保存的文件夹目录
+        mSenderID = mDBOperate.getIDByIMEI(mPeople.getIMEI());
+        createSavePath();
         mMessagesList = mDBOperate.getScrollMessageOfChattingInfo(0, 5, mSenderID, mID);
         mHeaderLayout.setTitleChat(
                 ImageUtils.getIDfromDrawable(this, NearByPeople.AVATAR + mPeople.getAvatar()),
@@ -179,7 +177,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 R.drawable.ic_topbar_profile, new OnRightImageButtonClickListener());
         mInputView.setEditText(mEetTextDitorEditer);
         initRounds();
-        
+
         mAdapter = new ChatAdapter(mApplication, ChatActivity.this, mMessagesList);
         mAdapter.setListView(mClvList);
         mClvList.setAdapter(mAdapter);
@@ -255,6 +253,8 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
             case R.id.chat_textditor_iv_audio:
                 mLayoutScroll.snapToScreen(1);
+                if (mAudioRecorder == null)
+                    mAudioRecorder = new AudioRecorderUtils();
                 break;
 
             case R.id.chat_audioditor_ib_plus:
@@ -288,7 +288,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: // 按下按钮
-                Log.i(TAG, "ACTION DOWN");
+                LogUtils.i(TAG, "ACTION DOWN");
 
                 if (recordState == RECORD_OFF) {
                     switch (v.getId()) {
@@ -304,8 +304,6 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
                         case R.id.chat_audioditor_iv_audiobtn:
                             downY = event.getY();
-
-                            mAudioRecorder = new AudioRecorderUtils();
 
                             RECORD_FILENAME = System.currentTimeMillis()
                                     + szu.wifichat.android.util.TextUtils.getRandomNumStr(3);
@@ -338,7 +336,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 break;
 
             case MotionEvent.ACTION_UP: // 松开手指
-                Log.i(TAG, "ACTION UP");
+                LogUtils.i(TAG, "ACTION UP");
                 if (recordState == RECORD_ON) {
                     recordState = RECORD_OFF;
 
@@ -481,7 +479,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
                     String path = uri.getPath();
-                    Log.i("接收文件路径：", path);
+                    LogUtils.i("接收文件路径：", path);
 
                     if (path != null) {
                         sendFilePath = path;
@@ -531,7 +529,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 break;
 
             case IPMSGConst.IPMSG_RECEIVE_IMAGE_DATA: { // 图片开始发送
-                Log.d(TAG, "接收方确认图片请求,发送文件为" + mCameraImagePath);
+                LogUtils.d(TAG, "接收方确认图片请求,发送文件为" + mCameraImagePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 tcpClient.sendFile(mCameraImagePath, mPeople.getIpaddress(),
@@ -540,7 +538,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 break;
 
             case IPMSGConst.IPMSG_RECIEVE_VOICE_DATA: { // 语音开始发送
-                Log.d(TAG, "接收方确认语音请求,发送文件为" + mVoicePath);
+                LogUtils.d(TAG, "接收方确认语音请求,发送文件为" + mVoicePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 if (FileUtils.isFileExists(mVoicePath))
@@ -550,7 +548,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 break;
 
             case IPMSGConst.IPMSG_RECIEVE_FILE_DATA: { // 文件开始发送
-                Log.d(TAG, "接收方确认文件请求,发送文件为" + sendFilePath);
+                LogUtils.d(TAG, "接收方确认文件请求,发送文件为" + sendFilePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 if (FileUtils.isFileExists(sendFilePath))

@@ -1,6 +1,7 @@
 package szu.wifichat.android.activity;
 
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.AvatarAdapter;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
@@ -8,14 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
-
-import szu.wifichat.android.R;
 
 public class ChooseAvatarActivity extends BaseActivity implements
         OnItemClickListener {

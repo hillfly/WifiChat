@@ -1,21 +1,9 @@
 package szu.wifichat.android.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Random;
 
-import szu.wifichat.android.view.HandyTextView;
-
-import android.content.Context;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.UnderlineSpan;
 import android.widget.EditText;
-
 
 /**
  * @fileName TextUtils.java
@@ -23,53 +11,6 @@ import android.widget.EditText;
  * @description 文本工具类
  */
 public class TextUtils {
-    /**
-     * 添加下划线
-     * 
-     * @param context
-     *            上下文
-     * @param textView
-     *            添加下划线的TextView
-     * @param start
-     *            添加下划线开始的位置
-     * @param end
-     *            添加下划线结束的位置
-     */
-    public static void addUnderlineText(final Context context, final HandyTextView textView,
-            final int start, final int end) {
-        textView.setFocusable(true);
-        textView.setClickable(true);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(textView
-                .getText().toString().trim());
-        spannableStringBuilder.setSpan(new UnderlineSpan(), start, end,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView.setText(spannableStringBuilder);
-    }
-
-    /**
-     * 获取括号中的国家区号
-     * 
-     * @param text
-     *            带有括号的国家区号
-     * @param defaultText
-     *            默认的国家区号(在获取错误时返回该值)
-     * @return
-     */
-    public static String getCountryCodeBracketsInfo(String text, String defaultText) {
-        if (text.contains("(") && text.contains(")")) {
-            int leftBrackets = text.indexOf("(");
-            int rightBrackets = text.lastIndexOf(")");
-            if (leftBrackets < rightBrackets) {
-                return "+" + text.substring(leftBrackets + 1, rightBrackets);
-            }
-        }
-        if (defaultText != null) {
-            return defaultText;
-        }
-        else {
-            return text;
-        }
-    }
 
     /**
      * 根据月日获取星座
@@ -151,7 +92,8 @@ public class TextUtils {
     /**
      * 返回指定长度的一串数字
      * 
-     * @param NumLen 数字串位数
+     * @param NumLen
+     *            数字串位数
      * @return
      */
     public static String getRandomNumStr(int NumLen) {
@@ -163,72 +105,6 @@ public class TextUtils {
             str.append(num);
         }
         return str.toString();
-    }
-
-    /**
-     * 获取Assets中的json文本
-     * 
-     * @param context
-     *            上下文
-     * @param name
-     *            文本名称
-     * @return
-     */
-    public static String getJson(Context context, String name) {
-        // TODO 待清除
-        if (name != null) {
-            String path = "json/" + name;
-            InputStream is = null;
-            try {
-                is = context.getAssets().open(path);
-                return readTextFile(is);
-            }
-            catch (IOException e) {
-                return null;
-            }
-            finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                        is = null;
-                    }
-                }
-                catch (IOException e) {
-
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 从输入流中获取文本
-     * 
-     * @param inputStream
-     *            文本输入流
-     * @return
-     */
-    public static String readTextFile(InputStream inputStream) {
-        // TODO 待清除
-        String readedStr = "";
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String tmp;
-            while ((tmp = br.readLine()) != null) {
-                readedStr += tmp;
-            }
-            br.close();
-            inputStream.close();
-        }
-        catch (UnsupportedEncodingException e) {
-            return null;
-        }
-        catch (IOException e) {
-            return null;
-        }
-
-        return readedStr;
     }
 
 }

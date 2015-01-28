@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import android.media.MediaRecorder;
-import android.util.Log;
 
 public class AudioRecorderUtils {
-    private static final String TAG = "AudioRecorderUtils";
     private static int SAMPLE_RATE_IN_HZ = 8000; // 采样率���
 
     private MediaRecorder mMediaRecorder;
@@ -34,9 +32,7 @@ public class AudioRecorderUtils {
         }
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
-        // mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        // recorder.setAudioChannels(AudioFormat.CHANNEL_CONFIGURATION_MONO);
         mMediaRecorder.setAudioSamplingRate(SAMPLE_RATE_IN_HZ);
         mMediaRecorder.setOutputFile(mVoicePath);
         mMediaRecorder.prepare();

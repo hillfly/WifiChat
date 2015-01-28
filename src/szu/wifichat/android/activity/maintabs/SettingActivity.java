@@ -2,15 +2,15 @@ package szu.wifichat.android.activity.maintabs;
 
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseDialog;
+import szu.wifichat.android.R;
 import szu.wifichat.android.activity.AboutActivity;
 import szu.wifichat.android.activity.SettingMyInfoActivity;
-import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.sql.SqlDBOperate;
+import szu.wifichat.android.util.ActivityCollectorUtils;
 import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.view.HeaderLayout;
-import szu.wifichat.android.view.SettingSwitchButton;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
-import android.content.Context;
+import szu.wifichat.android.view.SettingSwitchButton;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,8 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import szu.wifichat.android.R;
 
 public class SettingActivity extends TabItemActivity implements OnClickListener,
         OnCheckedChangeListener, DialogInterface.OnClickListener {
@@ -44,8 +42,6 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
     private SqlDBOperate mSqlDBOperate;
 
     private int mDialogFlag;
-    private Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +49,6 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
         initViews();
         initEvents();
         init();
-        mContext = this;
     }
 
     @Override
@@ -206,8 +201,6 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
                             break;
 
                         case 2:
-                            mUDPSocketThread = UDPSocketThread.getInstance(mApplication, mContext);
-                            mUDPSocketThread.notifyOffline();
                             break;
 
                         default:
@@ -233,7 +226,7 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
                             break;
 
                         case 2:
-                            finish();
+                            ActivityCollectorUtils.finishAllActivities(mApplication, getApplicationContext());
                             break;
 
                         default:
