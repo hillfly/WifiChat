@@ -3,8 +3,15 @@
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.http.conn.util.InetAddressUtils;
 
 import szu.wifichat.android.activity.wifiap.TimerCheck;
 import szu.wifichat.android.activity.wifiap.WifiApConst;
@@ -366,12 +373,25 @@ public class WifiUtils {
         return mWifiInfo.getSSID();
     }
 
-    public String getLocalIPAddress() {
-        setNewWifiManagerInfo();
-
-        if (mWifiInfo == null)
-            return "NULL";
-        return intToIp(mWifiInfo.getIpAddress());
+    public String getLocalIPAddress() {        
+        try {
+            Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+            while (en.hasMoreElements()) {
+                NetworkInterface nif = en.nextElement();
+                Enumeration<InetAddress> enumIpAddr = nif.getInetAddresses();
+                while (enumIpAddr.hasMoreElements()) {
+                    InetAddress mInetAddress = enumIpAddr.nextElement();
+                    if (!mInetAddress.isLoopbackAddress()
+                            && InetAddressUtils.isIPv4Address(mInetAddress.getHostAddress())) {
+                        return mInetAddress.getHostAddress();                        
+                    }
+                }
+            }
+        }
+        catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getServerIPAddress() {
@@ -379,6 +399,28 @@ public class WifiUtils {
         if (mDhcpInfo == null)
             return "NULL";
         return intToIp(mDhcpInfo.gateway);
+    }
+
+    public static String getBroadcastAddress() {
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        try {
+            for (Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces(); niEnum
+                    .hasMoreElements();) {
+                NetworkInterface ni = niEnum.nextElement();
+                if (!ni.isLoopback()) {
+                    for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses()) {
+                        if (interfaceAddress.getBroadcast() != null) {
+                            return interfaceAddress.getBroadcast().toString().substring(1);
+                        }
+                    }
+                }
+            }
+        }
+        catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public String getMacAddress() {

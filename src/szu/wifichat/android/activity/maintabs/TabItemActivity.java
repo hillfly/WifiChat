@@ -1,6 +1,7 @@
 package szu.wifichat.android.activity.maintabs;
 
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.R;
 import szu.wifichat.android.util.ActivityCollectorUtils;
 import android.os.Message;
 
@@ -34,7 +35,7 @@ public class TabItemActivity extends BaseActivity {
         if (MainTabActivity.getIsTabActive()) {
             System.out.println(System.currentTimeMillis() - exitTime);
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                showShortToast("再按一次退出程序");
+                showShortToast(R.string.tabitem_toast_logout);
                 exitTime = System.currentTimeMillis();
             }
             else {

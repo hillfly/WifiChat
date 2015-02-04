@@ -12,12 +12,13 @@ import szu.wifichat.android.BaseActivity;
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.socket.tcp.TcpService;
 import szu.wifichat.android.sql.SqlDBOperate;
 import szu.wifichat.android.util.ImageUtils;
 import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.SessionUtils;
+import szu.wifichat.android.util.WifiUtils;
 import android.content.Context;
 
 public class UDPSocketThread implements Runnable {
@@ -25,7 +26,6 @@ public class UDPSocketThread implements Runnable {
     private static UDPSocketThread instance; // 唯一实例
 
     private static final String TAG = "SZU_UDPSocketThread";
-    private static final String BROADCASTIP = "255.255.255.255"; // 广播地址
     private static final int BUFFERLENGTH = 1024; // 缓冲大小
 
     private byte[] receiveBuffer = new byte[BUFFERLENGTH];
@@ -34,19 +34,21 @@ public class UDPSocketThread implements Runnable {
     private static BaseApplication mApplication;
     private static Context mContext;
     private boolean isThreadRunning;
-    private Thread receiveUDPThread; // 接收UDP数据线程
+    private Thread receiveUDPThread;
+    private String BROADCASTIP;
 
     private static DatagramSocket UDPSocket;
     private static DatagramPacket sendDatagramPacket;
     private DatagramPacket receiveDatagramPacket;
 
     private static String mIMEI;
-    private NearByPeople mNearByPeople;
+    private Users mNearByPeople;
     private SqlDBOperate mDBOperate;
 
     private UDPSocketThread() {
         mApplication.initParam();
         mDBOperate = new SqlDBOperate(mContext);
+        BROADCASTIP = WifiUtils.getBroadcastAddress();
     }
 
     /**
@@ -274,10 +276,11 @@ public class UDPSocketThread implements Runnable {
 
     /** 暂停监听线程 **/
     public void stopUDPSocketThread() {
+        isThreadRunning = false;
         if (receiveUDPThread != null)
             receiveUDPThread.interrupt();
-        isThreadRunning = false;
         receiveUDPThread = null;
+        instance = null;
         LogUtils.i(TAG, "stopUDPSocketThread() 线程停止成功");
     }
 
@@ -293,7 +296,7 @@ public class UDPSocketThread implements Runnable {
         String logintime = SessionUtils.getLoginTime();
         int avatar = SessionUtils.getAvatar();
         int age = SessionUtils.getAge();
-        mNearByPeople = new NearByPeople(mIMEI, avatar, device, nickname, gender, age,
+        mNearByPeople = new Users(mIMEI, avatar, device, nickname, gender, age,
                 constellation, localIPaddress, logintime);
         sendUDPdata(IPMSGConst.IPMSG_BR_ENTRY, BROADCASTIP, mNearByPeople);
     }
@@ -335,13 +338,13 @@ public class UDPSocketThread implements Runnable {
     private synchronized void addUser(IPMSGProtocol paramIPMSGProtocol) {
         String receiveIMEI = paramIPMSGProtocol.getSenderIMEI();
         if (BaseApplication.isDebugmode) {
-            NearByPeople newUser = (NearByPeople) paramIPMSGProtocol.getAddObject();
+            Users newUser = (Users) paramIPMSGProtocol.getAddObject();
             mApplication.addOnlineUser(receiveIMEI, newUser);
             mDBOperate.addUserInfo(newUser);
         }
         else {
             if (!SessionUtils.isItself(receiveIMEI)) {
-                NearByPeople newUser = (NearByPeople) paramIPMSGProtocol.getAddObject();
+                Users newUser = (Users) paramIPMSGProtocol.getAddObject();
                 mApplication.addOnlineUser(receiveIMEI, newUser);
                 mDBOperate.addUserInfo(newUser);
             }
@@ -388,22 +391,30 @@ public class UDPSocketThread implements Runnable {
         sendUDPdata(ipmsgProtocol, targetIP);
     }
 
-    public static synchronized void sendUDPdata(IPMSGProtocol ipmsgProtocol, String targetIP) {
+    public static synchronized void sendUDPdata(final IPMSGProtocol ipmsgProtocol,
+            final String targetIP) {
         // 构造发送报文
-        InetAddress targetAddr;
-        try {
-            targetAddr = InetAddress.getByName(targetIP); // 目的地址
-            sendBuffer = ipmsgProtocol.getProtocolJSON().getBytes("gbk");
-            sendDatagramPacket = new DatagramPacket(sendBuffer, sendBuffer.length, targetAddr,
-                    IPMSGConst.PORT);
-            UDPSocket.send(sendDatagramPacket);
-            LogUtils.i(TAG, "sendUDPdata() 数据发送成功");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            LogUtils.e(TAG, "sendUDPdata() 发送UDP数据包失败");
-        }
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                try {
+                    InetAddress targetAddr;
+                    targetAddr = InetAddress.getByName(targetIP); // 目的地址
+                    sendBuffer = ipmsgProtocol.getProtocolJSON().getBytes("gbk");
+                    sendDatagramPacket = new DatagramPacket(sendBuffer, sendBuffer.length,
+                            targetAddr, IPMSGConst.PORT);
+                    UDPSocket.send(sendDatagramPacket);
+                    LogUtils.i(TAG, "sendUDPdata() 数据发送成功");
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtils.e(TAG, "sendUDPdata() 发送UDP数据包失败");
+                }
+
+            }
+        }).start();
 
     }
-
 }

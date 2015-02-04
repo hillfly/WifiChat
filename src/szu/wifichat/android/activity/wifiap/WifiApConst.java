@@ -24,7 +24,6 @@ public class WifiApConst {
 
     // WifiAP 参数
     public static final String PACKAGE_NAME = "szu.wifichat.android.activity";
-    public static final String FIRST_OPEN_KEY = "version";
     public static final String WIFI_AP_HEADER = "Chat_";
     public static final String WIFI_AP_PASSWORD = "wifichat123";
 }

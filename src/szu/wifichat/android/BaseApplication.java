@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.file.FileState;
 import szu.wifichat.android.util.FileUtils;
 import szu.wifichat.android.util.LogUtils;
@@ -26,14 +26,13 @@ public class BaseApplication extends Application {
     public static Map<String, Integer> mEmoticonsId;
     public static List<String> mEmoticons;
     public static List<String> mEmoticons_Zem;
-    public static List<String> mEmoticons_Zemoji;
 
     /** 缓存 **/
     private Map<String, SoftReference<Bitmap>> mAvatarCache;
     private HashMap<String, String> mLastMsgCache; // 最后一条消息缓存，以IMEI为KEY
-    private ArrayList<NearByPeople> mUnReadPeople; // 未读用户队列
+    private ArrayList<Users> mUnReadPeople; // 未读用户队列
     private HashMap<String, String> mLocalUserSession; // 本机用户Session信息
-    private HashMap<String, NearByPeople> mOnlineUsers; // 在线用户集合，以IMEI为KEY
+    private HashMap<String, Users> mOnlineUsers; // 在线用户集合，以IMEI为KEY
 
     public static HashMap<String, FileState> sendFileStates; // 存放文件状态
     public static HashMap<String, FileState> recieveFileStates; // 存放文件状态
@@ -73,7 +72,6 @@ public class BaseApplication extends Application {
         mEmoticonsId = new HashMap<String, Integer>();
         mEmoticons = new ArrayList<String>();
         mEmoticons_Zem = new ArrayList<String>();
-        mEmoticons_Zemoji = new ArrayList<String>();
 
         sendFileStates = new HashMap<String, FileState>();
         recieveFileStates = new HashMap<String, FileState>();
@@ -89,16 +87,8 @@ public class BaseApplication extends Application {
             mEmoticons_Zem.add(emoticonsName);
             mEmoticonsId.put(emoticonsName, emoticonsId);
         }
-        for (int i = 1; i < 59; i++) {
-            String emoticonsName = "[zemoji" + i + "]";
-            int emoticonsId = getResources().getIdentifier("zemoji_e" + i, "drawable",
-                    getPackageName());
-            mEmoticons.add(emoticonsName);
-            mEmoticons_Zemoji.add(emoticonsName);
-            mEmoticonsId.put(emoticonsName, emoticonsId);
-        }
 
-        createFilePath();
+        createFolder();
 
         // 默认启动响铃与振动提醒
         isSOUND = true;
@@ -130,24 +120,23 @@ public class BaseApplication extends Application {
     }
 
     public void initOnlineUserMap() {
-        mOnlineUsers = new LinkedHashMap<String, NearByPeople>();
+        mOnlineUsers = new LinkedHashMap<String, Users>();
     }
 
     // 函数创建文件存储目录
-    private void createFilePath() {
+    private void createFolder() {
         if (null == IMAG_PATH) {
             SAVE_PATH = FileUtils.getSDPath();// 获取SD卡的根目录路径,如果不存在就返回Null
             if (null == SAVE_PATH) {
-                SAVE_PATH = instance.getFilesDir().toString();// 获取内置存储区的地址
+                SAVE_PATH = instance.getFilesDir().toString();// 获取内置存储区目录
             }
-            String appName = instance.getString(R.string.app_name);
-            SAVE_PATH += File.separator + appName;
+            SAVE_PATH += File.separator + instance.getString(R.string.app_name);
             IMAG_PATH = SAVE_PATH + File.separator + "image";
             THUMBNAIL_PATH = SAVE_PATH + File.separator + "thumbnail";
             VOICE_PATH = SAVE_PATH + File.separator + "voice";
             FILE_PATH = SAVE_PATH + File.separator + "file";
             if (!FileUtils.isFileExists(IMAG_PATH))
-                FileUtils.createDirFile(BaseApplication.IMAG_PATH);// 如果目录不存在则创建目录
+                FileUtils.createDirFile(BaseApplication.IMAG_PATH);
             if (!FileUtils.isFileExists(THUMBNAIL_PATH))
                 FileUtils.createDirFile(BaseApplication.THUMBNAIL_PATH);
             if (!FileUtils.isFileExists(VOICE_PATH))
@@ -174,11 +163,11 @@ public class BaseApplication extends Application {
         return mAvatarCache;
     }
 
-    public void addOnlineUser(String paramIMEI, NearByPeople paramObject) {
+    public void addOnlineUser(String paramIMEI, Users paramObject) {
         mOnlineUsers.put(paramIMEI, paramObject);
     }
 
-    public NearByPeople getOnlineUser(String paramIMEI) {
+    public Users getOnlineUser(String paramIMEI) {
         return mOnlineUsers.get(paramIMEI);
     }
 
@@ -199,11 +188,10 @@ public class BaseApplication extends Application {
         }
     }
 
-    public HashMap<String, NearByPeople> getOnlineUserMap() {
+    public HashMap<String, Users> getOnlineUserMap() {
         return mOnlineUsers;
     }
 
-    // mLastMsgCache setter getter
     /** 初始化消息缓存 */
     public void initLastMsgCache() {
         mLastMsgCache = new HashMap<String, String>();
@@ -267,7 +255,7 @@ public class BaseApplication extends Application {
     // mUnReadMessags setter getter
     /** 初始化未读消息队列 */
     public void initUnReadMessages() {
-        mUnReadPeople = new ArrayList<NearByPeople>();
+        mUnReadPeople = new ArrayList<Users>();
     }
 
     public void clearUnReadMessages() {
@@ -279,7 +267,7 @@ public class BaseApplication extends Application {
      * 
      * @param people
      */
-    public void addUnReadPeople(NearByPeople people) {
+    public void addUnReadPeople(Users people) {
         if (!mUnReadPeople.contains(people))
             mUnReadPeople.add(people);
     }
@@ -289,7 +277,7 @@ public class BaseApplication extends Application {
      * 
      * @return
      */
-    public ArrayList<NearByPeople> getUnReadPeopleList() {
+    public ArrayList<Users> getUnReadPeopleList() {
         return mUnReadPeople;
     }
 
@@ -307,7 +295,7 @@ public class BaseApplication extends Application {
      * 
      * @param people
      */
-    public void removeUnReadPeople(NearByPeople people) {
+    public void removeUnReadPeople(Users people) {
         if (mUnReadPeople.contains(people))
             mUnReadPeople.remove(people);
     }

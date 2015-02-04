@@ -39,7 +39,7 @@ public class TcpClient implements Runnable {
 
     private TcpClient() {
         sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
-        mThread = new Thread(this); // 新建一个线程
+        mThread = new Thread(this);
         LogUtils.d(TAG, "建立线程成功");
 
     }
@@ -68,8 +68,6 @@ public class TcpClient implements Runnable {
 
     public void sendFile(ArrayList<FileStyle> fileStyles, ArrayList<FileState> fileStates,
             String target_IP) {
-        // this.fileStyles = fileStyles;
-        // this.fileStates = fileStates;
         while (SEND_FLAG == true)
             ;
 
@@ -89,7 +87,7 @@ public class TcpClient implements Runnable {
         LogUtils.d(TAG, "发送线程开启");
         IS_THREAD_STOP = false; // 使能发送标识
         if (!mThread.isAlive())
-            mThread.start(); // 启动线程
+            mThread.start();
     }
 
     public void sendFile(String filePath, String target_IP) {
@@ -162,7 +160,7 @@ public class TcpClient implements Runnable {
             try {
                 socket = new Socket(target_IP, Constant.TCP_SERVER_RECEIVE_PORT);
                 fileInputStream = new FileInputStream(new File(filePath));
-                output = socket.getOutputStream(); // 构造一个输出流
+                output = socket.getOutputStream();
                 dataOutput = new DataOutputStream(output);
                 int fileSize = fileInputStream.available();
                 dataOutput.writeUTF(filePath.substring(filePath.lastIndexOf(File.separator) + 1)
@@ -173,7 +171,6 @@ public class TcpClient implements Runnable {
                 FileState fs = BaseApplication.sendFileStates.get(filePath);
                 fs.fileSize = fileSize;
                 fs.type = type;
-                // FileState fs = getFileStateByName(filePath, fileStates);
                 while (-1 != (readSize = fileInputStream.read(mBuffer))) {
                     length += readSize;
                     dataOutput.write(mBuffer, 0, readSize);

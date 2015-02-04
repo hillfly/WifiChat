@@ -10,7 +10,7 @@ import szu.wifichat.android.BaseFragment;
 import szu.wifichat.android.R;
 import szu.wifichat.android.activity.OtherProfileActivity;
 import szu.wifichat.android.adapter.NearByPeopleAdapter;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.view.MoMoRefreshListView;
 import szu.wifichat.android.view.MoMoRefreshListView.OnCancelListener;
 import szu.wifichat.android.view.MoMoRefreshListView.OnRefreshListener;
@@ -29,7 +29,7 @@ import android.widget.TextView;
 public class NearByPeopleFragment extends BaseFragment implements OnItemClickListener,
         OnRefreshListener, OnCancelListener {
 
-    private static List<NearByPeople> mNearByPeoples; // 在线用户列表
+    private static List<Users> mNearByPeoples; // 在线用户列表
 
     private MoMoRefreshListView mMmrlvList;
     private NearByPeopleAdapter mAdapter;
@@ -72,9 +72,9 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         int position = (int) arg3;
-        NearByPeople people = mNearByPeoples.get(position);
+        Users people = mNearByPeoples.get(position);
         Intent intent = new Intent(mContext, OtherProfileActivity.class);
-        intent.putExtra(NearByPeople.ENTITY_PEOPLE, people);
+        intent.putExtra(Users.ENTITY_PEOPLE, people);
         startActivity(intent);
     }
 
@@ -90,9 +90,9 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
      * @param application
      */
     private void initMaptoList() {
-        HashMap<String, NearByPeople> mMap = mApplication.getOnlineUserMap();
-        mNearByPeoples = new ArrayList<NearByPeople>(mMap.size());
-        for (Map.Entry<String, NearByPeople> entry : mMap.entrySet()) {
+        HashMap<String, Users> mMap = mApplication.getOnlineUserMap();
+        mNearByPeoples = new ArrayList<Users>(mMap.size());
+        for (Map.Entry<String, Users> entry : mMap.entrySet()) {
             mNearByPeoples.add(entry.getValue());
         }
     }
@@ -115,7 +115,7 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                showLoadingDialog("正在加载,请稍后...");
+                showLoadingDialog(getString(R.string.dialog_loading));
             }
 
             @Override
@@ -133,7 +133,7 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
                     mMmrlvList.setAdapter(mAdapter);
                 }
                 else {
-                    showCustomToast("数据加载失败...");
+                    showCustomToast(getString(R.string.dialog_loading_failue));
                 }
             }
 
@@ -154,7 +154,7 @@ public class NearByPeopleFragment extends BaseFragment implements OnItemClickLis
             protected Boolean doInBackground(Void... params) {
                 try {
                     Thread.sleep(1000); // 停顿1S
-                    if (mApplication.getOnlineUserMap().isEmpty()) { // 若在线用户非空，则刷新
+                    if (mApplication.getOnlineUserMap().isEmpty()) {
                         return false;
                     }
                     initMaptoList();

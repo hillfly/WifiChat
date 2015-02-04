@@ -42,6 +42,7 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
     private SqlDBOperate mSqlDBOperate;
 
     private int mDialogFlag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,7 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
         // TODO Auto-generated method stub
         mHeaderLayout = (HeaderLayout) findViewById(R.id.setting_page_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
-        mHeaderLayout.setDefaultTitle("设置", null);
+        mHeaderLayout.setDefaultTitle(getString(R.string.maintab_text_setting), null);
 
         mSettingInfoButton = (ImageView) findViewById(R.id.btn_setting_my_information);
         mSettingInfoLayoutButton = (RelativeLayout) findViewById(R.id.setting_my_info_layout);
@@ -84,11 +85,15 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
     protected void init() {
         // TODO Auto-generated method stub
         mDeleteCacheDialog = BaseDialog.getDialog(SettingActivity.this, R.string.dialog_tips,
-                "删除聊天记录会删除所有接收的图片、语音和文件。", "确 定", this, "取 消", this);
+                getString(R.string.setting_dialog_chatlog_delete_confirm),
+                getString(R.string.setting_dialog_chatlog_delete_ok), this,
+                getString(R.string.setting_dialog_chatlog_delete_cancel), this);
         mDeleteCacheDialog.setButton1Background(R.drawable.btn_default_popsubmit);
 
-        mExitDialog = BaseDialog.getDialog(SettingActivity.this, R.string.dialog_tips, "确定要退出软件",
-                "确 定", this, "取 消", this);
+        mExitDialog = BaseDialog.getDialog(SettingActivity.this, R.string.dialog_tips,
+                getString(R.string.setting_dialog_logout_confirm),
+                getString(R.string.setting_dialog_logout_ok), this,
+                getString(R.string.setting_dialog_logout_cancel), this);
         mExitDialog.setButton1Background(R.drawable.btn_default_popsubmit);
 
         mSoundSwitchButton.setChecked(BaseApplication.getSoundFlag());
@@ -175,11 +180,11 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
                 switch (flag) {
                     case 1:
                         mDeleteCacheDialog.dismiss();
-                        showLoadingDialog("正在删除聊天记录...");
+                        showLoadingDialog(getString(R.string.setting_dialog_chatlog_deleting));
                         break;
                     case 2:
                         mExitDialog.dismiss();
-                        showLoadingDialog("正在退出程序...");
+                        showLoadingDialog(getString(R.string.setting_dialog_logout_confirm));
                         break;
                     default:
                         break;
@@ -222,11 +227,12 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
                     dismissLoadingDialog();
                     switch (flag) {
                         case 1:
-                            showShortToast("删除聊天记录成功");
+                            showShortToast(R.string.setting_dialog_toast_delect_success);
                             break;
 
                         case 2:
-                            ActivityCollectorUtils.finishAllActivities(mApplication, getApplicationContext());
+                            ActivityCollectorUtils.finishAllActivities(mApplication,
+                                    getApplicationContext());
                             break;
 
                         default:
@@ -235,7 +241,7 @@ public class SettingActivity extends TabItemActivity implements OnClickListener,
 
                 }
                 else {
-                    showShortToast("操作失败,请尝试重启程序。");
+                    showShortToast(R.string.setting_dialog_toast_delect_failue);
                 }
             }
         });

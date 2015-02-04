@@ -3,7 +3,7 @@ package szu.wifichat.android.util;
 import java.util.HashMap;
 
 import szu.wifichat.android.BaseApplication;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 
 
 public class SessionUtils {
@@ -11,18 +11,18 @@ public class SessionUtils {
             .getUserSession();
 
     public static void setBirthday(String birthday){
-    	mlocalUserSession.put(NearByPeople.BIRTHDAY, birthday);
+    	mlocalUserSession.put(Users.BIRTHDAY, birthday);
     }
     
     public static String getBirthday(){
-    	return mlocalUserSession.get(NearByPeople.BIRTHDAY);
+    	return mlocalUserSession.get(Users.BIRTHDAY);
     }
     /**
      * 获取用户数据库id
      * @return
      */
     public static int getLocalUserID(){
-        return Integer.parseInt(mlocalUserSession.get(NearByPeople.ID));
+        return Integer.parseInt(mlocalUserSession.get(Users.ID));
     }
 
     /**
@@ -31,7 +31,7 @@ public class SessionUtils {
      * @return localIPaddress
      */
     public static String getLocalIPaddress() {
-        return mlocalUserSession.get(NearByPeople.IPADDRESS);
+        return mlocalUserSession.get(Users.IPADDRESS);
     }
 
     /**
@@ -40,7 +40,7 @@ public class SessionUtils {
      * @return serverIPaddress
      */
     public static String getServerIPaddress() {
-        return mlocalUserSession.get(NearByPeople.SERVERIPADDRESS);
+        return mlocalUserSession.get(Users.SERVERIPADDRESS);
     }
 
     /**
@@ -49,7 +49,7 @@ public class SessionUtils {
      * @return Nickname
      */
     public static String getNickname() {
-        return mlocalUserSession.get(NearByPeople.NICKNAME);
+        return mlocalUserSession.get(Users.NICKNAME);
     }
 
     /**
@@ -58,7 +58,7 @@ public class SessionUtils {
      * @return Gender
      */
     public static String getGender() {
-        return mlocalUserSession.get(NearByPeople.GENDER);
+        return mlocalUserSession.get(Users.GENDER);
     }
 
     /**
@@ -67,7 +67,7 @@ public class SessionUtils {
      * @return IMEI
      */
     public static String getIMEI() {
-        return mlocalUserSession.get(NearByPeople.IMEI);
+        return mlocalUserSession.get(Users.IMEI);
     }
 
     /**
@@ -85,7 +85,7 @@ public class SessionUtils {
      * @return device
      */
     public static String getDevice() {
-        return mlocalUserSession.get(NearByPeople.DEVICE);
+        return mlocalUserSession.get(Users.DEVICE);
     }
 
     /**
@@ -94,7 +94,7 @@ public class SessionUtils {
      * @return AvatarNum
      */
     public static int getAvatar() {
-        return Integer.parseInt(mlocalUserSession.get(NearByPeople.AVATAR));
+        return Integer.parseInt(mlocalUserSession.get(Users.AVATAR));
     }
 
     /**
@@ -103,7 +103,7 @@ public class SessionUtils {
      * @return
      */
     public static String getConstellation() {
-        return mlocalUserSession.get(NearByPeople.CONSTELLATION);
+        return mlocalUserSession.get(Users.CONSTELLATION);
     }
 
     /**
@@ -112,7 +112,7 @@ public class SessionUtils {
      * @return Age
      */
     public static int getAge() {
-        return Integer.parseInt(mlocalUserSession.get(NearByPeople.AGE));
+        return Integer.parseInt(mlocalUserSession.get(Users.AGE));
     }
 
     /**
@@ -121,7 +121,7 @@ public class SessionUtils {
      * @return OnlineStateInt
      */
     public static int getOnlineStateInt() {
-        return Integer.parseInt(mlocalUserSession.get(NearByPeople.ONLINESTATEINT));
+        return Integer.parseInt(mlocalUserSession.get(Users.ONLINESTATEINT));
     }
 
     /**
@@ -130,7 +130,7 @@ public class SessionUtils {
      * @return isClient
      */
     public static boolean getIsClient() {
-        return Boolean.parseBoolean(mlocalUserSession.get(NearByPeople.ISCLIENT));
+        return Boolean.parseBoolean(mlocalUserSession.get(Users.ISCLIENT));
     }
 
     /**
@@ -139,7 +139,7 @@ public class SessionUtils {
      * @return Data 登录时间 年月日
      */
     public static String getLoginTime() {
-        return mlocalUserSession.get(NearByPeople.LOGINTIME);
+        return mlocalUserSession.get(Users.LOGINTIME);
     }
     
     /**
@@ -147,7 +147,7 @@ public class SessionUtils {
      * @param paramID
      */
     public static void setLocalUserID(int paramID){
-        mlocalUserSession.put(NearByPeople.ID, String.valueOf(paramID));
+        mlocalUserSession.put(Users.ID, String.valueOf(paramID));
     }
 
     /**
@@ -156,7 +156,7 @@ public class SessionUtils {
      * @param paramLoginTime
      */
     public static void setLoginTime(String paramLoginTime) {
-        mlocalUserSession.put(NearByPeople.LOGINTIME, paramLoginTime);
+        mlocalUserSession.put(Users.LOGINTIME, paramLoginTime);
     }
 
     /**
@@ -166,7 +166,7 @@ public class SessionUtils {
      *            本地IP地址值
      */
     public static void setLocalIPaddress(String paramLocalIPaddress) {
-        mlocalUserSession.put(NearByPeople.IPADDRESS, paramLocalIPaddress);
+        mlocalUserSession.put(Users.IPADDRESS, paramLocalIPaddress);
     }
 
     /**
@@ -176,7 +176,7 @@ public class SessionUtils {
      *            热点IP地址值
      */
     public static void setServerIPaddress(String paramServerIPaddress) {
-        mlocalUserSession.put(NearByPeople.SERVERIPADDRESS, paramServerIPaddress);
+        mlocalUserSession.put(Users.SERVERIPADDRESS, paramServerIPaddress);
     }
 
     /**
@@ -186,7 +186,7 @@ public class SessionUtils {
      * 
      */
     public static void setNickname(String paramNickname) {
-        mlocalUserSession.put(NearByPeople.NICKNAME, paramNickname);
+        mlocalUserSession.put(Users.NICKNAME, paramNickname);
     }
 
     /**
@@ -195,7 +195,7 @@ public class SessionUtils {
      * @param paramConstellation
      */
     public static void setConstellation(String paramConstellation) {
-        mlocalUserSession.put(NearByPeople.CONSTELLATION, paramConstellation);
+        mlocalUserSession.put(Users.CONSTELLATION, paramConstellation);
     }
 
     /**
@@ -205,7 +205,7 @@ public class SessionUtils {
      * 
      */
     public static void setGender(String paramGender) {
-        mlocalUserSession.put(NearByPeople.GENDER, paramGender);
+        mlocalUserSession.put(Users.GENDER, paramGender);
     }
 
     /**
@@ -215,7 +215,7 @@ public class SessionUtils {
      *            本机的IMEI值
      */
     public static void setIMEI(String paramIMEI) {
-        mlocalUserSession.put(NearByPeople.IMEI, paramIMEI);
+        mlocalUserSession.put(Users.IMEI, paramIMEI);
     }
 
     /**
@@ -224,7 +224,7 @@ public class SessionUtils {
      * @param paramDevice
      */
     public static void setDevice(String paramDevice) {
-        mlocalUserSession.put(NearByPeople.DEVICE, paramDevice);
+        mlocalUserSession.put(Users.DEVICE, paramDevice);
     }
 
     /**
@@ -238,7 +238,7 @@ public class SessionUtils {
      *            登陆状态的具体编码
      */
     public static void setOnlineStateInt(int paramOnlineStateInt) {
-        mlocalUserSession.put(NearByPeople.ONLINESTATEINT, String.valueOf(paramOnlineStateInt));
+        mlocalUserSession.put(Users.ONLINESTATEINT, String.valueOf(paramOnlineStateInt));
     }
 
     /**
@@ -248,7 +248,7 @@ public class SessionUtils {
      *            选择的头像编号
      */
     public static void setAvatar(int paramAvatar) {
-        mlocalUserSession.put(NearByPeople.AVATAR, String.valueOf(paramAvatar));
+        mlocalUserSession.put(Users.AVATAR, String.valueOf(paramAvatar));
     }
 
     /**
@@ -257,7 +257,7 @@ public class SessionUtils {
      * @param paramAge
      */
     public static void setAge(int paramAge) {
-        mlocalUserSession.put(NearByPeople.AGE, String.valueOf(paramAge));
+        mlocalUserSession.put(Users.AGE, String.valueOf(paramAge));
     }
 
     /**
@@ -266,7 +266,7 @@ public class SessionUtils {
      * @param paramIsClient
      */
     public static void setIsClient(boolean paramIsClient) {
-        mlocalUserSession.put(NearByPeople.ISCLIENT, String.valueOf(paramIsClient));
+        mlocalUserSession.put(Users.ISCLIENT, String.valueOf(paramIsClient));
     }
     
     public static boolean isItself(String paramIMEI){

@@ -3,18 +3,16 @@
 
 	<color name="white">#ffffffff</color>
 	<color name="black">#ff000000</color>
-	<color name="transparent">#00000000</color>
-	<color name="lucency">#00000000</color>
-	<color name="drap_bar_word_color">#ff3e7ec8</color>
 	<color name="gray">#ff7f7f7f</color>
+	<color name="blue">#ff0f81d9</color>
+	<color name="transparent">#00000000</color>
+	<color name="drap_bar_word_color">#ff3e7ec8</color>
 	<color name="round_corner_filter_green">#ff66ccff</color>
-	<color name="round_corner_filter_border">#ff000000</color>
 	<color name="dialog_divider">#ffbfcbd3</color>
 	<color name="dialog_listitem_press">#ffd0dce4</color>
 	<color name="dialog_backgroud_full">#6d000000</color>
 	<color name="background_normal">#fffffbf0</color>
 	<color name="background_normal_press">#ffece7da</color>
-	<color name="blue">#ff0f81d9</color>
 	<color name="devideline">#ffd0c9b8</color>
 	<color name="devideline_listview">#ffe5e2d4</color>
 	<color name="timestampline">#ffe5e1de</color>
@@ -37,9 +35,6 @@
 	<color name="msg_status_new_stroke">#ffff9b2f</color>
 	<color name="msg_editor_backgroud">#ffececec</color>
 	<color name="msg_plus_item_press">#ff1d1d1d</color>
-	<color name="msg_emotebar_backgroud">#ff73797d</color>
-	<color name="msg_emotebar_item_press">#ff3b3e40</color>
-	<color name="msg_emotebar_item_selected">#ffececec</color>
 	<color name="msg_emote_divider">#ffa1a1a1</color>
 	<color name="msg_short_line_normal">#ffafafaf</color>
 	<color name="msg_short_line_selected">#ff5cbde3</color>

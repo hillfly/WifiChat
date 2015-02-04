@@ -5,7 +5,7 @@ import java.util.List;
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseObjectListAdapter;
 import szu.wifichat.android.entity.Entity;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.ImageUtils;
 import szu.wifichat.android.view.HandyTextView;
@@ -51,9 +51,9 @@ public class NearByPeopleAdapter extends BaseObjectListAdapter {
         else {
             holder = (ViewHolder) convertView.getTag();
         }
-        NearByPeople people = (NearByPeople) getItem(position);
+        Users people = (Users) getItem(position);
         holder.mIvAvatar.setImageBitmap(ImageUtils.getAvatar(mApplication, mContext,
-                NearByPeople.AVATAR + people.getAvatar()));
+                Users.AVATAR + people.getAvatar()));
         holder.mHtvName.setText(people.getNickname());
         holder.mLayoutGender.setBackgroundResource(people.getGenderBgId());
         holder.mIvGender.setImageResource(people.getGenderId());

@@ -135,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/enable_sd_card"
+                android:text="@string/toast_sdcard_unavailable"
                 android:textSize="22px" />
         </LinearLayout>
     </FrameLayout>

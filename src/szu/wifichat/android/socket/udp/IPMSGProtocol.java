@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.util.JsonUtils;
 import szu.wifichat.android.util.LogUtils;
 
@@ -56,7 +56,7 @@ public class IPMSGProtocol {
             JSONObject protocolJSON = new JSONObject(paramProtocolJSON);
             packetNo = protocolJSON.getString(PACKETNO);
             commandNo = protocolJSON.getInt(COMMANDNO);
-            senderIMEI = protocolJSON.getString(NearByPeople.IMEI);
+            senderIMEI = protocolJSON.getString(Users.IMEI);
             if (protocolJSON.has(ADDTYPE)) { // 若有附加信息
                 String addJSONStr = null;
                 if (protocolJSON.has(ADDOBJECT)) { // 若为Entity类型
@@ -67,7 +67,7 @@ public class IPMSGProtocol {
                 }
                 switch (ADDITION_TYPE.valueOf(protocolJSON.getString(ADDTYPE))) {
                     case USER: // 为用户数据
-                        addObject = JsonUtils.getObject(addJSONStr, NearByPeople.class);
+                        addObject = JsonUtils.getObject(addJSONStr, Users.class);
                         break;
 
                     case MSG: // 为消息数据
@@ -99,7 +99,7 @@ public class IPMSGProtocol {
         if (paramObject instanceof Message) { // 若为Message对象
             this.addType = ADDITION_TYPE.MSG;
         }
-        else if (paramObject instanceof NearByPeople) { // 若为NearByPeople对象
+        else if (paramObject instanceof Users) { // 若为NearByPeople对象
             this.addType = ADDITION_TYPE.USER;
         }
     }
@@ -129,7 +129,7 @@ public class IPMSGProtocol {
         this.packetNo = paramPacketNo;
     }
 
-    @JSONField(name = NearByPeople.IMEI)
+    @JSONField(name = Users.IMEI)
     public String getSenderIMEI() {
         return this.senderIMEI;
     }

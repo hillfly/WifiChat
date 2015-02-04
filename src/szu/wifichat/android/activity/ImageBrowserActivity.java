@@ -4,20 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import szu.wifichat.android.BaseActivity;
+import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.ImageBrowserAdapter;
 import szu.wifichat.android.view.PhotoTextView;
 import szu.wifichat.android.view.ScrollViewPager;
-
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.View;
-import android.view.View.OnClickListener;
-
-import szu.wifichat.android.R;
 
 public class ImageBrowserActivity extends BaseActivity implements
-        OnPageChangeListener, OnClickListener {
+        OnPageChangeListener {
 
     private ScrollViewPager mSvpPager;
     private PhotoTextView mPtvPage;
@@ -76,12 +72,7 @@ public class ImageBrowserActivity extends BaseActivity implements
         mPosition = arg0;
         mPtvPage.setText((mPosition % mTotal) + 1 + "/" + mTotal);
     }
-
-    @Override
-    public void onClick(View arg0) {
-        showShortToast("图片已保存到本地");
-    }
-
+  
     @Override
     public void onBackPressed() {
         finish();

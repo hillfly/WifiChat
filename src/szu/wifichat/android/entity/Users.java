@@ -11,7 +11,7 @@ import szu.wifichat.android.R;
  * @description 附近个人实体类
  * @author _Hill3
  */
-public class NearByPeople extends Entity implements Parcelable {
+public class Users extends Entity implements Parcelable {
 
     /** 用户信息常量 **/
     public static final String ID = "ID";
@@ -21,7 +21,7 @@ public class NearByPeople extends Entity implements Parcelable {
     public static final String DEVICE = "Device";
     public static final String AVATAR = "avatar";
     public static final String BIRTHDAY = "birthday";
-    public static final String AGE = "Age";    
+    public static final String AGE = "Age";
     public static final String CONSTELLATION = "Constellation";
     public static final String ONLINESTATEINT = "OnlineStateInt";
     public static final String ISCLIENT = "isClient";
@@ -30,25 +30,25 @@ public class NearByPeople extends Entity implements Parcelable {
     public static final String LOGINTIME = "LoginTime";
     public static final String ENTITY_PEOPLE = "entity_people";
 
-    private String mIMEI; // IMEI
-    private int mAvatar; // 头像
-    private String mDevice; // 设备 Android PC
-    private String mNickname; // 昵称
-    private String mConstellation; // 星座
-    private String mGender; // 性别
-    private int mGenderId; // 性别对应的图片资源ResId
-    private int mGenderBgId; // 性别对应的背景资源ResId
-    private int mAge; // 年龄
-    private String mIpaddress; // IP地址
-    private String mLogintime;// 登陆时间
-    private int onlineStateInt; // 在线状态
-    private int msgCount; // 未接收消息数
+    private String mIMEI;
+    private int mAvatar;
+    private String mDevice;
+    private String mNickname;
+    private String mConstellation;
+    private String mGender;
+    private int mGenderId;
+    private int mGenderBgId;
+    private int mAge;
+    private String mIpaddress;
+    private String mLogintime;
+    private int onlineStateInt;
+    private int msgCount;
 
-    public NearByPeople() {
-        msgCount = 0; // 初始化为0
+    public Users() {
+        msgCount = 0;
     }
 
-    public NearByPeople(String paramIMEI, int paramAvatar, String paramDevice,
+    public Users(String paramIMEI, int paramAvatar, String paramDevice,
             String paramNickname, String paramGender, int paramAge, String paramConstellation,
             String paramIP, String paramLogintime) {
         super();
@@ -63,7 +63,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mLogintime = paramLogintime;
     }
 
-    @JSONField(name = NearByPeople.IMEI)
+    @JSONField(name = Users.IMEI)
     public String getIMEI() {
         return this.mIMEI;
     }
@@ -72,7 +72,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mIMEI = paramIMEI;
     }
 
-    @JSONField(name = NearByPeople.AVATAR)
+    @JSONField(name = Users.AVATAR)
     public int getAvatar() {
         return this.mAvatar;
     }
@@ -81,7 +81,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mAvatar = paramAvatar;
     }
 
-    @JSONField(name = NearByPeople.DEVICE)
+    @JSONField(name = Users.DEVICE)
     public String getDevice() {
         return this.mDevice;
     }
@@ -90,7 +90,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mDevice = paramDevice;
     }
 
-    @JSONField(name = NearByPeople.NICKNAME)
+    @JSONField(name = Users.NICKNAME)
     public String getNickname() {
         return this.mNickname;
     }
@@ -99,7 +99,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mNickname = paramNickname;
     }
 
-    @JSONField(name = NearByPeople.GENDER)
+    @JSONField(name = Users.GENDER)
     public String getGender() {
         return this.mGender;
     }
@@ -134,7 +134,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mGenderBgId = paramGenderBgId;
     }
 
-    @JSONField(name = NearByPeople.AGE)
+    @JSONField(name = Users.AGE)
     public int getAge() {
         return this.mAge;
     }
@@ -143,7 +143,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mAge = paramAge;
     }
 
-    @JSONField(name = NearByPeople.CONSTELLATION)
+    @JSONField(name = Users.CONSTELLATION)
     public String getConstellation() {
         return this.mConstellation;
     }
@@ -152,7 +152,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mConstellation = paramConstellation;
     }
 
-    @JSONField(name = NearByPeople.IPADDRESS)
+    @JSONField(name = Users.IPADDRESS)
     public String getIpaddress() {
         return this.mIpaddress;
     }
@@ -161,7 +161,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mIpaddress = paramIpaddress;
     }
 
-    @JSONField(name = NearByPeople.LOGINTIME)
+    @JSONField(name = Users.LOGINTIME)
     public String getLogintime() {
         return this.mLogintime;
     }
@@ -170,7 +170,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.mLogintime = paramLogintime;
     }
 
-    @JSONField(name = NearByPeople.ONLINESTATEINT)
+    @JSONField(name = Users.ONLINESTATEINT)
     public int getOnlineStateInt() {
         return this.onlineStateInt;
     }
@@ -188,7 +188,7 @@ public class NearByPeople extends Entity implements Parcelable {
         this.msgCount = paramMsgCount;
     }
 
-    public static Parcelable.Creator<NearByPeople> getCreator() {
+    public static Parcelable.Creator<Users> getCreator() {
         return CREATOR;
     }
 
@@ -206,11 +206,11 @@ public class NearByPeople extends Entity implements Parcelable {
         dest.writeInt(msgCount);
     }
 
-    public static final Parcelable.Creator<NearByPeople> CREATOR = new Parcelable.Creator<NearByPeople>() {
+    public static final Parcelable.Creator<Users> CREATOR = new Parcelable.Creator<Users>() {
 
         @Override
-        public NearByPeople createFromParcel(Parcel source) {
-            NearByPeople people = new NearByPeople();
+        public Users createFromParcel(Parcel source) {
+            Users people = new Users();
             people.setIMEI(source.readString());
             people.setAvatar(source.readInt());
             people.setDevice(source.readString());
@@ -225,8 +225,8 @@ public class NearByPeople extends Entity implements Parcelable {
         }
 
         @Override
-        public NearByPeople[] newArray(int size) {
-            return new NearByPeople[size];
+        public Users[] newArray(int size) {
+            return new Users[size];
         }
     };
 

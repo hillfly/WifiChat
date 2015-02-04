@@ -38,7 +38,7 @@ public class SessionListActivity extends TabItemActivity {
     protected void initViews() {
         mHeaderLayout = (HeaderLayout) findViewById(R.id.session_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
-        mHeaderLayout.setDefaultTitle("消息", null);
+        mHeaderLayout.setDefaultTitle(getString(R.string.maintab_text_message), null);
     }
 
     @Override

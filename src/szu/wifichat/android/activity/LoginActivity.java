@@ -8,7 +8,7 @@ import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.SimpleListDialogAdapter;
 import szu.wifichat.android.dialog.SimpleListDialog;
 import szu.wifichat.android.dialog.SimpleListDialog.onSimpleListItemClickListener;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.ImageUtils;
 import szu.wifichat.android.util.SessionUtils;
@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
 
         SharedPreferences mSharedPreferences = getSharedPreferences(GlobalSharedName,
                 Context.MODE_PRIVATE);
-        mNickname = mSharedPreferences.getString(NearByPeople.NICKNAME, "");
+        mNickname = mSharedPreferences.getString(Users.NICKNAME, "");
 
         // 若mNickname有内容，则读取本地存储的用户信息
         if (mNickname.length() != 0) {
@@ -133,17 +133,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mLlayoutMain.setVisibility(View.GONE);
             mLlayoutExMain.setVisibility(View.VISIBLE);
 
-            mAvatar = mSharedPreferences.getInt(NearByPeople.AVATAR, 0);
-            mBirthday = mSharedPreferences.getString(NearByPeople.BIRTHDAY, "000000");
-            mOnlineStateInt = mSharedPreferences.getInt(NearByPeople.ONLINESTATEINT, 0);
-            mGender = mSharedPreferences.getString(NearByPeople.GENDER, "获取失败");
-            mAge = mSharedPreferences.getInt(NearByPeople.AGE, -1);
+            mAvatar = mSharedPreferences.getInt(Users.AVATAR, 0);
+            mBirthday = mSharedPreferences.getString(Users.BIRTHDAY, "000000");
+            mOnlineStateInt = mSharedPreferences.getInt(Users.ONLINESTATEINT, 0);
+            mGender = mSharedPreferences.getString(Users.GENDER, "获取失败");
+            mAge = mSharedPreferences.getInt(Users.AGE, -1);
 
-            mConstellation = mSharedPreferences.getString(NearByPeople.CONSTELLATION, "获取失败");
-            mLastLogintime = mSharedPreferences.getString(NearByPeople.LOGINTIME, "获取失败");
+            mConstellation = mSharedPreferences.getString(Users.CONSTELLATION, "获取失败");
+            mLastLogintime = mSharedPreferences.getString(Users.LOGINTIME, "获取失败");
 
             mImgExAvatar.setImageBitmap(ImageUtils.getAvatar(mApplication, this,
-                    NearByPeople.AVATAR + mAvatar));
+                    Users.AVATAR + mAvatar));
             mTvExNickmame.setText(mNickname);
             mTvExConstellation.setText(mConstellation);
             mHtvExAge.setText(mAge + "");
@@ -273,7 +273,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
         mNickname = "";
         mGender = null;
         if (TextUtils.isNull(mEtNickname)) {
-            showShortToast("请输入您的聊天昵称");
+            showShortToast(R.string.login_toast_nickname);
             mEtNickname.requestFocus();
             return false;
         }
@@ -286,7 +286,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                 mGender = "男";
                 break;
             default:
-                showShortToast("请选择性别");
+                showShortToast(R.string.login_toast_sex);
                 return false;
         }
 
@@ -312,16 +312,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                showLoadingDialog("正在存储个人信息...");
+                showLoadingDialog(getString(R.string.login_dialog_saveInfo));
             }
 
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI
-                    showLogInfo(TAG, "mNickname:" + mNickname + " mAge:" + mAge + " mGender:"
-                            + mGender + " mOnlineState:" + mOnlineStateStr + "|" + mOnlineStateInt
-                            + " mAvatar:" + mAvatar + " IMEI:" + mIMEI + " mBirthday:" + mBirthday);
+                    mIMEI = mTelephonyManager.getDeviceId(); // 获取IMEI                  
 
                     // 设置用户Session信息
                     SessionUtils.setIMEI(mIMEI);
@@ -349,7 +346,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
                     finish();
                 }
                 else {
-                    showShortToast("操作失败,请尝试重启程序。");
+                    showShortToast(R.string.login_toast_loginfailue);
                 }
             }
         });

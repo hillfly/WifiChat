@@ -26,7 +26,7 @@ public class NearByActivity extends TabItemActivity {
     protected void initViews() {
         mHeaderLayout = (HeaderLayout) findViewById(R.id.nearby_header);
         mHeaderLayout.init(HeaderStyle.DEFAULT_TITLE);
-        mHeaderLayout.setDefaultTitle("附近", null);
+        mHeaderLayout.setDefaultTitle(getString(R.string.maintab_text_nearby), null);
     }
 
     @Override

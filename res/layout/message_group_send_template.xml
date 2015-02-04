@@ -60,9 +60,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_toRightOf="@+id/right_margin_view"
-				android:background="@drawable/bg_message_box_send"
-				android:clickable="true"
-				android:focusable="true"
+				android:background="@drawable/bg_message_box_send"	
 				android:gravity="center"
 				android:orientation="horizontal" />
 		</RelativeLayout>

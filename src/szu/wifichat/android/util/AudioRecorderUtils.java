@@ -31,7 +31,7 @@ public class AudioRecorderUtils {
             throw new IOException("Path to file could not be created");
         }
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mMediaRecorder.setAudioSamplingRate(SAMPLE_RATE_IN_HZ);
         mMediaRecorder.setOutputFile(mVoicePath);
@@ -40,14 +40,19 @@ public class AudioRecorderUtils {
     }
 
     public void stop() throws IOException {
-        mMediaRecorder.stop();
-        mMediaRecorder.release();
+        if (mMediaRecorder != null) {
+            mMediaRecorder.stop();
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
     }
 
     public double getAmplitude() {
         if (mMediaRecorder != null) {
             return (mMediaRecorder.getMaxAmplitude());
-        } else
+        }
+        else
             return 0;
     }
 }

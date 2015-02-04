@@ -5,7 +5,6 @@ import szu.wifichat.android.R;
 import szu.wifichat.android.adapter.AvatarAdapter;
 import szu.wifichat.android.view.HeaderLayout;
 import szu.wifichat.android.view.HeaderLayout.HeaderStyle;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -20,7 +19,6 @@ public class ChooseAvatarActivity extends BaseActivity implements
     private GridView gridView;
     private HeaderLayout mHeaderLayout;
     AvatarAdapter adapter;
-    Context context = this;
     // 图片的文字标题
     private static String[] titles = new String[] { "pic1", "pic2", "pic3",
             "pic4", "pic5", "pic6", "pic7", "pic8", "pic9", "pic10", "pic11",

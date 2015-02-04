@@ -5,7 +5,7 @@ import java.util.Date;
 
 import szu.wifichat.android.BaseActivity;
 import szu.wifichat.android.R;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.util.DateUtils;
 import szu.wifichat.android.util.ImageUtils;
@@ -134,7 +134,7 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
                 mCalendar.get(Calendar.DAY_OF_MONTH), this);
         mHtvAge.setText(mAge + "");
         mIvAvater.setImageBitmap(ImageUtils.getAvatar(mApplication, this,
-                NearByPeople.AVATAR + mAvatar));
+                Users.AVATAR + mAvatar));
         mEtNickname.setText(SessionUtils.getNickname());
     }
 
@@ -176,7 +176,7 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
         mNickname = "";
         mGender = null;
         if (TextUtils.isNull(mEtNickname)) {
-            showShortToast("请输入您的聊天昵称");
+            showShortToast(R.string.login_toast_nickname);
             mEtNickname.requestFocus();
             return false;
         }
@@ -189,7 +189,7 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
                 mGender = "男";
                 break;
             default:
-                showShortToast("请选择性别");
+                showShortToast(R.string.login_toast_sex);
                 return false;
         }
 
@@ -212,7 +212,7 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                showLoadingDialog("正在存储个人信息...");
+                showLoadingDialog(getString(R.string.login_dialog_saveInfo));
             }
 
             @Override
@@ -233,11 +233,11 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
                     // 在SD卡中存储登陆信息
                     SharedPreferences.Editor mEditor = getSharedPreferences(GlobalSharedName,
                             Context.MODE_PRIVATE).edit();
-                    mEditor.putString(NearByPeople.NICKNAME, mNickname)
-                            .putString(NearByPeople.GENDER, mGender)
-                            .putInt(NearByPeople.AVATAR, mAvatar).putInt(NearByPeople.AGE, mAge)
-                            .putString(NearByPeople.BIRTHDAY, mBirthday)
-                            .putString(NearByPeople.CONSTELLATION, mConstellation);
+                    mEditor.putString(Users.NICKNAME, mNickname)
+                            .putString(Users.GENDER, mGender)
+                            .putInt(Users.AVATAR, mAvatar).putInt(Users.AGE, mAge)
+                            .putString(Users.BIRTHDAY, mBirthday)
+                            .putString(Users.CONSTELLATION, mConstellation);
                     mEditor.commit();
                     return true;
                 }
@@ -288,7 +288,7 @@ public class SettingMyInfoActivity extends BaseActivity implements OnClickListen
 
                 mAvatar = result + 1;
                 mIvAvater.setImageBitmap(ImageUtils.getAvatar(mApplication, this,
-                        NearByPeople.AVATAR + mAvatar));
+                        Users.AVATAR + mAvatar));
             }
         }
 

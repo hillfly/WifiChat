@@ -158,7 +158,7 @@
     </style>
 
     <style name="Dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@color/lucency</item>
+        <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>

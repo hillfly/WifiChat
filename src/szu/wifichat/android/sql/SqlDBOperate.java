@@ -9,7 +9,7 @@ import org.json.JSONStringer;
 
 import szu.wifichat.android.entity.Message;
 import szu.wifichat.android.entity.Message.CONTENT_TYPE;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -66,7 +66,7 @@ public class SqlDBOperate
     }
     
     /*获取在线信息尚未完善,默认在线状态(0)*/
-    public void addUserInfo(NearByPeople people)
+    public void addUserInfo(Users people)
     {
     	 ContentValues values = new ContentValues();
          values.put("name", people.getNickname());

@@ -10,12 +10,11 @@ import szu.wifichat.android.activity.maintabs.MainTabActivity;
 import szu.wifichat.android.activity.wifiap.WifiApConst;
 import szu.wifichat.android.activity.wifiap.WifiapBroadcast;
 import szu.wifichat.android.adapter.WifiapAdapter;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.socket.udp.UDPSocketThread;
 import szu.wifichat.android.sql.SqlDBOperate;
 import szu.wifichat.android.sql.UserInfo;
 import szu.wifichat.android.util.DateUtils;
-import szu.wifichat.android.util.LogUtils;
 import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.util.TextUtils;
 import szu.wifichat.android.util.WifiUtils;
@@ -33,7 +32,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -77,7 +75,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
     private UserInfo mUserInfo; // 用户信息类实例
     private SqlDBOperate mSqlDBOperate;// 数据库操作实例,新
     private WifiapBroadcast mWifiapBroadcast;
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +85,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
         initViews();
         initEvents();
         initAction();
-
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
-                .detectDiskWrites().detectNetwork().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-                .penaltyLog().penaltyDeath().build());
-
-        mContext = this;
     }
 
     @Override
@@ -189,7 +179,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                 mBtnCreateAp.setVisibility(View.VISIBLE);
                 mIvWifiApIcon.setVisibility(View.VISIBLE);
                 mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_close);
-                mTvWifiApInfo.setText(getString(R.string.wifiap_text_connectap_succeed)
+                mTvWifiApInfo.setText(getString(R.string.wifiap_text_createap_succeed)
                         + getString(R.string.wifiap_text_connectap_ssid) + mWifiUtils.getApSSID());
                 isClient = false;
             }
@@ -226,12 +216,10 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
      */
     public void setIPaddress(boolean isClient) {
         mWifiUtils.setNewWifiManagerInfo();
-        LogUtils.d(TAG,
-                "isClient:" + isClient + "|" + "isWifiConnect:" + mWifiUtils.isWifiConnect());
         if (!isClient && !mWifiUtils.isWifiConnect()) {
-            // localIPaddress = mWifiUtils.getServerIPAddress(); // 获取本地IP
-            // serverIPaddres = localIPaddress; // 热点IP与本机IP相同
-            serverIPaddres = localIPaddress = "192.168.43.1";
+            localIPaddress = mWifiUtils.getLocalIPAddress();
+            serverIPaddres = localIPaddress;
+            // serverIPaddres = localIPaddress = "192.168.43.1";
         }
         else {
             localIPaddress = mWifiUtils.getLocalIPAddress();
@@ -257,12 +245,12 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
      */
     private boolean isValidated() {
 
-        setIPaddress(isClient); // 获取IP
+        setIPaddress(isClient);
         String nullIP = "0.0.0.0";
 
         if (nullIP.equals(localIPaddress) || nullIP.equals(serverIPaddres)
                 || localIPaddress == null || serverIPaddres == null) {
-            showShortToast("请创建热点或者连接一个热点");
+            showShortToast(R.string.wifiap_toast_connectap_unavailable);
             return false;
         }
 
@@ -271,7 +259,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
 
     /** 执行登陆 **/
     private void doLogin() {
-        // TODO 为了方便测试，可以将次部分注释掉
         if (!isValidated()) {
             return;
         }
@@ -279,13 +266,13 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                showLoadingDialog("正在存储连接信息...");
+                showLoadingDialog(getString(R.string.wifiap_dialog_login_saveInfo));
             }
 
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    mSqlDBOperate = new SqlDBOperate(mContext);// 实例化数据库操作类,新
+                    mSqlDBOperate = new SqlDBOperate(mContext);
                     String IMEI = SessionUtils.getIMEI();
                     String nickname = SessionUtils.getNickname();
                     String gender = SessionUtils.getGender();
@@ -331,16 +318,23 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     // 在SD卡中存储登陆信息
                     SharedPreferences.Editor mEditor = getSharedPreferences(GlobalSharedName,
                             Context.MODE_PRIVATE).edit();
-                    mEditor.putString(NearByPeople.IMEI, IMEI)
-                            .putString(NearByPeople.DEVICE, mDevice)
-                            .putString(NearByPeople.NICKNAME, nickname)
-                            .putString(NearByPeople.GENDER, gender)
-                            .putInt(NearByPeople.AVATAR, avatar).putInt(NearByPeople.AGE, age)
-                            .putString(NearByPeople.BIRTHDAY, SessionUtils.getBirthday())
-                            .putInt(NearByPeople.ONLINESTATEINT, onlineStateInt)
-                            .putString(NearByPeople.CONSTELLATION, constellation)
-                            .putString(NearByPeople.LOGINTIME, logintime);
+                    mEditor.putString(Users.IMEI, IMEI)
+                            .putString(Users.DEVICE, mDevice)
+                            .putString(Users.NICKNAME, nickname)
+                            .putString(Users.GENDER, gender)
+                            .putInt(Users.AVATAR, avatar).putInt(Users.AGE, age)
+                            .putString(Users.BIRTHDAY, SessionUtils.getBirthday())
+                            .putInt(Users.ONLINESTATEINT, onlineStateInt)
+                            .putString(Users.CONSTELLATION, constellation)
+                            .putString(Users.LOGINTIME, logintime);
                     mEditor.commit();
+
+                    // UDPThread
+                    mUDPSocketThread = UDPSocketThread.getInstance(mApplication,
+                            getApplicationContext());
+                    mUDPSocketThread.connectUDPSocket(); // 新建Socket线程
+                    mUDPSocketThread.notifyOnline(); // 发送上线广播
+
                     return true;
                 }
                 catch (Exception e) {
@@ -359,11 +353,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 dismissLoadingDialog();
-                if (result) { // 初始化Thread
-                    mUDPSocketThread = UDPSocketThread.getInstance(mApplication,
-                            getApplicationContext());
-                    mUDPSocketThread.connectUDPSocket(); // 新建Socket线程
-                    mUDPSocketThread.notifyOnline(); // 发送上线广播
+                if (result) {
                     startActivity(MainTabActivity.class);
                     finish();
                 }
@@ -656,7 +646,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                         mBtnCreateAp.setVisibility(View.VISIBLE);
                         mIvWifiApIcon.setVisibility(View.VISIBLE);
                         mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_close);
-                        mTvWifiApInfo.setText(getString(R.string.wifiap_text_connectap_succeed)
+                        mTvWifiApInfo.setText(getString(R.string.wifiap_text_createap_succeed)
                                 + getString(R.string.wifiap_text_connectap_ssid)
                                 + mWifiUtils.getApSSID());
                         isClient = false; // 非客户端
@@ -664,7 +654,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener,
                     else {
                         mBtnCreateAp.setVisibility(View.VISIBLE);
                         mBtnCreateAp.setBackgroundResource(R.drawable.wifiap_create);
-                        mTvWifiApInfo.setText(R.string.wifiap_text_createap_fail);
+                        mTvWifiApInfo.setText(R.string.wifiap_text_createap_failue);
                     }
                     break;
                 case WifiApConst.ApConnectting:

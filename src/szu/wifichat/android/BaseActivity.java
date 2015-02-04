@@ -14,6 +14,7 @@ import szu.wifichat.android.util.WifiUtils;
 import szu.wifichat.android.view.HandyTextView;
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -34,6 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected static OnActiveChatActivityListenner activeChatActivityListenner = null; // 激活的聊天窗口
 
     protected BaseApplication mApplication;
+    protected Context mContext;
     protected WifiUtils mWifiUtils;
     protected FlippingLoadingDialog mLoadingDialog;
     protected UDPSocketThread mUDPSocketThread;
@@ -56,6 +58,7 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         mApplication = BaseApplication.getInstance();
         mLoadingDialog = new FlippingLoadingDialog(this, "请求提交中");
+        mContext = this;
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -136,7 +139,7 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     public static boolean isExistActiveChatActivity() {
         return (activeChatActivityListenner == null) ? false : true;
-    }
+    }   
 
     protected void showLoadingDialog(String text) {
         if (text != null) {

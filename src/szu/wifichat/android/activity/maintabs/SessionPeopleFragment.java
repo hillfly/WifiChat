@@ -6,7 +6,7 @@ import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseFragment;
 import szu.wifichat.android.activity.message.ChatActivity;
 import szu.wifichat.android.adapter.NearByPeopleAdapter;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.view.MoMoRefreshListView;
 
 import android.app.Activity;
@@ -24,7 +24,7 @@ import szu.wifichat.android.R;
 
 public class SessionPeopleFragment extends BaseFragment implements OnItemClickListener {
 
-    private static List<NearByPeople> mSessionPeoples; // 未读消息用户列表
+    private static List<Users> mSessionPeoples; // 未读消息用户列表
 
     private MoMoRefreshListView mMmrlvList;
     private NearByPeopleAdapter mAdapter;
@@ -67,17 +67,17 @@ public class SessionPeopleFragment extends BaseFragment implements OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         int position = (int) arg3;
-        NearByPeople people = mSessionPeoples.get(position);
+        Users people = mSessionPeoples.get(position);
         mApplication.removeUnReadPeople(people); // 移除未读用户
         Intent intent = new Intent(mContext, ChatActivity.class);
-        intent.putExtra(NearByPeople.ENTITY_PEOPLE, people);
+        intent.putExtra(Users.ENTITY_PEOPLE, people);
         startActivity(intent);
     }
 
     /** 刷新用户在线列表UI **/
     public void refreshAdapter() {
         mSessionPeoples = mApplication.getUnReadPeopleList();
-        mAdapter.setData(mSessionPeoples); // Adapter加载List数据
+        mAdapter.setData(mSessionPeoples);
         mAdapter.notifyDataSetChanged();
         mMmrlvList.setSelection(0);
     }

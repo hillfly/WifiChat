@@ -67,7 +67,7 @@
             android:layout_marginLeft="4dip"
             android:background="@drawable/btn_chatbtn3"
             android:minWidth="50dip"
-            android:text="发送"
+            android:text="@string/chat_btn_send"
             android:textColor="@color/white"
             android:visibility="gone" />
 

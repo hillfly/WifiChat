@@ -1,17 +1,14 @@
 package szu.wifichat.android.adapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import szu.wifichat.android.BaseApplication;
 import szu.wifichat.android.BaseObjectListAdapter;
 import szu.wifichat.android.R;
-import szu.wifichat.android.activity.ImageBrowserActivity;
-import szu.wifichat.android.activity.message.ChatActivity;
 import szu.wifichat.android.entity.Entity;
 import szu.wifichat.android.entity.Message;
-import szu.wifichat.android.entity.NearByPeople;
+import szu.wifichat.android.entity.Users;
 import szu.wifichat.android.file.FileState;
 import szu.wifichat.android.socket.tcp.TcpClient;
 import szu.wifichat.android.socket.tcp.TcpService;
@@ -22,14 +19,9 @@ import szu.wifichat.android.util.SessionUtils;
 import szu.wifichat.android.view.EmoticonsTextView;
 import szu.wifichat.android.view.HandyTextView;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,12 +44,9 @@ public class ChatAdapter extends BaseObjectListAdapter {
     private static final int ITEM_POSITION = -1;
 
     private ListView mListView;
-    private NearByPeople mPeople;
+    private Users mPeople;
     private Bitmap mAvatarBitmap;
     private Bitmap mImageContentBitmap;
-
-    private MediaPlayer mMediaPlayer;
-    private boolean isPlay = false; // 播放状态
 
     public ChatAdapter(BaseApplication application, Context context, List<? extends Entity> datas) {
         super(application, context, datas);
@@ -78,23 +67,21 @@ public class ChatAdapter extends BaseObjectListAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Message msg = (Message) getItem(position);
         if (SessionUtils.isItself(msg.getSenderIMEI())) {
-            mAvatarBitmap = ImageUtils.getAvatar(mApplication, mContext, NearByPeople.AVATAR
+            mAvatarBitmap = ImageUtils.getAvatar(mApplication, mContext, Users.AVATAR
                     + SessionUtils.getAvatar());
         }
         else {
             mPeople = mApplication.getOnlineUser(msg.getSenderIMEI()); // 获取用户对象
-            mAvatarBitmap = ImageUtils.getAvatar(mApplication, mContext, NearByPeople.AVATAR
+            mAvatarBitmap = ImageUtils.getAvatar(mApplication, mContext, Users.AVATAR
                     + mPeople.getAvatar());
         }
         int messageType = getItemViewType(position);
 
         ViewHolder holder = null;
-        OnClick listener = null;
 
         if (convertView == null) {
 
             holder = new ViewHolder();
-            listener = new OnClick();
 
             switch (messageType) {
                 case TYPE_LEFT_TEXT:
@@ -109,7 +96,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.left_message_iv_userphoto);
                     holder.mEtvTextContent = (EmoticonsTextView) holder.mView
                             .findViewById(R.id.message_etv_msgtext);
-
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -125,8 +111,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.left_message_iv_userphoto);
                     holder.mIvImageContent = (ImageView) holder.mView
                             .findViewById(R.id.message_iv_msgimage);
-
-                    holder.mLayoutMessageContainer.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -142,8 +126,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.left_message_iv_userphoto);
                     holder.mIvVoiceImage = (ImageView) holder.mView
                             .findViewById(R.id.voice_message_iv_msgimage);
-
-                    holder.mIvVoiceImage.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -155,14 +137,10 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.left_message_layout_messagecontainer);
                     holder.mView = mInflater.inflate(R.layout.message_file, null);
 
-                    holder.mIvFileBg = (ImageView) holder.mView.findViewById(R.id.messgae_file_bg);
                     holder.mHtvLoadingProcess = (HandyTextView) holder.mView
                             .findViewById(R.id.message_file_htv_loading_text);
                     holder.mIvLeftAvatar = (ImageView) convertView
                             .findViewById(R.id.left_message_iv_userphoto);
-
-                    holder.mIvFileBg.setClickable(true);
-                    holder.mIvFileBg.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -178,7 +156,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.right_message_iv_userphoto);
                     holder.mEtvTextContent = (EmoticonsTextView) holder.mView
                             .findViewById(R.id.message_etv_msgtext);
-
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -194,8 +171,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.right_message_iv_userphoto);
                     holder.mIvImageContent = (ImageView) holder.mView
                             .findViewById(R.id.message_iv_msgimage);
-
-                    holder.mLayoutMessageContainer.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -211,8 +186,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.right_message_iv_userphoto);
                     holder.mIvVoiceImage = (ImageView) holder.mView
                             .findViewById(R.id.voice_message_iv_msgimage);
-
-                    holder.mIvVoiceImage.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
 
@@ -224,24 +197,19 @@ public class ChatAdapter extends BaseObjectListAdapter {
                             .findViewById(R.id.right_message_layout_messagecontainer);
                     holder.mView = mInflater.inflate(R.layout.message_file, null);
 
-                    holder.mIvFileBg = (ImageView) holder.mView.findViewById(R.id.messgae_file_bg);
                     holder.mHtvLoadingProcess = (HandyTextView) holder.mView
                             .findViewById(R.id.message_file_htv_loading_text);
                     holder.mIvRightAvatar = (ImageView) convertView
                             .findViewById(R.id.right_message_iv_userphoto);
 
-                    holder.mIvFileBg.setClickable(true);
-                    holder.mIvFileBg.setOnClickListener(listener);
                     holder.mLayoutMessageContainer.addView(holder.mView);
                     break;
             }
             convertView.setTag(holder);
-            convertView.setTag(holder.mLayoutMessageContainer.getId(), listener); // 对监听对象保存
 
         }
         else {
             holder = (ViewHolder) convertView.getTag();
-            listener = (OnClick) convertView.getTag(holder.mLayoutMessageContainer.getId());
         }
 
         switch (messageType) {
@@ -319,89 +287,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
                 break;
         }
 
-        listener.setMessage(msg);
         return convertView;
-    }
-
-    class OnClick implements OnClickListener {
-        Message message;
-
-        public void setMessage(Message paramMsg) {
-            this.message = paramMsg;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (message.getContentType()) {
-                case IMAGE:
-                    Intent imgIntent = new Intent(mContext, ImageBrowserActivity.class);
-                    imgIntent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
-                            ImageBrowserActivity.TYPE_PHOTO);
-                    imgIntent.putExtra(ImageBrowserActivity.PATH, message.getMsgContent());
-                    mContext.startActivity(imgIntent);
-                    ((ChatActivity) mContext).overridePendingTransition(R.anim.zoom_enter, 0);
-
-                    break;
-
-                case VOICE:
-                    // 播放录音
-                    final ImageView imgView = (ImageView) v;
-                    if (!isPlay) {
-                        mMediaPlayer = new MediaPlayer();
-                        String filePath = message.getMsgContent();
-                        try {
-                            mMediaPlayer.setDataSource(filePath);
-                            mMediaPlayer.prepare();
-                            imgView.setImageResource(R.drawable.voicerecord_stop);
-                            isPlay = true;
-                            mMediaPlayer.start();
-                            // 设置播放结束时监听
-                            mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    if (isPlay) {
-                                        imgView.setImageResource(R.drawable.voicerecord_right);
-                                        isPlay = false;
-                                        mMediaPlayer.stop();
-                                        mMediaPlayer.release();
-                                    }
-                                }
-                            });
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
-                        if (mMediaPlayer.isPlaying()) {
-                            mMediaPlayer.stop();
-                            mMediaPlayer.release();
-                            isPlay = false;
-                        }
-                        else {
-                            isPlay = false;
-                            mMediaPlayer.release();
-                        }
-                        imgView.setImageResource(R.drawable.voicerecord_right);
-                    }
-
-                    break;
-
-                case FILE:
-                    Intent fileIntent = new Intent();
-                    fileIntent.setType("*/*");
-                    fileIntent.setData(Uri.parse("file://"
-                            + FileUtils.getPathByFullPath(message.getMsgContent())));
-                    mContext.startActivity(fileIntent);
-                    break;
-
-                default:
-                    break;
-
-            }
-
-        }
     }
 
     /**
@@ -499,7 +385,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
                 + File.separator + FileUtils.getNameByPath(msg.getMsgContent());
         Bitmap bitmap = ImageUtils.getBitmapFromPath(imagePath);
 
-        LogUtils.i(TAG, "聊天图片：" + imagePath);
+        LogUtils.i(TAG, "chat_image_uri：" + imagePath);
 
         if (mImageContentBitmap == null)
             mImageContentBitmap = ImageUtils.getBitmapFromPath(msg.getMsgContent());
@@ -525,7 +411,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
         private ImageView mIvImageContent; // 图像内容
         private ImageView mIvVoiceImage; // 声音图像
         private HandyTextView mHtvLoadingProcess; // 下载进度条
-        private ImageView mIvFileBg;
 
         private ImageView mIvLeftAvatar; // 左边的头像
         private ImageView mIvRightAvatar; // 右边的头像
