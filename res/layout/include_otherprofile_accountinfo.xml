@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="16dip"
     android:paddingRight="16dip" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <szu.wifichat.android.view.HandyTextView
-            android:layout_width="fill_parent"
+        <hillfly.wifichat.view.HandyTextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -20,40 +20,40 @@
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
             android:paddingTop="10dip"
-            android:text="账号信息"
+            android:text="@string/otherpprofile_text_userinfo"
             android:textColor="@color/blue"
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="2dip"
             android:background="@color/blue"
             android:orientation="vertical" >
         </View>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <RelativeLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="50dip"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" >
 
-                <szu.wifichat.android.view.HandyTextView
+                <hillfly.wifichat.view.HandyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="IP地址"
+                    android:text="@string/otherpprofile_text_ip"
                     android:textColor="@color/font_attribute"
                     android:textSize="18sp" />
 
-                <szu.wifichat.android.view.HandyTextView
+                <hillfly.wifichat.view.HandyTextView
                     android:id="@+id/otherprofile_htv_ipaddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,33 +66,33 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <View
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:background="@color/devideline" />
 
             <RelativeLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="50dip"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" >
 
-                <szu.wifichat.android.view.HandyTextView
+                <hillfly.wifichat.view.HandyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="设备型号"
+                    android:text="@string/otherpprofile_text_device"
                     android:textColor="@color/font_attribute"
                     android:textSize="18sp" />
 
-                <szu.wifichat.android.view.HandyTextView
+                <hillfly.wifichat.view.HandyTextView
                     android:id="@+id/otherprofile_htv_device"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

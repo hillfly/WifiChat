@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="szu.wifichat.android"
+	package="hillfly.wifichat"
 	android:installLocation="auto"
 	android:versionCode="2"
-	android:versionName="2.0.140501" >
+	android:versionName="2.5.150310" >
 
 	<uses-sdk
 		android:minSdkVersion="14"
-		android:targetSdkVersion="17" />
+		android:targetSdkVersion="19" />
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />	
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.CAMERA" />
@@ -34,10 +34,10 @@
 		android:smallScreens="true" />
 
 	<application
-		android:name="szu.wifichat.android.BaseApplication"
+		android:name="hillfly.wifichat.BaseApplication"
 		android:allowBackup="false"
 		android:hardwareAccelerated="false"
-		android:icon="@drawable/app_logo"
+		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
 		android:largeHeap="true"
 		android:theme="@style/Theme.App" >
@@ -51,50 +51,41 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".activity.SettingMyInfoActivity"
-			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustPan" >
-		</activity>
-		<activity
-			android:name=".activity.ChooseAvatarActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.AboutActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
 			android:name=".activity.LoginActivity"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan" >
 		</activity>
 		<activity
 			android:name=".activity.WifiapActivity"
-			android:alwaysRetainTaskState="true"
+			android:screenOrientation="portrait" >
+		</activity>
+		<activity
+			android:name=".activity.MainTabActivity"
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustPan" >
+		</activity>
+		<activity
+			android:name=".activity.message.ChatActivity"
+			android:screenOrientation="portrait" >
+		</activity>
+		<activity
+			android:name=".activity.SettingInfoActivity"
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustPan" >
+		</activity>
+		<activity
+			android:name=".activity.ChooseAvatarActivity"
+			android:screenOrientation="portrait" >
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activity.SettingMyInfoActivity" />
+		</activity>
+		<activity
+			android:name=".activity.AboutActivity"
 			android:screenOrientation="portrait" >
 		</activity>
 		<activity
 			android:name=".activity.imagefactory.ImageFactoryActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.maintabs.MainTabActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.maintabs.NearByActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.maintabs.SessionListActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.maintabs.SettingActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.maintabs.TabItemActivity"
 			android:screenOrientation="portrait" >
 		</activity>
 		<activity
@@ -103,10 +94,6 @@
 		</activity>
 		<activity
 			android:name=".activity.ImageBrowserActivity"
-			android:screenOrientation="portrait" >
-		</activity>
-		<activity
-			android:name=".activity.message.ChatActivity"
 			android:screenOrientation="portrait" >
 		</activity>
 	</application>

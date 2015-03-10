@@ -21,7 +21,7 @@
 			android:visibility="gone" />
 	</LinearLayout>
 
-	<szu.wifichat.android.view.HandyTextView
+	<hillfly.wifichat.view.HandyTextView
 		android:id="@+id/message_file_htv_loading_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

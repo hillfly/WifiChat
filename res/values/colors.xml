@@ -23,7 +23,6 @@
 	<color name="link_color">#ff4abad7</color>
 	<color name="maintab_text_normal">#ffc1c1c1</color>
 	<color name="maintab_text_selected_color">#ffffffff</color>
-	<color name="dropbar_text_color">#ff434343</color>
 	<color name="notes_color">#ff777777</color>
 	<color name="light_notes_color">#ff999999</color>
 	<color name="text_color">#ff434343</color>
@@ -45,8 +44,8 @@
 	<color name="transparent_background">#00ffffff</color>
 	<color name="menu_text">#ff555555</color>
 	<color name="download_progressbar_bg">#4c000000</color>
-	<color name="bg_headerbar_spinner_normal">@color/transparent</color>
-	<color name="bg_headerbar_spinner_selected">#5f000000</color>
-	<color name="bg_headerbar_spinner_press">#7f000000</color>
+	<color name="pull_refresh_textview">#000000</color>
+    <color name="gold">#000000</color>
+    <color name="gray_f0f0f0">#f0f0f0</color>
 
 </resources>

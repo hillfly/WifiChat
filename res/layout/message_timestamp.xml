@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/message_layout_timecontainer"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginBottom="15dip"
@@ -19,7 +19,7 @@
         android:layout_marginRight="5dip"
         android:gravity="center" >
 
-        <szu.wifichat.android.view.HandyTextView
+        <hillfly.wifichat.view.HandyTextView
             android:id="@+id/message_timestamp_htv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_centerVertical="true"
         android:layout_marginLeft="55dip"
@@ -36,7 +36,7 @@
         android:background="@color/timestampline" />
 
     <ImageView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_centerVertical="true"
         android:layout_marginRight="55dip"

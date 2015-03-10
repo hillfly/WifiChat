@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:descendantFocusability="blocksDescendants"
+	android:orientation="horizontal"
+	android:paddingTop="3dp" >
+
+	<ImageView
+		android:id="@+id/wifiap_item_iv_rssi"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingLeft="7dp"
+		android:paddingRight="7dp" >
+	</ImageView>
+
+	<View
+		android:layout_width="0.5dp"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="7dp"
+		android:layout_marginTop="7dp"
+		android:background="@color/gray_f0f0f0" />
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="12dp"
+		android:orientation="vertical" >
+
+		<TextView
+			android:id="@+id/wifiap_item_tv_ssid"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="3dp"
+			android:singleLine="true"
+			android:textColor="@color/black"
+			android:textSize="15sp" />
+
+		<TextView
+			android:id="@+id/wifiap_item_tv_desc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:textSize="10sp" />
+	</LinearLayout>
+
+</LinearLayout>

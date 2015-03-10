@@ -6,13 +6,13 @@
     android:orientation="horizontal" 
     android:background="@drawable/bg_common_toast" >
 
-    <szu.wifichat.android.view.FlippingImageView
+    <hillfly.wifichat.view.FlippingImageView
         android:id="@+id/loadingdialog_fiv_icon"
         android:layout_width="30dip"
         android:layout_height="30dip"
         android:src="@drawable/app_icon" />
 
-    <szu.wifichat.android.view.HandyTextView
+    <hillfly.wifichat.view.HandyTextView
         android:id="@+id/loadingdialog_htv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

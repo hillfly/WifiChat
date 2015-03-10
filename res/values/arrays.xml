@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="chat_audio_type">
-        <item>智能切换</item>
-        <item>扬声器模式(免提)</item>
-        <item>听筒模式</item>
-    </string-array>
-    <string-array name="onlinestate_type">
-        <item>在线</item>
-        <item>忙碌</item>
-        <item>隐身</item>
-        <item>离线</item>     
-    </string-array>
-    <string-array name="reportfeed_items">
-        <item>骚扰信息</item>
-        <item>虚假身份</item>
-        <item>广告欺诈</item>
-        <item>不当发言</item>
-    </string-array>
+	<string-array name="onlinestate_type">
+		<item>在线</item>
+		<item>忙碌</item>
+		<item>隐身</item>
+		<item>离线</item>
+	</string-array>
 
 </resources>

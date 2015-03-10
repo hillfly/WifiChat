@@ -35,6 +35,9 @@ requirements:
 This project uses many other open source libraries such as:
 
 * [fastjson](https://github.com/alibaba/fastjson)
+* [Picasso](http://square.github.io/picasso)
+* [ViewBadger](https://github.com/jgilfelt/android-viewbadger)
+
 
 ## Contributing
 

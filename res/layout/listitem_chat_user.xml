@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical" >
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/bglistitem_selector_user"
+		android:gravity="center_vertical"
+		android:padding="6dip" >
+
+		<ImageView
+			android:id="@+id/user_item_iv_avatar"
+			android:layout_width="77dip"
+			android:layout_height="77dip"
+			android:layout_marginRight="10dip"
+			android:scaleType="fitXY" />
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@id/user_item_iv_avatar"
+			android:gravity="center_vertical"
+			android:orientation="vertical" >
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginBottom="5dip"
+				android:gravity="center" >
+
+				<ImageView
+					android:id="@+id/user_item_iv_icon_device"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true"
+					android:layout_marginLeft="10dip" />
+
+				<hillfly.wifichat.view.HandyTextView
+					android:id="@+id/user_item_htv_name"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="true"
+					android:layout_centerVertical="true"
+					android:layout_toLeftOf="@id/user_item_iv_icon_device"
+					android:singleLine="true"
+					android:textColor="@color/text_color"
+					android:textSize="17sp" />
+			</RelativeLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginBottom="5dip"
+				android:focusable="false"
+				android:gravity="left|center"
+				android:orientation="horizontal" >
+
+				<LinearLayout
+					android:id="@+id/user_item_layout_gender"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginRight="5dip"
+					android:gravity="center"
+					android:orientation="horizontal"
+					android:paddingBottom="2dip"
+					android:paddingLeft="5dip"
+					android:paddingRight="5dip"
+					android:paddingTop="2dip" >
+
+					<ImageView
+						android:id="@+id/user_item_iv_gender"
+						android:layout_width="8dip"
+						android:layout_height="8dip"
+						android:layout_marginRight="2dip"
+						android:scaleType="fitXY" />
+
+					<hillfly.wifichat.view.HandyTextView
+						android:id="@+id/user_item_htv_age"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="@color/white"
+						android:textSize="10sp" />
+				</LinearLayout>
+
+				<hillfly.wifichat.view.HandyTextView
+					android:id="@+id/user_item_htv_time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/font_value"
+					android:textSize="12sp" />
+			</LinearLayout>
+
+			<hillfly.wifichat.view.HandyTextView
+				android:id="@+id/user_item_htv_lastmsg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:singleLine="true"
+				android:textColor="@color/font_value"
+				android:textSize="13sp" />
+		</LinearLayout>
+	</RelativeLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:background="@color/devideline_listview" />
+
+</LinearLayout>

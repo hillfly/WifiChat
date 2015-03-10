@@ -13,26 +13,26 @@
 
         <LinearLayout
             android:id="@+id/switcher_layout_tab"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="left" >
 
             <View
                 android:layout_width="42dip"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:background="@drawable/bg_common_tabseletor_on" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:focusable="false"
             android:baselineAligned="false"
             android:orientation="horizontal" >
 
             <LinearLayout
                 android:layout_width="0dip"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal" >
@@ -55,7 +55,7 @@
 
             <LinearLayout
                 android:layout_width="0.0dip"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal" >

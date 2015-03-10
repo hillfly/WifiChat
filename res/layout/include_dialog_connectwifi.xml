@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical" >
+
+	<EditText
+		android:id="@+id/dialog_et_connectWifi"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/wifiap_hint_connectap_pwd"
+		android:inputType="textPassword"
+		android:maxLength="26"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:singleLine="true" />
+
+	<CheckBox
+		android:id="@+id/dialog_cb_showpwd"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/wifiap_diolog_showpwd" />
+
+</LinearLayout>

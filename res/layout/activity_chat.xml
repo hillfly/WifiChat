@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
 	android:background="@drawable/bg_chat_repeat" >
 
-	<include
-		android:id="@+id/chat_header"
-		layout="@layout/include_header" />
-
 	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_below="@+id/chat_header" >
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" >
 
 		<RelativeLayout
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" >
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" >
 
-			<szu.wifichat.android.view.ChatListView
+			<hillfly.wifichat.view.MultiListView
 				android:id="@+id/chat_clv_list"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:layout_above="@+id/chat_layout_editor"
 				android:cacheColorHint="@color/transparent"
 				android:divider="#00000000"
@@ -30,29 +25,30 @@
 				android:paddingLeft="4dip"
 				android:paddingRight="4dip"
 				android:scrollbars="none"
-				android:scrollingCache="false" />
+				android:scrollingCache="false" >
+			</hillfly.wifichat.view.MultiListView>
 
 			<LinearLayout
 				android:id="@+id/chat_layout_editor"
-				android:layout_width="fill_parent"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_above="@+id/chat_layout_emote"
 				android:background="@drawable/bg_chatbar_textmode"
 				android:orientation="vertical" >
 
-				<szu.wifichat.android.view.ScrollLayout
+				<hillfly.wifichat.view.ScrollLayout
 					android:id="@+id/chat_slayout_scroll"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="52dip" >
 
 					<include layout="@layout/include_message_textditor" />
 
 					<include layout="@layout/include_message_audioditor" />
-				</szu.wifichat.android.view.ScrollLayout>
+				</hillfly.wifichat.view.ScrollLayout>
 
 				<LinearLayout
 					android:id="@+id/chat_layout_rounds"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
 					android:layout_marginBottom="2dip"
@@ -64,14 +60,14 @@
 
 			<FrameLayout
 				android:id="@+id/chat_layout_emote"
-				android:layout_width="fill_parent"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_alignParentBottom="true"
 				android:background="@color/msg_editor_backgroud" >
 
-				<szu.wifichat.android.view.EmoteInputView
+				<hillfly.wifichat.view.EmoteInputView
 					android:id="@+id/chat_eiv_inputview"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:visibility="gone" />
 			</FrameLayout>

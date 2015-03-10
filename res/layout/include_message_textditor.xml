@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="52dip"
     android:gravity="bottom"
     android:orientation="horizontal"
@@ -29,21 +29,21 @@
 
             <ImageButton
                 android:id="@+id/chat_textditor_ib_keyboard"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="46dip"
                 android:background="@drawable/btn_chatbtn2"
                 android:src="@drawable/ic_chat_keyboard_normal" />
 
             <ImageButton
                 android:id="@+id/chat_textditor_ib_emote"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="46dip"
                 android:background="@drawable/btn_chatbtn2"
                 android:src="@drawable/ic_chat_emote_normal" />
         </RelativeLayout>
     </LinearLayout>
 
-    <szu.wifichat.android.view.EmoticonsEditText
+    <hillfly.wifichat.view.EmoticonsEditText
         android:id="@+id/chat_textditor_eet_editer"
         android:layout_width="0dip"
         android:layout_height="wrap_content"

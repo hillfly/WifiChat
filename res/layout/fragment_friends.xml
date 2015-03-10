@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+
+	<hillfly.wifichat.view.MultiListView
+		android:id="@+id/friends_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:cacheColorHint="@color/transparent"
+		android:divider="@null"
+		android:fadingEdge="none"
+		android:listSelector="@drawable/list_selector_transition" >
+	</hillfly.wifichat.view.MultiListView>
+
+</LinearLayout>

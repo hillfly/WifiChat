@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
+	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:gravity="right"
 	android:minHeight="40dip"
@@ -12,7 +12,7 @@
 
 	<LinearLayout
 		android:id="@+id/right_message_layout_contentcontainer"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
 		<RelativeLayout
@@ -35,7 +35,7 @@
 				android:layout_marginRight="3dip"
 				android:layout_marginTop="8dip" >
 
-				<szu.wifichat.android.view.HandyTextView
+				<hillfly.wifichat.view.HandyTextView
 					android:id="@+id/message_htv_status"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -67,9 +67,9 @@
 
 		<ImageView
 			android:id="@+id/right_message_iv_userphoto"
-			android:layout_width="40dip"
-			android:layout_height="40dip"
-			android:layout_marginLeft="4dip"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_marginLeft="4dp"
 			android:scaleType="fitXY" />
 	</LinearLayout>
 

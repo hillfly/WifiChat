@@ -7,7 +7,7 @@
 	<LinearLayout
 		android:id="@+id/voice_message"
 		android:layout_width="40dp"
-		android:layout_height="fill_parent" >
+		android:layout_height="match_parent" >
 
 		<ImageView
 			android:id="@+id/voice_message_iv_msgimage"

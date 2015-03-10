@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<string name="app_name">WifiChat</string>
+		
+	<string name="app_name">WiFiChat</string>
 	<string name="btn_return">返    回</string>
 	<string name="btn_next">下一步</string>
 	<string name="dialog_tips">提 示</string>
 	<string name="btn_finish">保    存</string>
-	<string name="dialog_loading">正在加载,请稍后...</string>
-	<string name="dialog_loading_failue">数据加载失败...</string>
+	<string name="btn_yes">确    定</string>
+	<string name="btn_cancel">取    消</string>
+	<string name="dialog_loading">正在加载,请稍后&#8230;</string>
+	<string name="dialog_loading_failue">数据加载失败&#8230;</string>
 	
 	<string name="welcome_btn_login">登 陆</string>
 	
@@ -15,50 +17,69 @@
 	<string name="login_text_onlinestate">在线</string>
 	<string name="login_text_birthday">出生日期</string>
 	<string name="login_text_age">岁</string>
-	<string name="login_text_birthdaytips">提醒：您的出生日期不会出现在个人资料中。</string>
+	<string name="login_text_birthdaytips">提醒：您的出生日期不会出现在个人资料中</string>
 	<string name="login_text_selectsex">选择性别</string>
 	<string name="login_text_male">男</string>
 	<string name="login_text_female">女</string>
 	<string name="login_text_lastlogin">上次登录: </string>
 	<string name="login_text_changeuser">更  换  账  户</string>
-	<string name="login_dialog_saveInfo">正在存储个人信息...</string>
+	<string name="login_dialog_saveInfo">正在存储个人信息&#8230;</string>
 	<string name="login_toast_loginfailue">操作失败,请尝试重启程序。</string>
 	<string name="login_toast_nickname">请输入您的聊天昵称</string>
 	<string name="login_toast_sex">请选择性别</string>
 	
-	<string name="wifiap_btn_connectwifi">点击连接</string>
+	<string name="wifiap_btn_connectwifi">连 接</string>
 	<string name="wifiap_btn_disconnect">点击断开</string>
-	<string name="wifiap_text_searchap_empty">未搜索到可用热点，可尝试重新搜索</string>
-	<string name="wifiap_text_searchap_searching">正在搜索附近的热点</string>
+	<string name="wifiap_btn_createap">创建热点</string>
+	<string name="wifiap_btn_closeap">关闭热点</string>
+	<string name="wifiap_btn_connecting">正在连接 </string>	
+	<string name="wifiap_text_wifi_connected">已连接到 </string>
+	<string name="wifiap_text_wifi_disconnect">WiFi连接已断开</string>
+	<string name="wifiap_text_ap_1">已开启热点</string>
+	<string name="wifiap_text_ap_0">热点已关闭</string>
+	<string name="wifiap_text_wifi_0">WiFi未开启</string>	
+	<string name="wifiap_text_wifi_1_0">WiFi已开启，未连接</string>	
 	<string name="wifiap_text_createap_failue">热点创建失败，请尝试重新创建</string>
 	<string name="wifiap_dialog_createap_nonsupport">您的设备不支持热点创建</string>
-	<string name="wifiap_text_createap_creating">正在创建热点</string>
+	<string name="wifiap_text_createap_creating">正在创建热点&#8230;</string>
 	<string name="wifiap_dialog_createap_closewifi_confirm">创建热点会关闭当前的WiFi，确认继续？</string>
-	<string name="wifiap_dialog_createap_used">系统热点被占用，点确定开启热点以传输文件。</string>
+	<string name="wifiap_dialog_createap_used">系统热点被占用，请先关闭热点后点击确定继续下一步</string>
 	<string name="wifiap_dialog_searchap_closeap_confirm">是否关闭当前热点去搜索其他热点？</string>
 	<string name="wifiap_dialog_closeap_confirm">您确定需要关闭热点？</string>
-	<string name="wifiap_dialog_login_saveInfo">正在存储连接信息...</string>
-	<string name="wifiap_toast_connectap_unavailable">请创建热点或者连接一个热点</string>
-	
+	<string name="wifiap_hint_connectap_pwd">请输入连接密码</string>
+	<string name="wifiap_dialog_login_saveInfo">正在存储连接信息&#8230;</string>
+	<string name="wifiap_toast_connectap_unavailable">请创建热点或者连接一个热点</string>	
+	<string name="wifiap_toast_connectap_error">连接错误，请检查密码后再尝试连接。</string>
+	<string name="wifiap_toast_connectap_error_1">连接错误，请尝试重新连接。</string>
 	<string name="wifiap_text_createap_succeed">热点创建成功！</string>
-	<string name="wifiap_text_connectap_ssid">\n热点名：</string>
+	<string name="wifiap_diolog_showpwd">显示密码</string>
 	
 	<string name="chat_btn_send">发 送</string>	
+	<string name="chat_text_plus_image">图片</string>
+	<string name="chat_text_plus_takephoto">拍照</string>
+	<string name="chat_text_plus_file">文件</string>
 	<string name="chat_dialog_record_cancel_move">向上滑动可取消录音</string>
 	<string name="chat_dialog_record_cancel_up">松开手指可取消录音</string>
 	<string name="chat_toast_record_shorttime">时间太短  录音失败</string>	
 	
+    <string name="otherpprofile_text_userinfo">账号信息</string>
+    <string name="otherpprofile_text_ip">IP地址</string>
+    <string name="otherpprofile_text_device">设备型号</string>
+	
+    <string name="setting_text_profile">个人资料</string>
 	<string name="setting_text_myprofile">我的资料</string>
+	<string name="setting_text_myprofile_avatar">请选择头像</string>
 	<string name="setting_text_sysconfig">系统设置</string>
 	<string name="setting_text_sysconfig_sound">声音提醒</string>
 	<string name="setting_text_sysconfig_vibra">震动提醒</string>
+	<string name="setting_text_sysconfig_aboutus">关于我们</string>	
 	<string name="setting_btn_cleandb">删除聊天记录</string>
 	<string name="setting_btn_aboutus">关 于 我 们</string>
 	<string name="setting_btn_closeapp">退 出</string>
 	<string name="setting_dialog_chatlog_delete_confirm">删除聊天记录会删除接收的所有图片、语音、文件</string>
 	<string name="setting_dialog_chatlog_delete_ok">确 定</string>
 	<string name="setting_dialog_chatlog_delete_cancel">取 消</string>	
-	<string name="setting_dialog_chatlog_deleting">正在删除聊天记录...</string>
+	<string name="setting_dialog_chatlog_deleting">正在删除聊天记录&#8230;</string>
 	<string name="setting_dialog_toast_delect_success">删除聊天记录成功</string>
 	<string name="setting_dialog_toast_delect_failue">操作失败,请尝试重启程序。</string>
 
@@ -66,17 +87,26 @@
 	<string name="setting_dialog_logout_ok">确 定</string>
 	<string name="setting_dialog_logout_cancel">取 消</string>	
 	
-	<string name="aboutus_copyright">Copyright © 2014 WiFiChat By _Hill3、Zhuanglb</string>
-	<string name="aboutus_text">\u0020\u0020这款软件是我们两个人的毕设，完成这款软件我们也就毕业了，
+	<string name="aboutus_copyright">Copyright © 2015 By _Hill3、Zhuanglb</string>
+	<string name="aboutus_text">\u0020\u0020\u0020\u0020这款软件是我们两个人的毕设，完成这款软件我们也就毕业了，
         从完全不懂安卓一路摸索直到短短几个月，遇到挺多问题，也参照很多前人的方法，然后不断进行代码
         改进和优化，作品很多待改进的地方，希望大家给予雅正。</string>
 	<string name="aboutus_text2">仅以此品献给基情燃烧的岁月\nBy _Hill3、Zhuanglb</string>
 	
+	<string name="maintab_text_emptypage">	暂时没有内容</string>
+    <string name="maintab_text_nearby">附近</string>
 	<string name="maintab_text_message">消息</string>
-	<string name="maintab_text_nearby">附近</string>
-	<string name="maintab_text_setting">设置</string>
-		
-	<string name="tabitem_toast_logout">再按一次退出程序</string>
+	<string name="maintab_text_setting">设置</string>		
+	<string name="maintab_toast_logout">再按一次退出程序</string>
+	
+	<string name="lv_refresh_head_load_more">加载更多</string>
+    <string name="lv_refresh_end_load_more">更    多</string>
+    <string name="lv_refresh_end_click_load_more">点击加载</string>
+    <string name="lv_refresh_release_refresh">松开刷新</string>
+    <string name="lv_refresh_pull_to_refresh">下拉刷新</string>
+    <string name="lv_refresh_doing_head_refresh">正在刷新&#8230;</string>
+    <string name="lv_refresh_doing_end_refresh">加载中&#8230;</string>
+    <string name="lv_refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
 	
 	<string name="toast_sdcard_unavailable">SD卡不可用,请检查</string>
 	<string name="toast_file_manager_unavailable">缺少文件管理器</string>
