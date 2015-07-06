@@ -1,4 +1,4 @@
-﻿package hillfly.wifichat.socket.tcp;
+package hillfly.wifichat.socket.tcp;
 
 import hillfly.wifichat.BaseApplication;
 import hillfly.wifichat.bean.Message;

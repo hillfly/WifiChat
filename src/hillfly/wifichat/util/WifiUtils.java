@@ -1,4 +1,4 @@
-﻿package hillfly.wifichat.util;
+package hillfly.wifichat.util;
 
 import hillfly.wifichat.BaseApplication;
 import hillfly.wifichat.activity.wifiap.TimerCheck;
