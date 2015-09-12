@@ -1,4 +1,4 @@
-﻿package hillfly.wifichat.file;
+package hillfly.wifichat.file;
 
 import java.io.File;
 import java.io.Serializable;

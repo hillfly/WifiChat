@@ -1,4 +1,5 @@
-﻿package hillfly.wifichat.file;
+package hillfly.wifichat.file;
+
 
 public class Constant {
 

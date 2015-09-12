@@ -1,4 +1,16 @@
-﻿package hillfly.wifichat.socket.tcp;
+package hillfly.wifichat.socket.tcp;
+
+import android.content.Context;
+import android.os.Handler;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import hillfly.wifichat.BaseApplication;
 import hillfly.wifichat.bean.Message;
@@ -11,18 +23,6 @@ import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.FileUtils;
 import hillfly.wifichat.util.LogUtils;
 import hillfly.wifichat.util.SessionUtils;
-
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import android.content.Context;
-import android.os.Handler;
 
 public class TcpClient implements Runnable {
     private static final String TAG = "SZU_TcpClient";

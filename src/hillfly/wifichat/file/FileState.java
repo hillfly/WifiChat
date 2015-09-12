@@ -1,4 +1,4 @@
-﻿package hillfly.wifichat.file;
+package hillfly.wifichat.file;
 
 import hillfly.wifichat.bean.Message.CONTENT_TYPE;
 

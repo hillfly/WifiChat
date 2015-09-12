@@ -1,4 +1,4 @@
-﻿package hillfly.wifichat.activity.wifiap;
+package hillfly.wifichat.activity.wifiap;
 
 /**
  * WifiAp常量
