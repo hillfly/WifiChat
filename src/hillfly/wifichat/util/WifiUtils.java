@@ -1,8 +1,7 @@
 package hillfly.wifichat.util;
 
-import hillfly.wifichat.BaseApplication;
-import hillfly.wifichat.activity.wifiap.TimerCheck;
-import hillfly.wifichat.activity.wifiap.WifiApConst;
+import hillfly.wifichat.common.BaseApplication;
+import hillfly.wifichat.consts.WifiApConst;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +49,7 @@ public class WifiUtils {
 
         startAp(ssid, passwd);
 
-        TimerCheck timerCheck = new TimerCheck() {
+        SchedulesUtils schedulesThread = new SchedulesUtils() {
             @Override
             public void doTimerCheckWork() {
 
@@ -71,7 +70,7 @@ public class WifiUtils {
                 this.exit();
             }
         };
-        timerCheck.start(10, 1000);
+        schedulesThread.start(10, 1000);
 
     }
 

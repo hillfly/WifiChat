@@ -4,15 +4,14 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical" >
 
-	<hillfly.wifichat.view.MultiListView
+	<hillfly.wifichat.common.view.MultiListView
 		android:id="@+id/message_list"
 		android:layout_width="match_parent"
         android:layout_height="match_parent"
 		android:cacheColorHint="@color/transparent"
 		android:divider="@null"
 		android:fadingEdge="none"
-		android:listSelector="@drawable/list_selector_transition" >
-	</hillfly.wifichat.view.MultiListView>
+		android:listSelector="@drawable/list_selector_transition" />
 
 	<!-- Here is the view to show if the list is emtpy -->
 	<TextView

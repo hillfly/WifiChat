@@ -35,7 +35,7 @@
 				android:layout_marginRight="3dip"
 				android:layout_marginTop="8dip" >
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/message_htv_status"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"

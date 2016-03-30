@@ -43,7 +43,7 @@
 			android:text="@string/aboutus_text2" />
 	</LinearLayout>
 
-	<hillfly.wifichat.view.HandyTextView
+	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"

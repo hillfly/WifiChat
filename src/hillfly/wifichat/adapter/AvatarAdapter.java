@@ -1,11 +1,11 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.bean.Avatar;
+import hillfly.wifichat.R;
+import hillfly.wifichat.model.Avatar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import hillfly.wifichat.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

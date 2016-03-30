@@ -1,17 +1,15 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.BaseApplication;
-import hillfly.wifichat.BaseArrayListAdapter;
+import hillfly.wifichat.R;
+import hillfly.wifichat.common.BaseApplication;
+import hillfly.wifichat.common.BaseArrayListAdapter;
 
 import java.util.List;
-
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import hillfly.wifichat.R;
 
 public class EmoteAdapter extends BaseArrayListAdapter {
 

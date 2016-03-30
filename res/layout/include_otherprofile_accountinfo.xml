@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <hillfly.wifichat.view.HandyTextView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -43,7 +43,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" >
 
-                <hillfly.wifichat.view.HandyTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -53,7 +53,7 @@
                     android:textColor="@color/font_attribute"
                     android:textSize="18sp" />
 
-                <hillfly.wifichat.view.HandyTextView
+                <TextView
                     android:id="@+id/otherprofile_htv_ipaddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" >
 
-                <hillfly.wifichat.view.HandyTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -92,7 +92,7 @@
                     android:textColor="@color/font_attribute"
                     android:textSize="18sp" />
 
-                <hillfly.wifichat.view.HandyTextView
+                <TextView
                     android:id="@+id/otherprofile_htv_device"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

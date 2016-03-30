@@ -1,17 +1,16 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
 import hillfly.wifichat.R;
 import hillfly.wifichat.adapter.SimpleListDialogAdapter;
-import hillfly.wifichat.bean.Users;
-import hillfly.wifichat.dialog.SimpleListDialog;
-import hillfly.wifichat.dialog.SimpleListDialog.onSimpleListItemClickListener;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.common.dialog.SimpleListDialog;
+import hillfly.wifichat.common.dialog.SimpleListDialog.onSimpleListItemClickListener;
+import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.ImageUtils;
 import hillfly.wifichat.util.SessionUtils;
 import hillfly.wifichat.util.SharePreferenceUtils;
 import hillfly.wifichat.util.TextUtils;
-import hillfly.wifichat.view.HandyTextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,11 +45,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private static final String DEFAULT_DATA = "19920101";
 
     private LinearLayout mLlayoutMain; // 首次登陆主界面
-    private HandyTextView mHtvSelectOnlineState;
+    private TextView mHtvSelectOnlineState;
     private EditText mEtNickname;
 
-    private HandyTextView mHtvConstellation;
-    private HandyTextView mHtvAge;
+    private TextView mHtvConstellation;
+    private TextView mHtvAge;
     private DatePicker mDpBirthday;
     private Calendar mCalendar;
     private Date mMinDate;
@@ -62,7 +61,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     private TextView mTvExNickmame;
     private LinearLayout mLayoutExGender; // 性别根布局
     private ImageView mIvExGender;
-    private HandyTextView mHtvExAge;
+    private TextView mHtvExAge;
     private TextView mTvExConstellation;// 星座
     private TextView mTvExLogintime; // 上次登录时间
 
@@ -99,10 +98,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
     protected void initViews() {
 
         mEtNickname = (EditText) findViewById(R.id.login_et_nickname);
-        mHtvSelectOnlineState = (HandyTextView) findViewById(R.id.login_htv_onlinestate);
+        mHtvSelectOnlineState = (TextView) findViewById(R.id.login_htv_onlinestate);
         mRgGender = (RadioGroup) findViewById(R.id.login_baseinfo_rg_gender);
-        mHtvConstellation = (HandyTextView) findViewById(R.id.login_birthday_htv_constellation);
-        mHtvAge = (HandyTextView) findViewById(R.id.login_birthday_htv_age);
+        mHtvConstellation = (TextView) findViewById(R.id.login_birthday_htv_constellation);
+        mHtvAge = (TextView) findViewById(R.id.login_birthday_htv_age);
         mDpBirthday = (DatePicker) findViewById(R.id.login_birthday_dp_birthday);
 
         mBtnBack = (Button) findViewById(R.id.login_btn_back);
@@ -118,7 +117,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener,
             mImgExAvatar = (ImageView) findViewById(R.id.login_img_existImg);
             mLayoutExGender = (LinearLayout) findViewById(R.id.login_layout_gender);
             mIvExGender = (ImageView) findViewById(R.id.login_iv_gender);
-            mHtvExAge = (HandyTextView) findViewById(R.id.login_htv_age);
+            mHtvExAge = (TextView) findViewById(R.id.login_htv_age);
             mTvExConstellation = (TextView) findViewById(R.id.login_tv_constellation);
             mTvExLogintime = (TextView) findViewById(R.id.login_tv_lastlogintime);
             mLlayoutExMain = (LinearLayout) findViewById(R.id.login_linearlayout_existmain);

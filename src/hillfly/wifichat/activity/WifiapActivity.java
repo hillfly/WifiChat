@@ -1,15 +1,16 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
-import hillfly.wifichat.BaseDialog;
-import hillfly.wifichat.activity.wifiap.WifiApConst;
-import hillfly.wifichat.activity.wifiap.WifiapBroadcast;
-import hillfly.wifichat.activity.wifiap.WifiapBroadcast.NetWorkChangeListener;
+import hillfly.wifichat.R;
 import hillfly.wifichat.adapter.WifiapAdapter;
-import hillfly.wifichat.bean.Users;
-import hillfly.wifichat.dialog.ConnWifiDialog;
-import hillfly.wifichat.sql.SqlDBOperate;
-import hillfly.wifichat.sql.UserInfo;
+import hillfly.wifichat.broadcast.WifiapBroadcast;
+import hillfly.wifichat.broadcast.WifiapBroadcast.NetWorkChangeListener;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.common.BaseDialog;
+import hillfly.wifichat.common.dialog.ConnWifiDialog;
+import hillfly.wifichat.common.sql.SqlDBOperate;
+import hillfly.wifichat.consts.WifiApConst;
+import hillfly.wifichat.model.UserInfo;
+import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.LogUtils;
 import hillfly.wifichat.util.SessionUtils;
@@ -21,7 +22,6 @@ import hillfly.wifichat.util.WifiUtils.WifiCipherType;
 import java.util.ArrayList;
 import java.util.List;
 
-import hillfly.wifichat.R;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -177,16 +177,6 @@ public class WifiapActivity extends BaseActivity implements OnClickListener, Net
         List<ScanResult> scanResults = WifiUtils.getScanResults();
         mWifiList.addAll(scanResults);
 
-        // int size = scanResults.size();
-        // for (int i = 0; i < size; ++i) {
-        // ScanResult ap = scanResults.get(i);
-        // String apSSID = ap.SSID;
-        // if (apSSID.startsWith(WifiApConst.WIFI_AP_HEADER) &&
-        // !mWifiList.contains(ap)) {
-        // mWifiList.add(ap);
-        // }
-
-        // }
     }
 
     /**

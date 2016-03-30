@@ -71,7 +71,7 @@
 					android:paddingBottom="16.0dp"
 					android:paddingTop="8.0dp" >
 
-					<hillfly.wifichat.view.SettingSwitchButton
+					<hillfly.wifichat.common.view.SettingSwitchButton
 						xmlns:android="http://schemas.android.com/apk/res/android"
 						android:id="@+id/checkbox_sound"
 						android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
 						android:textColor="@color/black"
 						android:textSize="16.0sp" />
 
-					<hillfly.wifichat.view.SettingSwitchButton
+					<hillfly.wifichat.common.view.SettingSwitchButton
 						xmlns:android="http://schemas.android.com/apk/res/android"
 						android:id="@+id/checkbox_vibration"
 						android:layout_width="wrap_content"

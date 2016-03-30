@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <hillfly.wifichat.view.CropImageView
+    <hillfly.wifichat.common.view.CropImageView
         android:id="@+id/imagefactory_crop_civ_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 

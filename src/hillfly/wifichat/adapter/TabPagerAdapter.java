@@ -1,6 +1,6 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.BaseFragment;
+import hillfly.wifichat.common.BaseFragment;
 
 import java.util.List;
 

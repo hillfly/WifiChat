@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <hillfly.wifichat.view.RotateImageView
+    <hillfly.wifichat.common.view.RotateImageView
         android:id="@+id/imagefactory_fliter_riv_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

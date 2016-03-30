@@ -1,12 +1,11 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.BaseObjectListAdapter;
 import hillfly.wifichat.R;
-import hillfly.wifichat.bean.Entity;
-import hillfly.wifichat.bean.Users;
+import hillfly.wifichat.common.BaseObjectListAdapter;
+import hillfly.wifichat.model.Entity;
+import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.ImageUtils;
-import hillfly.wifichat.view.HandyTextView;
 
 import java.util.List;
 
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,13 +37,13 @@ public class FriendsAdapter extends BaseObjectListAdapter {
 
             holder.mIvAvatar = (ImageView) convertView.findViewById(R.id.user_item_iv_avatar);
             holder.mIvDevice = (ImageView) convertView.findViewById(R.id.user_item_iv_icon_device);
-            holder.mHtvName = (HandyTextView) convertView.findViewById(R.id.user_item_htv_name);
+            holder.mHtvName = (TextView) convertView.findViewById(R.id.user_item_htv_name);
             holder.mLayoutGender = (LinearLayout) convertView
                     .findViewById(R.id.user_item_layout_gender);
             holder.mIvGender = (ImageView) convertView.findViewById(R.id.user_item_iv_gender);
-            holder.mHtvAge = (HandyTextView) convertView.findViewById(R.id.user_item_htv_age);
-            holder.mHtvTime = (HandyTextView) convertView.findViewById(R.id.user_item_htv_time);
-            holder.mHtvLastMsg = (HandyTextView) convertView
+            holder.mHtvAge = (TextView) convertView.findViewById(R.id.user_item_htv_age);
+            holder.mHtvTime = (TextView) convertView.findViewById(R.id.user_item_htv_time);
+            holder.mHtvLastMsg = (TextView) convertView
                     .findViewById(R.id.user_item_htv_lastmsg);
             convertView.setTag(holder);
         }
@@ -66,11 +66,11 @@ public class FriendsAdapter extends BaseObjectListAdapter {
     class ViewHolder {
         ImageView mIvAvatar;
         ImageView mIvDevice;
-        HandyTextView mHtvName;
+        TextView mHtvName;
         LinearLayout mLayoutGender;
         ImageView mIvGender;
-        HandyTextView mHtvAge;
-        HandyTextView mHtvTime;
-        HandyTextView mHtvLastMsg;
+        TextView mHtvAge;
+        TextView mHtvTime;
+        TextView mHtvLastMsg;
     }
 }

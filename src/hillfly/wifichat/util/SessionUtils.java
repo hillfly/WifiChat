@@ -1,6 +1,6 @@
 package hillfly.wifichat.util;
 
-import hillfly.wifichat.bean.Users;
+import hillfly.wifichat.model.Users;
 
 import java.util.HashMap;
 

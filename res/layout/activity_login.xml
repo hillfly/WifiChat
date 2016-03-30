@@ -32,7 +32,7 @@
 				android:maxLength="8"
 				android:singleLine="true" />
 
-			<hillfly.wifichat.view.HandyTextView
+			<TextView
 				android:id="@+id/login_htv_onlinestate"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
 				android:layout_marginBottom="10dp"
 				android:orientation="horizontal" >
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/login_htv_birthdaytip"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
 					android:textColor="@color/text_color"
 					android:textSize="17sp" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/login_birthday_htv_constellation"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
 					android:textColor="@color/text_color"
 					android:textSize="17sp" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/login_birthday_htv_age"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 					android:textColor="@color/text_color"
 					android:textSize="17sp" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/login_htv_sui"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
 				android:calendarViewShown="false"
 				android:spinnersShown="true" />
 
-			<hillfly.wifichat.view.HandyTextView
+			<TextView
 				android:id="@+id/login_htv_nickname_note"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="horizontal" >
 
-			<hillfly.wifichat.view.HandyTextView
+			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center"
@@ -149,7 +149,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginRight="3.0dip"
@@ -162,7 +162,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/login_text_female"
@@ -235,7 +235,7 @@
 						android:layout_marginRight="2dip"
 						android:scaleType="fitXY" />
 
-					<hillfly.wifichat.view.HandyTextView
+					<TextView
 						android:id="@+id/login_htv_age"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"

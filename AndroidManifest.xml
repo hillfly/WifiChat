@@ -34,7 +34,7 @@
 		android:smallScreens="true" />
 
 	<application
-		android:name="hillfly.wifichat.BaseApplication"
+		android:name="hillfly.wifichat.common.BaseApplication"
 		android:allowBackup="false"
 		android:hardwareAccelerated="false"
 		android:icon="@drawable/ic_launcher"
@@ -65,7 +65,7 @@
 			android:windowSoftInputMode="adjustPan" >
 		</activity>
 		<activity
-			android:name=".activity.message.ChatActivity"
+			android:name=".activity.ChatActivity"
 			android:screenOrientation="portrait" >
 		</activity>
 		<activity
@@ -85,7 +85,7 @@
 			android:screenOrientation="portrait" >
 		</activity>
 		<activity
-			android:name=".activity.imagefactory.ImageFactoryActivity"
+			android:name=".activity.ImageFactoryActivity"
 			android:screenOrientation="portrait" >
 		</activity>
 		<activity

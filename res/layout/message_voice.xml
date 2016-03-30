@@ -11,10 +11,10 @@
 
 		<ImageView
 			android:id="@+id/voice_message_iv_msgimage"
-			android:layout_width="22dip"
-			android:layout_height="22dip"
-			android:layout_marginLeft="dip"
-			android:layout_marginRight="1dip"
+			android:layout_width="22dp"
+			android:layout_height="22dp"
+			android:layout_marginLeft="1dp"
+			android:layout_marginRight="1dp"
 			android:gravity="center" />
 	</LinearLayout>
 

@@ -1,10 +1,10 @@
 package hillfly.wifichat.util;
 
-import hillfly.wifichat.BaseApplication;
 import hillfly.wifichat.R;
 import hillfly.wifichat.R.drawable;
-import hillfly.wifichat.activity.imagefactory.ImageFactoryActivity;
-import hillfly.wifichat.activity.imagefactory.ImageFactoryFliter.FilterType;
+import hillfly.wifichat.activity.ImageFactoryActivity;
+import hillfly.wifichat.common.BaseApplication;
+import hillfly.wifichat.common.view.imagefactory.ImageFactoryFliter.FilterType;
 
 import java.io.File;
 import java.io.FileOutputStream;

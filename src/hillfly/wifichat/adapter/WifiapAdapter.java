@@ -1,13 +1,11 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.activity.wifiap.WifiApConst;
+import hillfly.wifichat.R;
+import hillfly.wifichat.consts.WifiApConst;
 import hillfly.wifichat.util.WifiUtils;
 
 import java.util.List;
 
-import com.squareup.picasso.Picasso;
-
-import hillfly.wifichat.R;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.view.LayoutInflater;
@@ -16,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class WifiapAdapter extends BaseAdapter {
     private LayoutInflater mInflater;

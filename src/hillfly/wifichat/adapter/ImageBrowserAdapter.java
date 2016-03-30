@@ -1,7 +1,7 @@
 package hillfly.wifichat.adapter;
 
 import hillfly.wifichat.activity.ImageBrowserActivity;
-import hillfly.wifichat.view.photoview.PhotoView;
+import hillfly.wifichat.common.view.photoview.PhotoView;
 
 import java.util.ArrayList;
 import java.util.List;

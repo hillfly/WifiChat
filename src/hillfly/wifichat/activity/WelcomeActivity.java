@@ -1,7 +1,7 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
 import hillfly.wifichat.R;
+import hillfly.wifichat.common.BaseActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

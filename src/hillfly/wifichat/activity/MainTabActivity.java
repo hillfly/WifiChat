@@ -1,16 +1,16 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.ActivitiesManager;
-import hillfly.wifichat.BaseActivity;
-import hillfly.wifichat.BaseFragment;
 import hillfly.wifichat.R;
-import hillfly.wifichat.activity.maintabs.FriendsFragment;
-import hillfly.wifichat.activity.maintabs.MessageFragment;
-import hillfly.wifichat.activity.maintabs.SettingFragment;
 import hillfly.wifichat.adapter.TabPagerAdapter;
-import hillfly.wifichat.socket.udp.IPMSGConst;
-import hillfly.wifichat.socket.udp.UDPMessageListener;
-import hillfly.wifichat.socket.udp.UDPMessageListener.OnNewMsgListener;
+import hillfly.wifichat.common.ActivitiesManager;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.common.BaseFragment;
+import hillfly.wifichat.common.socket.udp.UDPMessageListener;
+import hillfly.wifichat.common.socket.udp.UDPMessageListener.OnNewMsgListener;
+import hillfly.wifichat.consts.IPMSGConst;
+import hillfly.wifichat.fragment.FriendsFragment;
+import hillfly.wifichat.fragment.MessageFragment;
+import hillfly.wifichat.fragment.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,8 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
-import hillfly.wifichat.activity.message.ChatActivity;
-import hillfly.wifichat.bean.Users;
-import hillfly.wifichat.view.HandyTextView;
 import hillfly.wifichat.R;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.model.Users;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class OtherProfileActivity extends BaseActivity implements OnClickListener {
 
@@ -20,11 +19,11 @@ public class OtherProfileActivity extends BaseActivity implements OnClickListene
 
     private LinearLayout mLayoutGender;// 性别根布局
     private ImageView mIvGender;// 性别
-    private HandyTextView mHtvAge;// 年龄
-    private HandyTextView mHtvConstellation;// 星座
-    private HandyTextView mHtvTime;// 登陆时间
-    private HandyTextView mHtvIPaddress; // IP地址
-    private HandyTextView mHtvDevice; // 设备品牌型号
+    private TextView mHtvAge;// 年龄
+    private TextView mHtvConstellation;// 星座
+    private TextView mHtvTime;// 登陆时间
+    private TextView mHtvIPaddress; // IP地址
+    private TextView mHtvDevice; // 设备品牌型号
 
     private Users mPeople;// 用户实体
 
@@ -42,11 +41,11 @@ public class OtherProfileActivity extends BaseActivity implements OnClickListene
         // mLayoutChat = (LinearLayout) findViewById(R.id.otherprofile_bottom_layout_chat);
         mLayoutGender = (LinearLayout) findViewById(R.id.otherprofile_layout_gender);
         mIvGender = (ImageView) findViewById(R.id.otherprofile_iv_gender);
-        mHtvAge = (HandyTextView) findViewById(R.id.otherprofile_htv_age);
-        mHtvConstellation = (HandyTextView) findViewById(R.id.otherprofile_htv_constellation);
-        mHtvTime = (HandyTextView) findViewById(R.id.otherprofile_htv_time);
-        mHtvIPaddress = (HandyTextView) findViewById(R.id.otherprofile_htv_ipaddress);
-        mHtvDevice = (HandyTextView) findViewById(R.id.otherprofile_htv_device);
+        mHtvAge = (TextView) findViewById(R.id.otherprofile_htv_age);
+        mHtvConstellation = (TextView) findViewById(R.id.otherprofile_htv_constellation);
+        mHtvTime = (TextView) findViewById(R.id.otherprofile_htv_time);
+        mHtvIPaddress = (TextView) findViewById(R.id.otherprofile_htv_ipaddress);
+        mHtvDevice = (TextView) findViewById(R.id.otherprofile_htv_device);
 
     }
 

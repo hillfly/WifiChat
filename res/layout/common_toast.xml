@@ -5,7 +5,7 @@
     android:background="@drawable/bg_common_toast"  
     android:orientation="horizontal" >
 
-    <hillfly.wifichat.view.HandyTextView
+    <TextView
         android:id="@+id/toast_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,19 +1,18 @@
 package hillfly.wifichat.adapter;
 
-import hillfly.wifichat.BaseApplication;
-import hillfly.wifichat.BaseObjectListAdapter;
 import hillfly.wifichat.R;
-import hillfly.wifichat.bean.Entity;
-import hillfly.wifichat.bean.Message;
-import hillfly.wifichat.bean.Users;
-import hillfly.wifichat.file.FileState;
-import hillfly.wifichat.socket.tcp.TcpClient;
-import hillfly.wifichat.socket.tcp.TcpService;
+import hillfly.wifichat.common.BaseApplication;
+import hillfly.wifichat.common.BaseObjectListAdapter;
+import hillfly.wifichat.common.socket.tcp.TcpClient;
+import hillfly.wifichat.common.socket.tcp.TcpService;
+import hillfly.wifichat.common.view.EmoticonsTextView;
+import hillfly.wifichat.model.Entity;
+import hillfly.wifichat.model.FileState;
+import hillfly.wifichat.model.Message;
+import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.FileUtils;
 import hillfly.wifichat.util.ImageUtils;
 import hillfly.wifichat.util.SessionUtils;
-import hillfly.wifichat.view.EmoticonsTextView;
-import hillfly.wifichat.view.HandyTextView;
 
 import java.io.File;
 import java.util.List;
@@ -26,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -89,7 +89,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
             switch (messageType) {
                 case TYPE_LEFT_TEXT:
                     convertView = mInflater.inflate(R.layout.message_group_receive_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.left_message_layout_messagecontainer);
@@ -104,7 +104,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_LEFT_IMAGE:
                     convertView = mInflater.inflate(R.layout.message_group_receive_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.left_message_layout_messagecontainer);
@@ -119,7 +119,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_LEFT_VOICE:
                     convertView = mInflater.inflate(R.layout.message_group_receive_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.left_message_layout_messagecontainer);
@@ -134,13 +134,13 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_LEFT_FILE:
                     convertView = mInflater.inflate(R.layout.message_group_receive_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.left_message_layout_messagecontainer);
                     holder.mView = mInflater.inflate(R.layout.message_file, null);
 
-                    holder.mHtvLoadingProcess = (HandyTextView) holder.mView
+                    holder.mHtvLoadingProcess = (TextView) holder.mView
                             .findViewById(R.id.message_file_htv_loading_text);
                     holder.mIvLeftAvatar = (ImageView) convertView
                             .findViewById(R.id.left_message_iv_userphoto);
@@ -149,7 +149,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_RIGHT_TEXT:
                     convertView = mInflater.inflate(R.layout.message_group_send_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.right_message_layout_messagecontainer);
@@ -164,7 +164,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_RIGHT_IMAGE:
                     convertView = mInflater.inflate(R.layout.message_group_send_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.right_message_layout_messagecontainer);
@@ -179,7 +179,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_RIGHT_VOICE:
                     convertView = mInflater.inflate(R.layout.message_group_send_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.right_message_layout_messagecontainer);
@@ -194,13 +194,13 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
                 case TYPE_RIGHT_FILE:
                     convertView = mInflater.inflate(R.layout.message_group_send_template, null);
-                    holder.mHtvTimeStampTime = (HandyTextView) convertView
+                    holder.mHtvTimeStampTime = (TextView) convertView
                             .findViewById(R.id.message_timestamp_htv_time);
                     holder.mLayoutMessageContainer = (LinearLayout) convertView
                             .findViewById(R.id.right_message_layout_messagecontainer);
                     holder.mView = mInflater.inflate(R.layout.message_file, null);
 
-                    holder.mHtvLoadingProcess = (HandyTextView) holder.mView
+                    holder.mHtvLoadingProcess = (TextView) holder.mView
                             .findViewById(R.id.message_file_htv_loading_text);
                     holder.mIvRightAvatar = (ImageView) convertView
                             .findViewById(R.id.right_message_iv_userphoto);
@@ -352,7 +352,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
         FileState file = (FileState) paramMsg.obj;
 
         if (mListView != null) {
-            HandyTextView htvView = (HandyTextView) mListView.findViewWithTag(FileUtils
+            TextView htvView = (TextView) mListView.findViewWithTag(FileUtils
                     .getNameByPath(file.fileName));
 
             if (htvView != null) {
@@ -423,14 +423,14 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
     static class ViewHolder {
 
-        private HandyTextView mHtvTimeStampTime; // 时间
+        private TextView mHtvTimeStampTime; // 时间
         private LinearLayout mLayoutMessageContainer; // 消息容器
         private View mView;
 
         private EmoticonsTextView mEtvTextContent; // 文本内容
         private ImageView mIvImageContent; // 图像内容
         private ImageView mIvVoiceImage; // 声音图像
-        private HandyTextView mHtvLoadingProcess; // 下载进度条
+        private TextView mHtvLoadingProcess; // 下载进度条
 
         private ImageView mIvLeftAvatar; // 左边的头像
         private ImageView mIvRightAvatar; // 右边的头像

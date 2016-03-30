@@ -6,7 +6,7 @@
     android:paddingLeft="1dip"
     android:paddingRight="1dip" >
 
-    <hillfly.wifichat.view.HandyTextView
+    <TextView
         android:id="@+id/listitem_dialog_text"
         android:layout_width="0dip"
         android:layout_height="wrap_content"

@@ -1,15 +1,14 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
 import hillfly.wifichat.R;
-import hillfly.wifichat.bean.Users;
-import hillfly.wifichat.socket.udp.UDPMessageListener;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.common.socket.udp.UDPMessageListener;
+import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.ImageUtils;
 import hillfly.wifichat.util.SessionUtils;
 import hillfly.wifichat.util.SharePreferenceUtils;
 import hillfly.wifichat.util.TextUtils;
-import hillfly.wifichat.view.HandyTextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -40,8 +40,8 @@ public class SettingInfoActivity extends BaseActivity implements OnClickListener
 
     private EditText mEtNickname;
 
-    private HandyTextView mHtvConstellation;
-    private HandyTextView mHtvAge;
+    private TextView mHtvConstellation;
+    private TextView mHtvAge;
     private ImageView mIvAvater;
     private DatePicker mDpBirthday;
     private Calendar mCalendar;
@@ -78,8 +78,8 @@ public class SettingInfoActivity extends BaseActivity implements OnClickListener
         mIvAvater = (ImageView) findViewById(R.id.setting_my_avater_img);
         mEtNickname = (EditText) findViewById(R.id.setting_my_nickname);
         mRgGender = (RadioGroup) findViewById(R.id.setting_baseinfo_rg_gender);
-        mHtvConstellation = (HandyTextView) findViewById(R.id.setting_birthday_htv_constellation);
-        mHtvAge = (HandyTextView) findViewById(R.id.setting_birthday_htv_age);
+        mHtvConstellation = (TextView) findViewById(R.id.setting_birthday_htv_constellation);
+        mHtvAge = (TextView) findViewById(R.id.setting_birthday_htv_age);
         mDpBirthday = (DatePicker) findViewById(R.id.setting_birthday_dp_birthday);
 
         mRbBoy = (RadioButton) findViewById(R.id.setting_baseinfo_rb_male);

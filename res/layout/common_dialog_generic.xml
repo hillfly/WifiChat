@@ -30,7 +30,7 @@
 				android:layout_height="wrap_content"
 				android:orientation="vertical" >
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/dialog_generic_htv_title"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
 						android:paddingBottom="8dip"
 						android:paddingTop="4dip" >
 
-						<hillfly.wifichat.view.HandyTextView
+						<TextView
 							android:id="@+id/dialog_generic_htv_message"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"

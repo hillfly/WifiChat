@@ -40,7 +40,7 @@
 					android:layout_centerVertical="true"
 					android:layout_marginLeft="10dip" />
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/user_item_htv_name"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
 						android:layout_marginRight="2dip"
 						android:scaleType="fitXY" />
 
-					<hillfly.wifichat.view.HandyTextView
+					<TextView
 						android:id="@+id/user_item_htv_age"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 						android:textSize="10sp" />
 				</LinearLayout>
 
-				<hillfly.wifichat.view.HandyTextView
+				<TextView
 					android:id="@+id/user_item_htv_time"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 					android:textSize="12sp" />
 			</LinearLayout>
 
-			<hillfly.wifichat.view.HandyTextView
+			<TextView
 				android:id="@+id/user_item_htv_lastmsg"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

@@ -1,8 +1,8 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
-import hillfly.wifichat.adapter.AvatarAdapter;
 import hillfly.wifichat.R;
+import hillfly.wifichat.adapter.AvatarAdapter;
+import hillfly.wifichat.common.BaseActivity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;

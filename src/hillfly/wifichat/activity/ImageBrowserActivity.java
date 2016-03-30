@@ -1,14 +1,14 @@
 package hillfly.wifichat.activity;
 
-import hillfly.wifichat.BaseActivity;
+import hillfly.wifichat.R;
 import hillfly.wifichat.adapter.ImageBrowserAdapter;
-import hillfly.wifichat.view.PhotoTextView;
-import hillfly.wifichat.view.ScrollViewPager;
+import hillfly.wifichat.common.BaseActivity;
+import hillfly.wifichat.common.view.PhotoTextView;
+import hillfly.wifichat.common.view.ScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import hillfly.wifichat.R;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 

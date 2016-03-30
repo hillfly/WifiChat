@@ -19,7 +19,7 @@
         android:layout_marginRight="5dip"
         android:gravity="center" >
 
-        <hillfly.wifichat.view.HandyTextView
+        <TextView
             android:id="@+id/message_timestamp_htv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

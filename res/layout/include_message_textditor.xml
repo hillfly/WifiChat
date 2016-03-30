@@ -43,7 +43,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <hillfly.wifichat.view.EmoticonsEditText
+    <hillfly.wifichat.common.view.EmoticonsEditText
         android:id="@+id/chat_textditor_eet_editer"
         android:layout_width="0dip"
         android:layout_height="wrap_content"

@@ -1,7 +1,7 @@
 package hillfly.wifichat.util;
 
-import hillfly.wifichat.BaseApplication;
-import hillfly.wifichat.bean.Users;
+import hillfly.wifichat.common.BaseApplication;
+import hillfly.wifichat.model.Users;
 import android.content.Context;
 import android.content.SharedPreferences;
 
