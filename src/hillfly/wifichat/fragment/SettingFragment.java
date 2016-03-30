@@ -229,7 +229,8 @@ public class SettingFragment extends BaseFragment implements OnClickListener,
                             break;
 
                         case 2:
-                            ActivitiesManager.finishAllActivities();
+                            ActivitiesManager.finishAllActivities(getActivity()
+                                    .getApplicationContext());
                             break;
 
                         default:

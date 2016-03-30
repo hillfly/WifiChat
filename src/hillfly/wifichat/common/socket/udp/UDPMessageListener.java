@@ -11,7 +11,7 @@ import hillfly.wifichat.model.IPMSGProtocol;
 import hillfly.wifichat.model.Message;
 import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.ImageUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 import hillfly.wifichat.util.SessionUtils;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import android.content.Context;
 
 public class UDPMessageListener implements Runnable {
 
-    private static final String TAG = "SZU_UDPMessageListener";
+    private static final Logger logger = Logger.getLogger(UDPMessageListener.class);
 
     private static final int POOL_SIZE = 5; // 单个CPU线程池大小
     private static final int BUFFERLENGTH = 1024; // 缓冲大小
@@ -106,13 +106,13 @@ public class UDPMessageListener implements Runnable {
                     UDPSocket = null;
                 }
                 receiveUDPThread = null;
-                LogUtils.e(TAG, "UDP数据包接收失败！线程停止");
+                logger.e("UDP数据包接收失败！线程停止");
                 e.printStackTrace();
                 break;
             }
 
             if (receiveDatagramPacket.getLength() == 0) {
-                LogUtils.e(TAG, "无法接收UDP数据或者接收到的UDP数据为空");
+                logger.e("无法接收UDP数据或者接收到的UDP数据为空");
                 continue;
             }
 
@@ -122,7 +122,7 @@ public class UDPMessageListener implements Runnable {
                         "gbk");
             }
             catch (UnsupportedEncodingException e) {
-                LogUtils.e(TAG, "系统不支持GBK编码");
+                logger.e("系统不支持GBK编码");
             }
 
             IPMSGProtocol ipmsgRes = new IPMSGProtocol(UDPListenResStr);
@@ -162,17 +162,17 @@ public class UDPMessageListener implements Runnable {
 
         // 收到上线数据包，添加用户，并回送IPMSG_ANSENTRY应答。
             case IPMSGConst.IPMSG_BR_ENTRY: {
-                LogUtils.i(TAG, "收到上线通知");
+                logger.i("收到上线通知");
                 addUser(ipmsgRes);
                 sendUDPdata(IPMSGConst.IPMSG_ANSENTRY, receiveDatagramPacket.getAddress(),
                         mLocalUser);
-                LogUtils.i(TAG, "成功发送上线应答");
+                logger.i("成功发送上线应答");
             }
                 break;
 
             // 收到上线应答，更新在线用户列表
             case IPMSGConst.IPMSG_ANSENTRY: {
-                LogUtils.i(TAG, "收到上线应答");
+                logger.i("收到上线应答");
                 addUser(ipmsgRes);
             }
                 break;
@@ -180,12 +180,12 @@ public class UDPMessageListener implements Runnable {
             // 收到下线广播
             case IPMSGConst.IPMSG_BR_EXIT: {
                 removeOnlineUser(senderIMEI, 1);
-                LogUtils.i(TAG, "成功删除imei为" + senderIMEI + "的用户");
+                logger.i("成功删除imei为" + senderIMEI + "的用户");
             }
                 break;
 
             case IPMSGConst.IPMSG_REQUEST_IMAGE_DATA:
-                LogUtils.i(TAG, "收到IMAGE发送请求");
+                logger.i("收到IMAGE发送请求");
 
                 tcpService = TcpService.getInstance(mContext);
                 tcpService.setSavePath(BaseApplication.IMAG_PATH);
@@ -194,7 +194,7 @@ public class UDPMessageListener implements Runnable {
                 break;
 
             case IPMSGConst.IPMSG_REQUEST_VOICE_DATA:
-                LogUtils.i(TAG, "收到VOICE发送请求");
+                logger.i("收到VOICE发送请求");
 
                 tcpService = TcpService.getInstance(mContext);
                 tcpService.setSavePath(BaseApplication.VOICE_PATH);
@@ -203,7 +203,7 @@ public class UDPMessageListener implements Runnable {
                 break;
 
             case IPMSGConst.IPMSG_SENDMSG: {
-                LogUtils.i(TAG, "收到MSG消息");
+                logger.i("收到MSG消息");
                 Message msg = (Message) ipmsgRes.getAddObject();
 
                 switch (msg.getContentType()) {
@@ -212,35 +212,35 @@ public class UDPMessageListener implements Runnable {
                         break;
 
                     case IMAGE:
-                        LogUtils.i(TAG, "收到图片信息");
+                        logger.i("收到图片信息");
                         msg.setMsgContent(BaseApplication.IMAG_PATH + File.separator
                                 + msg.getSenderIMEI() + File.separator + msg.getMsgContent());
                         String THUMBNAIL_PATH = BaseApplication.THUMBNAIL_PATH + File.separator
                                 + msg.getSenderIMEI();
 
-                        LogUtils.d(TAG, "缩略图文件夹路径:" + THUMBNAIL_PATH);
-                        LogUtils.d(TAG, "图片文件路径:" + msg.getMsgContent());
+                        logger.d("缩略图文件夹路径:" + THUMBNAIL_PATH);
+                        logger.d("图片文件路径:" + msg.getMsgContent());
 
                         ImageUtils.createThumbnail(mContext, msg.getMsgContent(), THUMBNAIL_PATH
                                 + File.separator);
                         break;
 
                     case VOICE:
-                        LogUtils.i(TAG, "收到录音信息");
+                        logger.i("收到录音信息");
                         msg.setMsgContent(BaseApplication.VOICE_PATH + File.separator
                                 + msg.getSenderIMEI() + File.separator + msg.getMsgContent());
-                        LogUtils.d(TAG, "文件路径:" + msg.getMsgContent());
+                        logger.d("文件路径:" + msg.getMsgContent());
                         break;
 
                     case FILE:
-                        LogUtils.i(TAG, "收到文件 发送请求");
+                        logger.i("收到文件 发送请求");
                         tcpService = TcpService.getInstance(mContext);
                         tcpService.setSavePath(BaseApplication.FILE_PATH);
                         tcpService.startReceive();
                         sendUDPdata(IPMSGConst.IPMSG_CONFIRM_FILE_DATA, senderIp);
                         msg.setMsgContent(BaseApplication.FILE_PATH + File.separator
                                 + msg.getSenderIMEI() + File.separator + msg.getMsgContent());
-                        LogUtils.d(TAG, "文件路径:" + msg.getMsgContent());
+                        logger.d("文件路径:" + msg.getMsgContent());
                         break;
                 }
 
@@ -273,7 +273,7 @@ public class UDPMessageListener implements Runnable {
                 break;
 
             default:
-                LogUtils.i(TAG, "收到命令：" + commandNo);
+                logger.i("收到命令：" + commandNo);
 
                 android.os.Message pMessage = new android.os.Message();
                 pMessage.what = commandNo;
@@ -294,7 +294,7 @@ public class UDPMessageListener implements Runnable {
             // 绑定端口
             if (UDPSocket == null)
                 UDPSocket = new DatagramSocket(IPMSGConst.PORT);
-            LogUtils.i(TAG, "connectUDPSocket() 绑定端口成功");
+            logger.i("绑定端口成功");
 
             // 创建数据接受包
             if (receiveDatagramPacket == null)
@@ -314,7 +314,7 @@ public class UDPMessageListener implements Runnable {
             receiveUDPThread.start();
         }
         isThreadRunning = true;
-        LogUtils.i(TAG, "startUDPSocketThread() 线程启动成功");
+        logger.i("线程启动成功");
     }
 
     /** 暂停监听线程 **/
@@ -324,7 +324,7 @@ public class UDPMessageListener implements Runnable {
             receiveUDPThread.interrupt();
         receiveUDPThread = null;
         instance = null; // 置空, 消除静态变量引用
-        LogUtils.i(TAG, "stopUDPSocketThread() 线程停止成功");
+        logger.i("线程停止成功");
     }
 
     public void addMsgListener(OnNewMsgListener listener) {
@@ -340,13 +340,13 @@ public class UDPMessageListener implements Runnable {
         // 获取本机用户数据
         mLocalUser = SessionUtils.getLocalUserInfo();
         sendUDPdata(IPMSGConst.IPMSG_BR_ENTRY, BROADCASTIP, mLocalUser);
-        LogUtils.i(TAG, "notifyOnline() 上线通知成功");
+        logger.i("上线通知成功");
     }
 
     /** 用户下线通知 **/
     public void notifyOffline() {
         sendUDPdata(IPMSGConst.IPMSG_BR_EXIT, BROADCASTIP);
-        LogUtils.i(TAG, "notifyOffline() 下线通知成功");
+        logger.i("下线通知成功");
     }
 
     /** 刷新用户列表 **/
@@ -375,7 +375,7 @@ public class UDPMessageListener implements Runnable {
                 mDBOperate.addUserInfo(newUser);
             }
         }
-        LogUtils.i(TAG, "成功添加imei为" + receiveIMEI + "的用户");
+        logger.i("成功添加imei为" + receiveIMEI + "的用户");
 
     }
 
@@ -429,11 +429,11 @@ public class UDPMessageListener implements Runnable {
                     sendDatagramPacket = new DatagramPacket(sendBuffer, sendBuffer.length,
                             targetAddr, IPMSGConst.PORT);
                     UDPSocket.send(sendDatagramPacket);
-                    LogUtils.i(TAG, "sendUDPdata() 数据发送成功");
+                    logger.i("数据发送成功");
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                    LogUtils.e(TAG, "sendUDPdata() 发送UDP数据包失败");
+                    logger.e("发送UDP数据包失败");
                 }
 
             }
@@ -450,7 +450,7 @@ public class UDPMessageListener implements Runnable {
             mListenerList.get(i).processMessage(pMsg);
         }
 
-        LogUtils.d(TAG, "addUser | OnlineUsersNum：" + mOnlineUsers.size());
+        logger.d("addUser | OnlineUsersNum：" + mOnlineUsers.size());
     }
 
     public Users getOnlineUser(String paramIMEI) {
@@ -479,7 +479,7 @@ public class UDPMessageListener implements Runnable {
             mOnlineUsers.clear();
         }
 
-        LogUtils.d(TAG, "removeUser | OnlineUsersNum：" + mOnlineUsers.size());
+        logger.d("removeUser | OnlineUsersNum：" + mOnlineUsers.size());
     }
 
     public HashMap<String, Users> getOnlineUserMap() {

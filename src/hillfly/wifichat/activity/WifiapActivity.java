@@ -12,7 +12,7 @@ import hillfly.wifichat.consts.WifiApConst;
 import hillfly.wifichat.model.UserInfo;
 import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.DateUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 import hillfly.wifichat.util.SessionUtils;
 import hillfly.wifichat.util.SharePreferenceUtils;
 import hillfly.wifichat.util.TextUtils;
@@ -51,7 +51,7 @@ import android.widget.TextView;
 public class WifiapActivity extends BaseActivity implements OnClickListener, NetWorkChangeListener,
         OnScrollListener, OnItemClickListener {
 
-    private static final String TAG = "SZU_WifiapActivity";
+    private static final Logger logger = Logger.getLogger(WifiapActivity.class);
 
     private String localIPaddress; // 本地WifiIP
     private String serverIPaddres; // 热点IP
@@ -225,7 +225,7 @@ public class WifiapActivity extends BaseActivity implements OnClickListener, Net
             localIPaddress = WifiUtils.getLocalIPAddress();
             serverIPaddres = WifiUtils.getServerIPAddress();
         }
-        LogUtils.i(TAG, "localIPaddress:" + localIPaddress + " serverIPaddres:" + serverIPaddres);
+        logger.i("localIPaddress:" + localIPaddress + " serverIPaddres:" + serverIPaddres);
     }
 
     /**

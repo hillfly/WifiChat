@@ -33,7 +33,7 @@ import android.os.Message;
  */
 
 public class WifiUtils {
-    private static final String TAG = "SZU_WifiUtils";
+    private static final Logger logger = Logger.getLogger(WifiUtils.class);
     private static Context mContext = BaseApplication.getInstance();
     private static WifiManager mWifiManager = (WifiManager) mContext
             .getSystemService(Context.WIFI_SERVICE);
@@ -54,13 +54,13 @@ public class WifiUtils {
             public void doTimerCheckWork() {
 
                 if (isWifiApEnabled()) {
-                    // LogUtils.v(TAG, "WifiAp enabled success!");
+                    // LogUtils.v("WifiAp enabled success!");
                     Message msg = handler.obtainMessage(WifiApConst.ApCreateApSuccess);
                     handler.sendMessage(msg);
                     this.exit();
                 }
                 else {
-                    // LogUtils.v(TAG, "WifiAp enabled failed!");
+                    // LogUtils.v("WifiAp enabled failed!");
                 }
             }
 
@@ -403,7 +403,7 @@ public class WifiUtils {
                 if (!ni.isLoopback()) {
                     for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses()) {
                         if (interfaceAddress.getBroadcast() != null) {
-                            LogUtils.d(TAG, interfaceAddress.getBroadcast().toString().substring(1));
+                            logger.d(interfaceAddress.getBroadcast().toString().substring(1));
                             return interfaceAddress.getBroadcast().toString().substring(1);
                         }
                     }

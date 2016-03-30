@@ -9,7 +9,7 @@ import hillfly.wifichat.model.FileStyle;
 import hillfly.wifichat.model.Message;
 import hillfly.wifichat.util.DateUtils;
 import hillfly.wifichat.util.FileUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 import hillfly.wifichat.util.SessionUtils;
 
 import java.io.DataOutputStream;
@@ -25,7 +25,7 @@ import android.content.Context;
 import android.os.Handler;
 
 public class TcpClient implements Runnable {
-    private static final String TAG = "SZU_TcpClient";
+    private static final Logger logger = Logger.getLogger(TcpClient.class);
 
     private Thread mThread;
     private boolean IS_THREAD_STOP = false; // 是否线程开始标志
@@ -40,7 +40,7 @@ public class TcpClient implements Runnable {
     private TcpClient() {
         sendFileThreads = new ArrayList<TcpClient.SendFileThread>();
         mThread = new Thread(this);
-        LogUtils.d(TAG, "建立线程成功");
+        logger.d("建立线程成功");
 
     }
 
@@ -79,11 +79,11 @@ public class TcpClient implements Runnable {
 
     private TcpClient(Context context) {
         this();
-        LogUtils.d(TAG, "TCP_Client初始化完毕");
+        logger.d("TCP_Client初始化完毕");
     }
 
     public void startSend() {
-        LogUtils.d(TAG, "发送线程开启");
+        logger.d("发送线程开启");
         IS_THREAD_STOP = false; // 使能发送标识
         if (!mThread.isAlive())
             mThread.start();
@@ -110,7 +110,7 @@ public class TcpClient implements Runnable {
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        LogUtils.d(TAG, "TCP_Client初始化");
+        logger.d("TCP_Client初始化");
 
         while (!IS_THREAD_STOP) {
             if (SEND_FLAG) {
@@ -133,7 +133,7 @@ public class TcpClient implements Runnable {
     }
 
     public class SendFileThread extends Thread {
-        private static final String TAG = "SZU_SendFileThread";
+        
         private boolean SEND_FLAG = true; // 是否发送广播标志
         private byte[] mBuffer = new byte[Constant.READ_BUFFER_SIZE]; // 数据报内容
         private OutputStream output = null;
@@ -193,7 +193,7 @@ public class TcpClient implements Runnable {
                     }
                     dataOutput.flush();
                 }
-                LogUtils.d(TAG, fs.fileName + "发送完毕");
+                logger.d(fs.fileName + "发送完毕");
 
                 output.close();
                 dataOutput.close();
@@ -205,7 +205,7 @@ public class TcpClient implements Runnable {
                                 DateUtils.getNowtime(), fs.fileName, type);
                         imageMsg.setMsgContent(FileUtils.getNameByPath(imageMsg.getMsgContent()));
                         UDPMessageListener.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, imageMsg);
-                        LogUtils.d(TAG, "图片发送完毕");
+                        logger.d("图片发送完毕");
                         break;
 
                     case VOICE:
@@ -213,7 +213,7 @@ public class TcpClient implements Runnable {
                                 DateUtils.getNowtime(), fs.fileName, type);
                         voiceMsg.setMsgContent(FileUtils.getNameByPath(voiceMsg.getMsgContent()));
                         UDPMessageListener.sendUDPdata(IPMSGConst.IPMSG_SENDMSG, target_IP, voiceMsg);
-                        LogUtils.d(TAG, "语音发送完毕");
+                        logger.d("语音发送完毕");
                         break;
 
                     case FILE:
@@ -231,13 +231,13 @@ public class TcpClient implements Runnable {
             }
             catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
-                LogUtils.d(TAG, "建立客户端socket失败");
+                logger.d("建立客户端socket失败");
                 SEND_FLAG = false;
                 e.printStackTrace();
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
-                LogUtils.d(TAG, "建立客户端socket失败");
+                logger.d("建立客户端socket失败");
                 SEND_FLAG = false;
                 e.printStackTrace();
             }
@@ -249,7 +249,7 @@ public class TcpClient implements Runnable {
         @Override
         public void run() {
             // TODO Auto-generated method stub
-            LogUtils.d(TAG, "SendFileThread初始化");
+            logger.d("SendFileThread初始化");
             if (SEND_FLAG) {
                 sendFile();
             }

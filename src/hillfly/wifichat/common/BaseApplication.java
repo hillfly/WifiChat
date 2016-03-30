@@ -3,7 +3,7 @@ package hillfly.wifichat.common;
 import hillfly.wifichat.R;
 import hillfly.wifichat.model.FileState;
 import hillfly.wifichat.util.FileUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 
 import java.io.File;
 import java.lang.ref.Reference;
@@ -19,11 +19,13 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Vibrator;
+import android.util.Log;
 
 public class BaseApplication extends Application {
-
+    
     public static boolean isDebugmode = false;
     private boolean isPrintLog = true;
+    private int logLevel = Log.DEBUG;
 
     /** 静音、震动默认开关 **/
     private static boolean isSlient = false;
@@ -54,6 +56,7 @@ public class BaseApplication extends Application {
     public static List<String> mEmoticons_Zem;
 
     private static BaseApplication instance;
+    private static Logger logger;
 
     /**
      * <p>
@@ -78,8 +81,8 @@ public class BaseApplication extends Application {
         recieveFileStates = new HashMap<String, FileState>();
         mAvatarCache = new HashMap<String, SoftReference<Bitmap>>();
 
-        ActivitiesManager.init(getApplicationContext()); // 初始化活动管理器
-        LogUtils.setLogStatus(isPrintLog); // 设置是否显示日志
+        ActivitiesManager.init(); // 初始化活动管理器
+        logger = Logger.initLogger(instance, isPrintLog, logLevel); // 初始化日志
 
         initEmoticons();
         initNotification();
@@ -111,13 +114,13 @@ public class BaseApplication extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        LogUtils.e("BaseApplication", "onLowMemory");
+        logger.e("onLowMemory");
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        LogUtils.e("BaseApplication", "onTerminate");
+        logger.e("onTerminate");
     }
 
     // 函数创建文件存储目录

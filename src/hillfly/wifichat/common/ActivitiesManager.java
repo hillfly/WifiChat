@@ -13,14 +13,12 @@ import android.content.Context;
  * @description 活动管理类
  **/
 public class ActivitiesManager {
-
     private static Stack<BaseActivity> queue;
     private static UDPMessageListener mListener;
     private static ChatActivity mChatActivity;
 
-    public static void init(Context context) {
+    public static void init() {
         queue = new Stack<BaseActivity>();
-        mListener = UDPMessageListener.getInstance(context);
     }
 
     public static void addActivity(BaseActivity activity) {
@@ -33,7 +31,8 @@ public class ActivitiesManager {
         }
     }
 
-    public static void finishAllActivities() {
+    public static void finishAllActivities(Context context) {
+        mListener = UDPMessageListener.getInstance(context);
         mListener.notifyOffline();
         mListener.stopUDPSocketThread();
         mListener = null;

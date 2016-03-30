@@ -18,7 +18,7 @@ import hillfly.wifichat.model.Users;
 import hillfly.wifichat.util.AudioRecorderUtils;
 import hillfly.wifichat.util.FileUtils;
 import hillfly.wifichat.util.ImageUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 import hillfly.wifichat.util.SessionUtils;
 
 import java.io.File;
@@ -51,7 +51,7 @@ import android.widget.LinearLayout;
 
 public class ChatActivity extends BaseMessageActivity implements OnItemClickListener {
 
-    private static final String TAG = "SZU_ChatActivity";
+    private static final Logger logger = Logger.getLogger(ChatActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -504,7 +504,7 @@ public class ChatActivity extends BaseMessageActivity implements OnItemClickList
                 break;
 
             case IPMSGConst.IPMSG_CONFIRM_IMAGE_DATA: { // 图片开始发送
-                LogUtils.d(TAG, "接收方确认图片请求,发送的文件为" + mCameraImagePath);
+                logger.d("接收方确认图片请求,发送的文件为" + mCameraImagePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 tcpClient.sendFile(mCameraImagePath, mChatUser.getIpaddress(),
@@ -513,7 +513,7 @@ public class ChatActivity extends BaseMessageActivity implements OnItemClickList
                 break;
 
             case IPMSGConst.IPMSG_CONFIRM_VOICE_DATA: { // 语音开始发送
-                LogUtils.d(TAG, "接收方确认语音请求,发送的文件为" + mVoicePath);
+                logger.d("接收方确认语音请求,发送的文件为" + mVoicePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 if (FileUtils.isFileExists(mVoicePath))
@@ -523,7 +523,7 @@ public class ChatActivity extends BaseMessageActivity implements OnItemClickList
                 break;
 
             case IPMSGConst.IPMSG_CONFIRM_FILE_DATA: { // 文件开始发送
-                LogUtils.d(TAG, "接收方确认文件请求,发送的文件为" + sendFilePath);
+                logger.d("接收方确认文件请求,发送的文件为" + sendFilePath);
                 tcpClient = TcpClient.getInstance(ChatActivity.this);
                 tcpClient.startSend();
                 if (FileUtils.isFileExists(sendFilePath))

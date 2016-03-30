@@ -147,7 +147,7 @@ public class MainTabActivity extends BaseActivity implements ActionBar.TabListen
                 ExitTime = System.currentTimeMillis();
             }
             else {
-                ActivitiesManager.finishAllActivities();
+                ActivitiesManager.finishAllActivities(getApplicationContext());
             }
             return true;
         }

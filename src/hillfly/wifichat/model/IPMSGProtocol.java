@@ -2,7 +2,7 @@ package hillfly.wifichat.model;
 
 import hillfly.wifichat.consts.IPMSGConst;
 import hillfly.wifichat.util.JsonUtils;
-import hillfly.wifichat.util.LogUtils;
+import hillfly.wifichat.util.Logger;
 
 import java.util.Date;
 
@@ -26,7 +26,8 @@ import com.alibaba.fastjson.annotation.JSONField;
  * 
  */
 public class IPMSGProtocol {
-    private static final String TAG = "SZU_IPMSGPProtocol";
+    private static final Logger logger = Logger.getLogger(IPMSGProtocol.class);
+    
     private static final String PACKETNO = "packetNo";
     private static final String COMMANDNO = "commandNo";
     private static final String ADDOBJECT = "addObject";
@@ -84,7 +85,7 @@ public class IPMSGProtocol {
         }
         catch (JSONException e) {
             e.printStackTrace();
-            LogUtils.e(TAG, "非标准JSON文本");
+            logger.e("非标准JSON文本");
         }
     }
 
